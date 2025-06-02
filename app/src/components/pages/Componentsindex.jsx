@@ -15,4 +15,4 @@ import Settings from "./Settings";
 import User from "./User";
 import Users from "./Users";
 
-export default { Beer, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users }
+module.exports = { Beer, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users }

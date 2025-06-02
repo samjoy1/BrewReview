@@ -1,12 +1,11 @@
-import { addDoc, collection, doc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { View, Text } from "react-native";
 import { FIRESTORE_DB } from "../firebaseconfig";
 
 
 function ListOfBeers() {
   const [beers, setBeers] = useState([]);
-  const [beer, setBeer] = useState("");
   //const [brewery, setBrewery] = useState("");
 
   useEffect(() => {
@@ -37,7 +36,6 @@ function ListOfBeers() {
       {beers.map((beer) => (
         <View
           key={beer.id}
-          className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200"
         >
           <Text className="text-lg font-semibold text-gray-800">
             {beer.name}
