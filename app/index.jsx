@@ -11,13 +11,12 @@ import { Beer, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostRevi
 
 export default function Index() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Beer">
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
       <Stack.Screen name="Brewery" component={Brewery} />
       <Stack.Screen name="Camera" component={Camera} />
       <Stack.Screen name="Categories" component={Categories} />
-
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="PostBeer" component={PostBeer} />

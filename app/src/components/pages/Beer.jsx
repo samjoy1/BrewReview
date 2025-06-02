@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import BeerCard from "../beer/BeerCard";
 
-function Beer () {
-    return (
-        <View>
-            <Text>hello</Text>
-        </View>
-    )
+function Beer() {
+  return (
+    <View>
+      <BeerCard />
+    </View>
+  );
 }
 
-export default Beer
+export default Beer;
