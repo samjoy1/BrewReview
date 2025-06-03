@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 function Search({ navigation }) {
@@ -28,18 +28,52 @@ function Search({ navigation }) {
   }, []);
 
   return (
-    <View className="p-4 bg-gray-100 min-h-screen">
-      <Text className="text-2xl font-bold mb-4 text-center text-blue-600">
-        Beer List
+    <ScrollView className="bg-gray-100 min-h-screen p-4">
+      <Text className="text-2xl font-bold mb-6 text-center text-black-600">
+        All Beers
       </Text>
-      {beers.map((beer) => (
-        <View key={beer.id}>
-          <Text className="text-lg font-semibold text-gray-800">
-            {beer.name}
-          </Text>
-        </View>
-      ))}
-    </View>
+
+      <View className="flex-row flex-wrap space-between">
+        {beers.map((beer) => (
+          <View
+            key={beer.id}
+            className="bg-white rounded-lg shadow-md mb-4"
+            style={{
+              elevation: 3,
+              width: "48%", 
+              flexDirection: "row",
+              overflow: "hidden",
+              minHeight: 100,
+            }}
+          >
+            <Image
+              source={{ uri: beer.img_url }}
+              className="w-24 h-24"
+              style={{ resizeMode: "cover", height: 80, width: 80 }}
+            />
+            <View className="flex-1 p-3 justify-center">
+              <Text className="text-lg font-semibold text-gray-900">
+                {beer.name}
+              </Text>
+              <Text className="text-sm text-gray-600 mb-1">{beer.brewery}</Text>
+              <Text className="text-sm text-gray-700">
+                Alcohol: {beer.percentage}%
+              </Text>
+              <Text className="text-sm text-gray-500 mb-2">
+                Votes: {beer.votes}
+              </Text>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Beer", { id: beer.id })}
+                className="bg-blue-600 rounded px-3 py-1.5 self-start"
+              >
+                <Text className="text-white font-semibold">View More</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 

@@ -7,6 +7,10 @@ function Home({navigation}) {
       <Button onPress={() => {navigation.navigate('Beer')}}>
         <Text>Goodbye</Text>
       </Button>
+      <Button onPress={() => {navigation.navigate('Search')}}>
+        <Text>Search</Text>
+      </Button>
+      
     </View>
   );
 }
