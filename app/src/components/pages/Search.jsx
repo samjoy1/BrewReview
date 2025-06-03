@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
+const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
+
 function Search({ navigation }) {
   const [beers, setBeers] = useState([]);
   //const [brewery, setBrewery] = useState("");
@@ -37,21 +39,22 @@ function Search({ navigation }) {
         {beers.map((beer) => (
           <View
             key={beer.id}
-            className="bg-white rounded-lg shadow-md mb-4"
+            className="bg-white rounded-lg shadow-md mb-4 p-3"
             style={{
               elevation: 3,
-              width: "48%", 
-              flexDirection: "row",
+              width: "48%",
+              flexDirection: "column",
+              alignItems: "center",
               overflow: "hidden",
               minHeight: 100,
             }}
           >
             <Image
-              source={{ uri: beer.img_url }}
+              source={beer.img_url ? { uri: beer.img_url } : defaultBeerImage}
               className="w-24 h-24"
-              style={{ resizeMode: "cover", height: 80, width: 80 }}
+              style={{ height: 80, width: 80 }}
             />
-            <View className="flex-1 p-3 justify-center">
+            <View className="flex-1">
               <Text className="text-lg font-semibold text-gray-900">
                 {beer.name}
               </Text>
