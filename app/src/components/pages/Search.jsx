@@ -1,12 +1,20 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
 
 function Search({ navigation }) {
   const [beers, setBeers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   //const [brewery, setBrewery] = useState("");
 
   useEffect(() => {
@@ -34,6 +42,13 @@ function Search({ navigation }) {
       <Text className="text-2xl font-bold mb-6 text-center text-black-600">
         All Beers
       </Text>
+      <TextInput
+        placeholder="Search beers..."
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+        className="bg-white p-3 rounded-lg mb-6 border border-gray-300"
+        placeholderTextColor="#888"
+      />
 
       <View className="flex-row flex-wrap space-between">
         {beers.map((beer) => (
@@ -60,7 +75,7 @@ function Search({ navigation }) {
               </Text>
               <Text className="text-sm text-gray-600 mb-1">{beer.brewery}</Text>
               <Text className="text-sm text-gray-700">
-                Alcohol: {beer.percentage}%
+                ABV: {beer.percentage}%
               </Text>
               <Text className="text-sm text-gray-500 mb-2">
                 Votes: {beer.votes}
