@@ -1,9 +1,11 @@
 import { collection, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { Button, FlatList, Text, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-import { useState, useEffect } from "react";
 
-function Users() {
+export default function Users({ navigation }) {
   const [users, setUsers] = useState([]);
+  const [followedUsers, setFollowedUsers] = useState({});
 
   useEffect(() => {
     getDocs(collection(FIRESTORE_DB, "users"))
@@ -17,15 +19,36 @@ function Users() {
       .catch((err) => console.error(err));
   }, []);
 
+  const toggleFollow = (userId) => {
+    setFollowedUsers((prev) => ({
+      ...prev,
+      [userId]: !prev[userId],
+    }));
+  };
+
   return (
-    <ul>
-      {users.map((user) => (
-        <li key={user.id}>
-          <p>ID:</p> {user.id}
-        </li>
-      ))}
-    </ul>
+    <FlatList
+      data={users}
+      keyExtractor={(user) => user.id}
+      renderItem={({ item: user }) => {
+        return (
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
+            <Text style={{ marginRight: 12 }}>{user.name}</Text>
+            <View style={{ marginRight: 12 }}>
+              <Button
+                title="View User"
+                onPress={() => navigation.navigate("User", { userId: user.id })}
+              />
+            </View>
+            <View>
+              <Button
+                title={followedUsers[user.id] ? "Unfollow" : "Follow"}
+                onPress={() => toggleFollow(user.id)}
+              />
+            </View>
+          </View>
+        );
+      }}
+    />
   );
 }
-
-export default Users;
