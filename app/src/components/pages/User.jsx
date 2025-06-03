@@ -1,10 +1,10 @@
-"use client";
-
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView } from "react-native";
 import { doc, getDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-import { useState, useEffect } from "react";
 
-function User({ userId }) {
+export default function User({ route }) {
+  const { userId } = route.params;
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -17,17 +17,15 @@ function User({ userId }) {
       .catch((err) => console.error(err));
   }, [userId]);
 
+  if (!user) return null;
+
   return (
-    <div>
-      {user && (
-        <>
-          <p>ID: {user.id}</p>
-          {/* <p>Name: {user.name}</p> */}
-          {/* <p>Email: {user.email}</p> */}
-        </>
-      )}
-    </div>
+    <ScrollView contentContainerStyle={{ padding: 16 }}>
+      {Object.entries(user).map(([field, value]) => (
+        <View key={field} style={{ marginBottom: 12 }}>
+          <Text>{field}: {String(value)}</Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
-
-export default User;
