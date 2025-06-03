@@ -1,13 +1,25 @@
-import { Text, View } from "react-native";
-import React from "react";
 import "@/global.css";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-
+import React from "react";
 const Stack = createNativeStackNavigator();
 
 // components
-import { Beer, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users } from "./src/components/pages/Componentsindex"
+import {
+  Beer,
+  Brewery,
+  Camera,
+  Categories,
+  Home,
+  Login,
+  Map,
+  PostBeer,
+  PostReview,
+  Profile,
+  Search,
+  Settings,
+  User,
+  Users,
+} from "./src/components/pages/Componentsindex";
 
 export default function Index() {
   return (

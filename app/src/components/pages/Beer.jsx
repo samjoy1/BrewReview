@@ -1,30 +1,78 @@
+import { useNavigation } from "@react-navigation/native";
+import * as Linking from "expo-linking";
 import { Heart, Share2 } from "lucide-react-native";
 import { useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Share,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 
 // BLOCKERS
 // not able to get dynamic info from database until it is populated
 
 // TO DO BUT NEED TO WAIT
-// 1 - need to update it so that the params from when the user clicks on a beer can be used to direct them to the correct individual beer screen
-// 2 - dynamically get the required information from the database
+// - dynamically get the required information from the database
+// - use params to take user to correct brewery page
+
+// TO TELL TEAM ABOUT
+// - toast being a global thing we can use
 
 // TO DO AND CAN BE DONE TODAY
-// 1 - on press of the brewery, re direct the user to the brewery page
-// 2 - have something actually happen when you click on share
 // 3 - sort out reviews, also add a post review button which redirects user to post a review page
 // 4 - maybe have country be an on press touchable opacity that re directs the user to a page that has beers filtered by their country
 // 5 - have type take the user to a list of beers filtered by that type
 // 6 - have the rating take the user to a list of beers filtered by rating
-// 7 - separate everything out in to components
+// 7 - separate everything out in to components, handler funcs etc
 
 function Beer() {
-  // use state
+  // HOOKS
   const [liked, setLiked] = useState(false);
+  const navigation = useNavigation();
 
-  // upon handle press being invoked, set liked to the opposite of its current state
-  function handlePress() {
+  // HANDLER FUNCTIONS
+  function handlePressHeartButton() {
     setLiked(!liked);
+  }
+
+  // need to use params to send the user to the correct brewery page when the database is live
+  function handlePressBrewery() {
+    navigation.navigate("Brewery");
+  }
+
+  // currently just sends a string of that thing but i also want to send a link to the individual beer so add that
+  function handleShare() {
+    // this will be changed later to be dynamic
+    const beerID = "awesome-brew"; 
+    // currently shares a development url, won't work without expo go
+    const url = Linking.createURL(`/beer/${beerID}`)
+
+    Share.share({
+      message: `${name} from ${brewery} was so good I simply had to share it with you 🍻\n\n${url}`,
+    })
+      .then((result) => {
+        if (result.action === Share.sharedAction) {
+          console.log("beer shared successfully");
+          Toast.show({
+            type: "success",
+            text1: "Shared successfully",
+            position: "bottom",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("There was an error sharing", err.message);
+        Toast.show({
+          type: "error",
+          text1: "Failed to share",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
   }
 
   // placeholder data, to be replaced once databases have all required info
@@ -47,7 +95,7 @@ function Beer() {
       {/* HEADER */}
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-xl font-bold">{name}</Text>
-        <TouchableOpacity onPress={handlePress}>
+        <TouchableOpacity onPress={handlePressHeartButton}>
           <Heart
             size={28}
             color={liked ? "red" : "gray"}
@@ -86,8 +134,13 @@ function Beer() {
           <Text className="text-xl font-bold">{rating}</Text>
         </View>
         {/* BREWERY */}
-        <View className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center">
-          <Text className="text-xl font-bold">{brewery}</Text>
+        <View>
+          <TouchableOpacity
+            className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center"
+            onPress={handlePressBrewery}
+          >
+            <Text className="text-xl font-bold">{brewery}</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -100,7 +153,10 @@ function Beer() {
 
       {/* SHARE */}
       <View className="items-end">
-        <TouchableOpacity className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2">
+        <TouchableOpacity
+          className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2"
+          onPress={handleShare}
+        >
           <Share2 size={20} color="gray" />
           <Text className="ml-2 text-gray-700">Share</Text>
         </TouchableOpacity>
