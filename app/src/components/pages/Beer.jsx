@@ -12,11 +12,11 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 // TO DO AND CAN BE DONE TODAY
 // 1 - on press of the brewery, re direct the user to the brewery page
 // 2 - have something actually happen when you click on share
-// 3 - sort out reviews
+// 3 - sort out reviews, also add a post review button which redirects user to post a review page
 // 4 - maybe have country be an on press touchable opacity that re directs the user to a page that has beers filtered by their country
 // 5 - have type take the user to a list of beers filtered by that type
 // 6 - have the rating take the user to a list of beers filtered by rating
-// 7 - separate everything out in to components 
+// 7 - separate everything out in to components
 
 function Beer() {
   // use state
