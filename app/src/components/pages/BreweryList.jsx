@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
-const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
+const defaultBeerImage = require("../../../../assets/images/default-brewery-image.png");
 
 function BreweryList({ navigation }) {
   const [breweries, setBrewery] = useState([]);
