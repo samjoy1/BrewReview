@@ -13,7 +13,7 @@ import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
 
-function Search({ navigation }) {
+function BeerList({ navigation }) {
   const [beers, setBeers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   //const [brewery, setBrewery] = useState("");
@@ -102,4 +102,4 @@ function Search({ navigation }) {
   );
 }
 
-export default Search;
+export default BeerList;

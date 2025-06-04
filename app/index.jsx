@@ -1,19 +1,34 @@
-import { Text, View } from "react-native";
-import React from "react";
 import "@/global.css";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-
-const Stack = createNativeStackNavigator();
+import React from "react";
 
 // components
-import { Beer, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users } from "./src/components/pages/Componentsindex"
+import {
+  Beer,
+  Brewery,
+  Camera,
+  Categories,
+  Home,
+  BeerList,
+  Login,
+  Map,
+  PostBeer,
+  PostReview,
+  Profile,
+  Search,
+  Settings,
+  User,
+  Users,
+} from "./src/components/pages/Componentsindex";
+
+const Stack = createNativeStackNavigator();
 
 export default function Index() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
+      <Stack.Screen name="BeerList" component={BeerList} />
       <Stack.Screen name="Brewery" component={Brewery} />
       <Stack.Screen name="Camera" component={Camera} />
       <Stack.Screen name="Categories" component={Categories} />
