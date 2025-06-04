@@ -1,26 +1,15 @@
-import { Button } from "@react-navigation/elements";
+import React from "react";
 import { Text, View } from "react-native";
+import Navbar from "./NavBar";
 
-function Home({ navigation }) {
+export default function Home() {
   return (
-    <View>
-      <Button
-        onPress={() => {
-          navigation.navigate("Beer");
-        }}
-      >
-        <Text>Goodbye</Text>
-      </Button>
+    <View className="flex-1 bg-white">
+      <View className="flex-1 items-center justify-center">
+        <Text className="text-xl font-bold">Welcome to Home</Text>
+      </View>
 
-      <Button
-        onPress={() => {
-          navigation.navigate("BeerList");
-        }}
-      >
-        <Text>List of beers</Text>
-      </Button>
+      <Navbar />
     </View>
   );
 }
-
-export default Home;
