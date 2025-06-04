@@ -7,14 +7,11 @@ const defaultBeerImage = require("../../../../assets/images/default-beer-image.p
 
 function BeerList({ navigation }) {
   const [beers, setBeers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  //const [brewery, setBrewery] = useState("");
 
   useEffect(() => {
     const beerRef = collection(FIRESTORE_DB, "beers");
     getDocs(beerRef)
       .then((querySnapshot) => {
-        //console.log(querySnapshot.docs[0].data())
         let compiledBeers = [];
         let newBeer = {};
         querySnapshot.docs.map((doc) => {
@@ -50,14 +47,6 @@ function BeerList({ navigation }) {
           <Text className="text-black text-lg font-bold">Breweries</Text>
         </TouchableOpacity>
       </View>
-
-      {/* <TextInput
-        placeholder="Search beers..."
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-        className="bg-white p-3 rounded-lg mb-6 border border-gray-300"
-        placeholderTextColor="#888"
-      /> */}
 
       <View className="flex-row flex-wrap space-between">
         {beers.map((beer) => (

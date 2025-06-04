@@ -7,14 +7,11 @@ const defaultBeerImage = require("../../../../assets/images/default-brewery-imag
 
 function BreweryList({ navigation }) {
   const [breweries, setBrewery] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  //const [brewery, setBrewery] = useState("");
 
   useEffect(() => {
     const breweryRef = collection(FIRESTORE_DB, "breweries");
     getDocs(breweryRef)
       .then((querySnapshot) => {
-        //console.log(querySnapshot.docs[0].data())
         let breweries = [];
         let newBrewery = {};
         querySnapshot.docs.map((doc) => {
@@ -50,14 +47,6 @@ function BreweryList({ navigation }) {
           <Text className="text-black text-lg font-bold">Breweries</Text>
         </TouchableOpacity>
       </View>
-
-      {/* <TextInput
-        placeholder="Search beers..."
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-        className="bg-white p-3 rounded-lg mb-6 border border-gray-300"
-        placeholderTextColor="#888"
-      /> */}
 
       <View className="flex-row flex-wrap space-between">
         {breweries.map((brewery) => (
@@ -95,7 +84,9 @@ function BreweryList({ navigation }) {
               </Text>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate("Brewery", { id: brewery.id })}
+                onPress={() =>
+                  navigation.navigate("Brewery", { id: brewery.id })
+                }
                 className="bg-amber-700 rounded px-3 py-1.5 self-start"
               >
                 <Text className="text-white font-semibold">View More</Text>
