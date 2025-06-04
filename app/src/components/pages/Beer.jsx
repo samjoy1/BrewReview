@@ -1,17 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { Heart, Share2 } from "lucide-react-native";
 import { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  Share,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import {
+  BeerImage,
+  BeerReviews,
+  Header,
+  InfoButtons,
+  ShareButton,
+} from "../beer/index";
 
 // TO DO BUT NEED TO WAIT
 // - dynamically get the required information from the database
@@ -20,9 +19,17 @@ import Toast from "react-native-toast-message";
 // TO TELL TEAM ABOUT
 // - toast being a global thing we can use
 
-// 7 - separate everything out in to components, handler funcs etc
-
 function Beer() {
+    
+  // placeholder data, to be replaced once databases have all required info
+  const name = "Awesome Brew";
+  const image =
+    "https://imgs.search.brave.com/HTnfzB4GPTeNE42Sm6aAH116T7QcNedDW2gE4mTiaks/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTQ1/ODY0NTU5L3Bob3Rv/L3VzYS1uZXctamVy/c2V5LWhhbmQtcG91/cmluZy1iZWVyLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1F/Y0R2MXRqbjM1eEJt/amtUR0dkMmRTYk9P/eWZ1U0dTSWhlNUtM/bE5xSjFVPQ";
+  const type = "IPA";
+  const country = "Germany";
+  const rating = 4.5;
+  const brewery = "Berlin Brewery";
+
   // HOOKS
   const [liked, setLiked] = useState(false);
   const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
@@ -40,13 +47,12 @@ function Beer() {
   const navigation = useNavigation();
 
   // HANDLER FUNCTIONS
-  function handlePressHeartButton() {
-    setLiked(!liked);
-  }
-
-  // need to use params to send the user to the correct brewery page when the database is live
   function handlePressBrewery() {
     navigation.navigate("Brewery");
+  }
+
+  function handlePressHeartButton() {
+    setLiked(!liked);
   }
 
   // should go to all beers filtered by country
@@ -92,7 +98,6 @@ function Beer() {
     });
   }
 
-  // currently just sends a string of that thing but i also want to send a link to the individual beer so add that
   function handleShare() {
     // this will be changed later to be dynamic
     const beerID = "awesome-brew";
@@ -123,15 +128,6 @@ function Beer() {
       });
   }
 
-  // placeholder data, to be replaced once databases have all required info
-  const name = "Awesome Brew";
-  const image =
-    "https://imgs.search.brave.com/HTnfzB4GPTeNE42Sm6aAH116T7QcNedDW2gE4mTiaks/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTQ1/ODY0NTU5L3Bob3Rv/L3VzYS1uZXctamVy/c2V5LWhhbmQtcG91/cmluZy1iZWVyLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1F/Y0R2MXRqbjM1eEJt/amtUR0dkMmRTYk9P/eWZ1U0dTSWhlNUtM/bE5xSjFVPQ";
-  const type = "IPA";
-  const country = "Germany";
-  const rating = 4.5;
-  const brewery = "Berlin Brewery";
-
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <ScrollView
@@ -139,113 +135,32 @@ function Beer() {
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* HEADER */}
-        <View className="flex-row justify-between items-center mb-4">
-          <Text className="text-xl font-bold">{name}</Text>
-          <TouchableOpacity onPress={handlePressHeartButton}>
-            <Heart
-              size={28}
-              color={liked ? "red" : "gray"}
-              fill={liked ? "red" : "none"}
-            />
-          </TouchableOpacity>
-        </View>
+        <Header
+          name={name}
+          liked={liked}
+          onHeartButtonPress={handlePressHeartButton}
+        />
 
-        {/* IMAGE - have it fit better*/}
-        <View className="w-full h-48 bg-gray-200 rounded-xl justify-center items-center mb-4">
-          <Image
-            source={{
-              uri: image,
-            }}
-            className="w-full h-full"
-            resizeMode="contain"
-          />
-        </View>
+        <BeerImage image={image} />
 
-        {/* FLEX BOX HOLDING TYPE AND COUNTRY */}
-        <View className="flex-row mb-2 px-1">
-          {/* TYPE */}
-          <TouchableOpacity
-            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-            onPress={handlePressType}
-          >
-            <Text className="text-base font-bold text-center">{type}</Text>
-          </TouchableOpacity>
-          {/* COUNTRY */}
-          <TouchableOpacity
-            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-            onPress={handlePressCountry}
-          >
-            <Text className="text-base font-bold text-center">{country}</Text>
-          </TouchableOpacity>
-        </View>
+        <InfoButtons
+          type={type}
+          country={country}
+          rating={rating}
+          brewery={brewery}
+          onTypeButtonPress={handlePressType}
+          onCountryButtonPress={handlePressCountry}
+          onRatingButtonPress={handlePressRating}
+          onBreweryButtonPress={handlePressBrewery}
+        />
 
-        {/* FLEX BOX HOLDING RATING AND BREWERY */}
-        <View className="flex-row mb-4 px-1">
-          {/* RATING */}
+        <BeerReviews
+          reviews={reviews}
+          onPostReviewButtonPress={handlePressPostReview}
+          onVoteButtonPress={handleVote}
+        />
 
-          <TouchableOpacity
-            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-            onPress={handlePressRating}
-          >
-            <Text className="text-base font-bold text-center">{rating}</Text>
-          </TouchableOpacity>
-          {/* BREWERY */}
-          <TouchableOpacity
-            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-            onPress={handlePressBrewery}
-          >
-            <Text className="text-base font-bold text-center">{brewery}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* REVIEWS - insert beer icon rating system*/}
-        <View className="bg-white border border-gray-300 rounded-xl p-4 mb-4">
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-xl font-bold mb-2">Reviews</Text>
-
-            <TouchableOpacity
-              onPress={handlePressPostReview}
-              className="bg-green-500 px-3 py-1 rounded"
-            >
-              <Text className="text-black text-sm font-semibold">Post Review</Text>
-            </TouchableOpacity>
-          </View>
-
-          {reviews.map((review) => (
-            <View
-              key={review.id}
-              className="border-b border-gray-200 mb-2 pb-2"
-            >
-              <Text className="font-semibold text-lg">{review.title}</Text>
-              <Text className="text-gray-600 text-sm mb-1">
-                By {review.user} on {review.date_created} --- Rating:{" "}
-                {review.rating}
-              </Text>
-              <Text className="mb-2">{review.body}</Text>
-              <View className="flex-row items-center justify-between">
-                <Text>Votes: {review.votes}</Text>
-                <TouchableOpacity
-                  className="bg-blue-500 px-3 py-1 rounded"
-                  onPress={() => handleVote(review.id)}
-                >
-                  <Text className="text-white">Vote +1</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* SHARE */}
-        <View className="items-end">
-          <TouchableOpacity
-            className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2"
-            onPress={handleShare}
-          >
-            <Share2 size={20} color="gray" />
-            <Text className="ml-2 text-gray-700">Share</Text>
-          </TouchableOpacity>
-        </View>
+        <ShareButton onShareButtonPress={handleShare} />
       </ScrollView>
     </SafeAreaView>
   );
