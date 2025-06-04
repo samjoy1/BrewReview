@@ -13,9 +13,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-// BLOCKERS
-// not able to get dynamic info from database until it is populated
-
 // TO DO BUT NEED TO WAIT
 // - dynamically get the required information from the database
 // - use params to take user to correct brewery page
@@ -23,17 +20,12 @@ import Toast from "react-native-toast-message";
 // TO TELL TEAM ABOUT
 // - toast being a global thing we can use
 
-// TO DO AND CAN BE DONE SOON
-// 3 - sort out reviews, also add a post review button which redirects user to post a review page
-// 3 - prevent the user from
-// 4 - maybe have country be an on press touchable opacity that re directs the user to a page that has beers filtered by their country
-// 5 - have type take the user to a list of beers filtered by that type
-// 6 - have the rating take the user to a list of beers filtered by rating
 // 7 - separate everything out in to components, handler funcs etc
 
 function Beer() {
   // HOOKS
   const [liked, setLiked] = useState(false);
+  const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
   const [reviews, setReviews] = useState([
     {
       id: 1,
@@ -57,16 +49,47 @@ function Beer() {
     navigation.navigate("Brewery");
   }
 
+  // should go to all beers filtered by country
+  function handlePressCountry() {
+    navigation.navigate("Search");
+  }
+
+  // should go to all beers filtered by type
+  function handlePressType() {
+    navigation.navigate("Search");
+  }
+
+  // should go to all beers filtered by high to low rating
+  function handlePressRating() {
+    navigation.navigate("Search");
+  }
+
   function handlePressPostReview() {
     navigation.navigate("PostReview");
   }
 
   function handleVote(reviewId) {
+    if (hasVotedOnReviewID.includes(reviewId)) {
+      Toast.show({
+        type: "info",
+        text1: "You have already voted on this review",
+        position: "bottom",
+      });
+      return;
+    }
+
     setReviews((prevReviews) =>
       prevReviews.map((review) =>
         review.id === reviewId ? { ...review, votes: review.votes + 1 } : review
       )
     );
+
+    setHasVotedOnReviewID((prevReviews) => [...prevReviews, reviewId]);
+    Toast.show({
+      type: "success",
+      text1: "Vote added",
+      position: "bottom",
+    });
   }
 
   // currently just sends a string of that thing but i also want to send a link to the individual beer so add that
@@ -112,8 +135,9 @@ function Beer() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <ScrollView
-        className="p-4 bg-gray-100 min-h-screen pb-32"
-        contentContainerStyle={{ flexGrow: 1 }}
+        className="p-4"
+        contentContainerStyle={{ paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
       >
         {/* HEADER */}
         <View className="flex-row justify-between items-center mb-4">
@@ -139,43 +163,52 @@ function Beer() {
         </View>
 
         {/* FLEX BOX HOLDING TYPE AND COUNTRY */}
-        <View className="flex-row justify-between mb-2 space-x-2">
+        <View className="flex-row mb-2 px-1">
           {/* TYPE */}
-          <View className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center">
-            <Text className="text-xl font-bold">{type}</Text>
-          </View>
+          <TouchableOpacity
+            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+            onPress={handlePressType}
+          >
+            <Text className="text-base font-bold text-center">{type}</Text>
+          </TouchableOpacity>
           {/* COUNTRY */}
-          <View className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center">
-            <Text className="text-xl font-bold">{country}</Text>
-          </View>
+          <TouchableOpacity
+            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+            onPress={handlePressCountry}
+          >
+            <Text className="text-base font-bold text-center">{country}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* FLEX BOX HOLDING RATING AND BREWERY */}
-        <View className="flex-row justify-between mb-4 space-x-2">
+        <View className="flex-row mb-4 px-1">
           {/* RATING */}
-          <View className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center">
-            <Text className="text-xl font-bold">{rating}</Text>
-          </View>
+
+          <TouchableOpacity
+            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+            onPress={handlePressRating}
+          >
+            <Text className="text-base font-bold text-center">{rating}</Text>
+          </TouchableOpacity>
           {/* BREWERY */}
-          <View>
-            <TouchableOpacity
-              className="flex-1 bg-white border border-gray-300 rounded-lg p-2 items-center"
-              onPress={handlePressBrewery}
-            >
-              <Text className="text-xl font-bold">{brewery}</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+            onPress={handlePressBrewery}
+          >
+            <Text className="text-base font-bold text-center">{brewery}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* REVIEWS - insert beer icon rating system*/}
         <View className="bg-white border border-gray-300 rounded-xl p-4 mb-4">
-          <Text className="text-xl font-bold mb-2">Reviews</Text>
-          <View className="p-4">
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-xl font-bold mb-2">Reviews</Text>
+
             <TouchableOpacity
               onPress={handlePressPostReview}
               className="bg-green-500 px-3 py-1 rounded"
             >
-              <Text className="text-black text-lg">Post Review</Text>
+              <Text className="text-black text-sm font-semibold">Post Review</Text>
             </TouchableOpacity>
           </View>
 
