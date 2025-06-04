@@ -92,7 +92,7 @@ function BeerList({ navigation }) {
 
               <TouchableOpacity
                 onPress={() => navigation.navigate("Beer", { id: beer.id })}
-                className="bg-blue-600 rounded px-3 py-1.5 self-start"
+                className="bg-amber-700 rounded px-3 py-1.5 self-start"
               >
                 <Text className="text-white font-semibold">View More</Text>
               </TouchableOpacity>
