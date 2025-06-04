@@ -11,13 +11,6 @@ function Home({ navigation }) {
       >
         <Text>Goodbye</Text>
       </Button>
-      <Button
-        onPress={() => {
-          navigation.navigate("Search");
-        }}
-      >
-        <Text>Search</Text>
-      </Button>
 
       <Button
         onPress={() => {

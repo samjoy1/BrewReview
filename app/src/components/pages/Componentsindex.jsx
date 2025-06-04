@@ -2,6 +2,7 @@
 // components
 import Beer from "./Beer";
 import BeerList from "./BeerList"
+import BreweryList from "./BreweryList"
 import Brewery from "./Brewery";
 import Camera from "./Camera";
 import Categories from "./Categories";
@@ -17,4 +18,4 @@ import User from "./User";
 import Users from "./Users";
 
 
-module.exports = { Beer, BeerList, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users }
+module.exports = { Beer, BeerList, BreweryList, Brewery, Camera, Categories, Home, Login, Map, PostBeer, PostReview, Profile, Search, Settings, User, Users }

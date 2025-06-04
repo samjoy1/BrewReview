@@ -1,4 +1,3 @@
-//test line for gitHub branch name change
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -41,21 +40,31 @@ function BeerList({ navigation }) {
   return (
     <ScrollView className="bg-gray-100 min-h-screen p-4">
       <View className="flex-row justify-center mb-6">
-        <TouchableOpacity className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4">
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("BeerList");
+          }}
+          className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4"
+        >
           <Text className="text-black text-lg font-bold">Beers</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4">
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("BreweryList");
+          }}
+          className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4"
+        >
           <Text className="text-black text-lg font-bold">Breweries</Text>
         </TouchableOpacity>
       </View>
 
-      <TextInput
+      {/* <TextInput
         placeholder="Search beers..."
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
         className="bg-white p-3 rounded-lg mb-6 border border-gray-300"
         placeholderTextColor="#888"
-      />
+      /> */}
 
       <View className="flex-row flex-wrap space-between">
         {beers.map((beer) => (

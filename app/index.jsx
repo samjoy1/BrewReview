@@ -10,6 +10,7 @@ import {
   Categories,
   Home,
   BeerList,
+  BreweryList,
   Login,
   Map,
   PostBeer,
@@ -29,6 +30,7 @@ export default function Index() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
       <Stack.Screen name="BeerList" component={BeerList} />
+      <Stack.Screen name="BreweryList" component={BreweryList} />
       <Stack.Screen name="Brewery" component={Brewery} />
       <Stack.Screen name="Camera" component={Camera} />
       <Stack.Screen name="Categories" component={Categories} />
