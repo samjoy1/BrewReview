@@ -5,12 +5,12 @@ import React from "react";
 // components
 import {
   Beer,
+  BeerList,
   Brewery,
+  BreweryList,
   Camera,
   Categories,
   Home,
-  BeerList,
-  BreweryList,
   Login,
   Map,
   PostBeer,

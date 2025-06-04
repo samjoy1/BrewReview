@@ -1,4 +1,5 @@
-import { collection, getDocs } from "firebase/firestore";
+import { Picker } from "@react-native-picker/picker";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
@@ -8,24 +9,23 @@ const defaultBeerImage = require("../../../../assets/images/default-beer-image.p
 function BeerList({ navigation }) {
   const [beers, setBeers] = useState([]);
 
+  const [sortField, setSortField] = useState("name");
+  const [sortDirection, setSortDirection] = useState("asc");
+
   useEffect(() => {
     const beerRef = collection(FIRESTORE_DB, "beers");
-    getDocs(beerRef)
-      .then((querySnapshot) => {
-        let compiledBeers = [];
-        let newBeer = {};
-        querySnapshot.docs.map((doc) => {
-          newBeer = { ...doc.data() };
-          newBeer.id = doc.id;
-          compiledBeers.push(newBeer);
-        });
+    const beerQuery = query(beerRef, orderBy(sortField, sortDirection));
 
-        return compiledBeers;
-      })
-      .then((result) => {
-        setBeers(result);
+    getDocs(beerQuery).then((querySnapshot) => {
+      let compiledBeers = [];
+      querySnapshot.docs.forEach((doc) => {
+        let newBeer = { ...doc.data(), id: doc.id };
+        compiledBeers.push(newBeer);
       });
-  }, []);
+
+      setBeers(compiledBeers);
+    });
+  }, [sortField, sortDirection]);
 
   return (
     <ScrollView className="bg-gray-100 min-h-screen p-4">
@@ -46,6 +46,26 @@ function BeerList({ navigation }) {
         >
           <Text className="text-black text-lg font-bold">Breweries</Text>
         </TouchableOpacity>
+      </View>
+
+      <View className="bg-white rounded-lg p-2 mb-4">
+        <Text className="font-semibold text-gray-700 mb-1">Sort by:</Text>
+        <Picker
+          selectedValue={sortField}
+          onValueChange={(itemValue) => setSortField(itemValue)}
+        >
+          <Picker.Item label="Votes" value="votes" />
+          <Picker.Item label="Name" value="name" />
+          <Picker.Item label="ABV" value="percentage" />
+        </Picker>
+
+        <Picker
+          selectedValue={sortDirection}
+          onValueChange={(itemValue) => setSortDirection(itemValue)}
+        >
+          <Picker.Item label="Descending" value="desc" />
+          <Picker.Item label="Ascending" value="asc" />
+        </Picker>
       </View>
 
       <View className="flex-row flex-wrap space-between">

@@ -97,6 +97,6 @@ function BreweryList({ navigation }) {
       </View>
     </ScrollView>
   );
-}
+};
 
 export default BreweryList;
