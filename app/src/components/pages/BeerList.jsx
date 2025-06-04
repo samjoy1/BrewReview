@@ -1,13 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
