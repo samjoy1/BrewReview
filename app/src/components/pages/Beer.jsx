@@ -7,17 +7,16 @@ import Toast from "react-native-toast-message";
 import {
   BeerImage,
   BeerReviews,
-  Header,
+  IndividualBeerHeader,
   InfoButtons,
   ShareButton,
 } from "../beer/Index";
+import Header from "./HeaderNav";
+import Navbar from "./NavBar";
 
 // TO DO BUT NEED TO WAIT
 // - dynamically get the required information from the database
 // - use params to take user to correct brewery page
-
-// TO TELL TEAM ABOUT
-// - toast being a global thing we can use
 
 function Beer() {
   // placeholder data, to be replaced once databases have all required info
@@ -129,12 +128,13 @@ function Beer() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
+      <Header />
       <ScrollView
         className="p-4"
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <Header
+        <IndividualBeerHeader
           name={name}
           liked={liked}
           onHeartButtonPress={handlePressHeartButton}
@@ -161,6 +161,7 @@ function Beer() {
 
         <ShareButton onShareButtonPress={handleShare} />
       </ScrollView>
+      <Navbar />
     </SafeAreaView>
   );
 }
