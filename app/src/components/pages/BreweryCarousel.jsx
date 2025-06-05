@@ -34,14 +34,13 @@ export default function BreweryCarousel() {
   );
 
   return (
-    <View className="py-6">
+    <View className="py-1">
       <FlatList
         data={breweries}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="mt-6"
       />
     </View>
   );
