@@ -1,7 +1,9 @@
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
-import { FIRESTORE_DB } from "../firebaseconfig";
+import { FIREBASE_APP, FIRESTORE_DB } from "../firebaseconfig";
 
 import {
   ActivityIndicator,
@@ -17,6 +19,45 @@ function Profile() {
   const { userId } = useLocalSearchParams();
   const router = useRouter();
 
+  const pickImageAndUpload = async () => {
+    // Ask for permissions
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert("Permission to access media library is required!");
+      return;
+    }
+
+    // Pick image
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const image = result.assets[0];
+      const response = await fetch(image.uri);
+      const blob = await response.blob();
+
+      // Upload to Firebase Storage
+      const storage = getStorage(FIREBASE_APP);
+      const storageRef = ref(storage, `avatars/${userId}.jpg`);
+      await uploadBytes(storageRef, blob);
+
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Update Firestore user profile
+      const userRef = doc(FIRESTORE_DB, "users", userId);
+      await updateDoc(userRef, {
+        avatar_img_url: downloadURL,
+      });
+
+      // Update state to re-render
+      setUser({ ...user, avatar_img_url: downloadURL });
+    }
+  };
   const [user, setUser] = useState(null);
   useEffect(() => {
     async function fetchUser() {
@@ -54,7 +95,10 @@ function Profile() {
           <Icon name="settings" type="feather" color="#000" />
         </TouchableOpacity>
 
-        <View style={styles.avatarContainer}>
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={pickImageAndUpload}
+        >
           <Avatar
             rounded
             size="large"
@@ -76,7 +120,10 @@ function Profile() {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
+        <Text style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
+          Tap to change avatar
+        </Text>
       </View>
 
       {/* Sections */}
