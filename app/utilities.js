@@ -13,7 +13,23 @@ export async function fetchData (collection, id) {
     } )
 }
 
-export async function getUsernames (setFunction) {
+// getting only the ids
+export async function getBeerIds (setFunction) { // NOTE: setFunction is not required as an input
+    const docSnap = await getDocs(collection(FIRESTORE_DB, "beers"));
+
+    let beerIds = []
+    try {
+        docSnap.forEach((doc) => {
+            beerIds.push(doc.data().id)
+        })
+        if (setFunction) setFunction(beerIds)
+        return beerIds
+    }
+    catch {console.log("Couldn't retrieve that data!")}
+    finally {}
+}
+
+export async function getUsernames (setFunction) { // NOTE: setFunction is not required as an input
     const docSnap = await getDocs(collection(FIRESTORE_DB, "users"));
 
     let usernamesArray = []
@@ -24,9 +40,19 @@ export async function getUsernames (setFunction) {
         if (setFunction) setFunction(usernamesArray)
         return usernamesArray
     }
-    catch {}
+    catch {console.log("Couldn't retrieve that data!")}
     finally {}
 }
+
+getUsernames()
+.then((usernames) => {
+    console.log(usernames)
+})
+
+getBeerIds()
+.then((beers) => {
+    console.log(beers)
+})
 
 
 
