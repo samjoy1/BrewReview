@@ -4,7 +4,7 @@ import { FIRESTORE_DB } from "../firebaseconfig.js";
 
 
 // fetch data
-async function fetchData (collection, id) {
+export async function fetchData (collection, id) {
     return new Promise(async function (resolve, reject) {
         const docRef = doc(FIRESTORE_DB, collection, id);
         const docSnap = await getDoc(docRef); 
@@ -13,7 +13,7 @@ async function fetchData (collection, id) {
     } )
 }
 
-async function getUsernames () {
+export async function getUsernames (setFunction) {
     const docSnap = await getDocs(collection(FIRESTORE_DB, "users"));
 
     let usernamesArray = []
@@ -21,6 +21,7 @@ async function getUsernames () {
         docSnap.forEach((doc) => {
             usernamesArray.push(doc.data().username)
         }) 
+        if (setFunction) setFunction(usernamesArray)
         return usernamesArray
     }
     catch {}
@@ -30,7 +31,7 @@ async function getUsernames () {
 
 
 // fetch data by id
-function getBeerById (beer_id, setFunction) {
+export function getBeerById (beer_id, setFunction) {
     return fetchData("beers", beer_id)
     .then((beer) => { 
         if (setFunction) setFunction(beer.data())
@@ -38,7 +39,7 @@ function getBeerById (beer_id, setFunction) {
     })
 }
 
-function getBreweryById (brewery_id, setFunction) {
+export function getBreweryById (brewery_id, setFunction) {
     return fetchData("breweries", brewery_id)
     .then((brewery) => { 
         if (setFunction) setFunction(brewery.data())
@@ -46,7 +47,7 @@ function getBreweryById (brewery_id, setFunction) {
     })
 }
 
-function getCategoryById (category_id, setFunction) {
+export function getCategoryById (category_id, setFunction) {
     return fetchData("categories", category_id)
     .then((category) => { 
         if (setFunction) setFunction(category.data()) 
@@ -54,7 +55,7 @@ function getCategoryById (category_id, setFunction) {
     })
 }
 
-function getReviewById (review_id, setFunction) {
+export function getReviewById (review_id, setFunction) {
     return fetchData("reviews", review_id)
     .then((review) => { 
         if (setFunction) setFunction(review.data()) 
@@ -62,7 +63,7 @@ function getReviewById (review_id, setFunction) {
     })
 }
 
-function getUserByUsername (username, setFunction) {
+export function getUserByUsername (username, setFunction) {
     return fetchData("users", username)
     .then((user) => { 
         if (setFunction) setFunction(user.data()) 
@@ -73,7 +74,7 @@ function getUserByUsername (username, setFunction) {
 
 
 // validation
-function hasUserVoted (user_id, review_id) { // user_id: the id of the user that is voting for a review | review_id: the review that they are voting for
+export function hasUserVoted (user_id, review_id) { // user_id: the id of the user that is voting for a review | review_id: the review that they are voting for
     let review = {}
     return getReviewById(review_id, (result) => {
             review = result
@@ -86,7 +87,7 @@ function hasUserVoted (user_id, review_id) { // user_id: the id of the user that
     })
 }
 
-function hasUserReviewed (user_id, beer_id) { // user_id: the id of the user posting the review | beer_id: the beer they are posting a review for
+export function hasUserReviewed (user_id, beer_id) { // user_id: the id of the user posting the review | beer_id: the beer they are posting a review for
     return getBeerById(beer_id)
     .then((beer) => {
         if (beer.reviews.includes(user_id)) return true
@@ -94,7 +95,7 @@ function hasUserReviewed (user_id, beer_id) { // user_id: the id of the user pos
     })
 }
 
-function isUserFollowing (activeuser_username, userToFollow_username) { // user_id: the id of the user that wants to follow another user | userToFollow_id: the id of the user they want to follow
+export function isUserFollowing (activeuser_username, userToFollow_username) { // user_id: the id of the user that wants to follow another user | userToFollow_id: the id of the user they want to follow
     getUserByUsername(activeuser_username)
     .then((user) => {
         if (user.following.includes(userToFollow_username)) return true
@@ -103,7 +104,7 @@ function isUserFollowing (activeuser_username, userToFollow_username) { // user_
     return
 }
     
-function followUnfollowUser (activeuser_username, userToFollow_username) {
+export function followUnfollowUser (activeuser_username, userToFollow_username) {
     return getUserByUsername(activeuser_username)
     .then((user) => {
         if (user.following.includes(userToFollow_username)) {
@@ -128,7 +129,7 @@ function followUnfollowUser (activeuser_username, userToFollow_username) {
 
 
 // Profile
-function isUsernameTaken (usernameString) {
+export function isUsernameTaken (usernameString) {
     return getUsernames()
     .then((usernames) => {
         if (usernames.includes(usernameString)) {
@@ -137,18 +138,78 @@ function isUsernameTaken (usernameString) {
     })
 }
 
-
-function isPasswordValid () {
+export function isUsernameValid () {
     return
 }
 
-function isEmailValid () {
+export function isPasswordValid () {
+    return
+}
+
+export function isEmailValid () {
     return
 }
 
 
-// module.exports = { 
-//     getBeerById, getBreweryById, getCategoryById, getReviewById, getUserByUsername,
-//     hasUserVoted, hasUserReviewed, isUserFollowing,
-//     isUsernameTaken, isPasswordValid, isEmailValid
-//  }
+
+// Date & Time
+export function getDate (unixTimestamp, type) { // 
+    const date = new Date(unixTimestamp * 1000)
+
+    switch (type) {
+        case "full":
+            return date.toString()
+        case "datetime":
+            return date.toLocaleString()
+        case "date":
+            return date.toLocaleDateString()
+        case "time":
+            return date.toLocaleTimeString()
+        case "year":
+            return date.getFullYear()
+        case "month":
+            switch (date.getMonth()) {
+                case 1:
+                    return "January"
+                case 2:
+                    return "February"
+                case 3:
+                    return "March"
+                case 4:
+                    return "April"
+                case 5:
+                    return "May"
+                case 6:
+                    return "June"
+                case 7:
+                    return "July"
+                case 8:
+                    return "August"
+                case 9:
+                    return "September"
+                case 10:
+                    return "October"
+                case 11:
+                    return "November"
+                case 12:
+                    return "December"
+            }
+        case "day":
+            switch (date.getDay()) {
+                case 1:
+                    return "Monday"
+                case 2:
+                    return "Tuesday"
+                case 3:
+                    return "Wednesday"
+                case 4:
+                    return "Thursday"
+                case 5:
+                    return "Friday"
+                case 6:
+                    return "Saturday"
+                case 7:
+                    return "Sunday"
+            }
+    }
+}
