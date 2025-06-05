@@ -1,13 +1,13 @@
-import React, { useState } from "react"
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Image,
   Modal,
   Pressable,
-  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"
 
 export default function Header() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -32,7 +32,7 @@ export default function Header() {
           className="w-28 h-10 rounded-full"
         />
       </TouchableOpacity>
-
+      {/*TODO: the Profile button below is not rendering. Needs fixing */}
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
         <Image
           source={{
