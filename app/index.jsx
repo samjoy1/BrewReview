@@ -1,12 +1,13 @@
 import "@/global.css";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-const Stack = createNativeStackNavigator();
 
 // components
 import {
   Beer,
+  BeerList,
   Brewery,
+  BreweryList,
   Camera,
   Categories,
   Home,
@@ -21,11 +22,15 @@ import {
   Users,
 } from "./src/components/pages/Componentsindex";
 
+const Stack = createNativeStackNavigator();
+
 export default function Index() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
+      <Stack.Screen name="BeerList" component={BeerList} />
+      <Stack.Screen name="BreweryList" component={BreweryList} />
       <Stack.Screen name="Brewery" component={Brewery} />
       <Stack.Screen name="Camera" component={Camera} />
       <Stack.Screen name="Categories" component={Categories} />
