@@ -23,7 +23,7 @@ import {
 
 export default function Index() {
   return (
-    <Stack.Navigator initialRouteName="Beer">
+    <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
       <Stack.Screen name="Brewery" component={Brewery} />

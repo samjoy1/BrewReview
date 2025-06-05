@@ -1,5 +1,5 @@
 import { FIRESTORE_DB } from "@/firebaseconfig";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import {
   collection,
@@ -23,7 +23,17 @@ import {
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-// - use params to take user to correct brewery page
+// will throw an error at the moment because it isn't receiving a beer id from another page yet
+
+// is set up to correctly receive a beerID via navigation params, from list of beers now just need to have it correctly navigate here by doing the following:
+// navigation.navigate("Beer", { beerID: beer.id })
+
+/*
+TO DO 
+1 - use params to go to the correct breweries page
+2 - look at beer list and make sure it links correctly to this
+3 - 
+*/
 
 function Beer() {
   // HOOKS
@@ -32,11 +42,13 @@ function Beer() {
   const [beerData, setBeerData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { beerID } = route.params || {};
 
   // FETCHING THE BEER DATA
   useEffect(() => {
-    const id = "313_craft"; // get this later from route.params once katys page has been approved and merged
-    const docRef = doc(FIRESTORE_DB, "beers", id);
+    const currentBeerID = beerID;
+    const docRef = doc(FIRESTORE_DB, "beers", currentBeerID);
 
     getDoc(docRef)
       .then((docSnap) => {
@@ -60,13 +72,13 @@ function Beer() {
           position: "bottom",
         });
       });
-  }, []);
+  }, [beerID]);
 
   // FETCHING REVIEW DATA
   useEffect(() => {
-    const id = "313_craft"; // get this later from route.params...
+    const currentBeerID = beerID;
     const reviewsRef = collection(FIRESTORE_DB, "reviews");
-    const q = query(reviewsRef, where("beer_id", "==", id));
+    const q = query(reviewsRef, where("beer_id", "==", currentBeerID));
 
     getDocs(q)
       .then((querySnapshot) => {
@@ -85,7 +97,7 @@ function Beer() {
           position: "bottom",
         });
       });
-  }, []);
+  }, [beerID]);
 
   // USING THE BEER DATA
   const name = beerData?.name || "Loading";
@@ -148,8 +160,6 @@ function Beer() {
   }
 
   function handleShare() {
-    // this will be changed later to be dynamic
-    const beerID = "awesome-brew";
     // currently shares a development url, won't work without expo go
     const url = Linking.createURL(`/beer/${beerID}`);
 
