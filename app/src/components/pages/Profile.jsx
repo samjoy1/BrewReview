@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import {
   ScrollView,
   StyleSheet,
@@ -7,6 +9,25 @@ import {
 } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 function Profile({ navigation }) {
+  const [user, setUser] = useState({
+    username: "Jesus G C",
+    followersCount: 0,
+    followingCount: 0,
+    avatarUri: null,
+  });
+
+  useEffect(() => {
+    async function fetchUser() {
+      setUser({
+        username: "Manu G C",
+        followersCount: 42,
+        followingCount: 7,
+        avatarUri: "https://avatar.iran.liara.run/public",
+      });
+    }
+    fetchUser();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -14,25 +35,31 @@ function Profile({ navigation }) {
         <TouchableOpacity>
           <Icon name="settings" type="feather" color="#000" />
         </TouchableOpacity>
+
         <View style={styles.avatarContainer}>
           <Avatar
             rounded
             size="large"
             icon={{ name: "user", type: "feather" }}
+            source={user.avatarUri ? { uri: user.avatarUri } : null}
             containerStyle={styles.avatar}
           />
-          <Text style={styles.username}>Manu G C</Text>
+          <Text style={styles.username}>{user.username}</Text>
           <View style={styles.statsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("FollowersPage")}
             >
-              <Text style={styles.linkText}>0 followers</Text>
+              <Text style={styles.linkText}>
+                {user.followersCount} followers
+              </Text>
             </TouchableOpacity>
             <Text style={styles.dotSeparator}> · </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("FollowingPage")}
             >
-              <Text style={styles.linkText}>0 following</Text>
+              <Text style={styles.linkText}>
+                {user.followingCount} following
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
