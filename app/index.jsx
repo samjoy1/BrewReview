@@ -2,27 +2,29 @@ import "@/global.css";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
+const Stack = createNativeStackNavigator();
+
 // components
 import {
   Beer,
-  BeerList,
   Brewery,
-  BreweryList,
   Camera,
   Categories,
+  FavouriteBeers,
+  FollowersPage,
+  FollowingPage,
   Home,
   Login,
   Map,
   PostBeer,
   PostReview,
   Profile,
+  RecentReviews,
   Search,
   Settings,
   User,
   Users,
 } from "./src/components/pages/Componentsindex";
-
-const Stack = createNativeStackNavigator();
 
 export default function Index() {
   return (
@@ -43,6 +45,10 @@ export default function Index() {
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="User" component={User} />
       <Stack.Screen name="Users" component={Users} />
+      <Stack.Screen name="RecentReviews" component={RecentReviews} />
+      <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+      <Stack.Screen name="FollowersPage" component={FollowersPage} />
+      <Stack.Screen name="FollowingPage" component={FollowingPage} />
     </Stack.Navigator>
   );
 }
