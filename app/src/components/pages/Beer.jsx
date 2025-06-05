@@ -1,6 +1,8 @@
+import { FIRESTORE_DB } from "@/firebaseconfig";
 import { useNavigation } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -19,18 +21,10 @@ import Navbar from "./NavBar";
 // - use params to take user to correct brewery page
 
 function Beer() {
-  // placeholder data, to be replaced once databases have all required info
-  const name = "Tasty Bev";
-  const image =
-    "https://imgs.search.brave.com/HTnfzB4GPTeNE42Sm6aAH116T7QcNedDW2gE4mTiaks/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTQ1/ODY0NTU5L3Bob3Rv/L3VzYS1uZXctamVy/c2V5LWhhbmQtcG91/cmluZy1iZWVyLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1F/Y0R2MXRqbjM1eEJt/amtUR0dkMmRTYk9P/eWZ1U0dTSWhlNUtM/bE5xSjFVPQ";
-  const type = "IPA";
-  const country = "Germany";
-  const rating = 4.5;
-  const brewery = "Berlin Brewery";
-
   // HOOKS
   const [liked, setLiked] = useState(false);
   const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
+  const [beerData, setBeerData] = useState(null);
   const [reviews, setReviews] = useState([
     {
       id: 1,
@@ -43,6 +37,44 @@ function Beer() {
     },
   ]);
   const navigation = useNavigation();
+
+  // FETCHING THE BEER DATA
+  useEffect(() => {
+    const id = "carlsberg_export"; // get this later from route.params once katys page has been approved and merged
+    const docRef = doc(FIRESTORE_DB, "beers", id);
+
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          setBeerData(docSnap.data);
+          console.log("beer data: ", data)
+        } else {
+          console.log("Unable to find more information on that Beer!");
+          Toast.show({
+            type: "error",
+            text1: "Unable to display more information on this beer",
+            position: "bottom",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching beer", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to fetch beer data",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
+  }, []);
+
+  // USING THE BEER DATA
+  const name = beerData?.name || "Loading";
+  const image = beerData?.image;
+  const type = beerData?.category;
+  const country = beerData?.country;
+  const rating = beerData?.percentage;
+  const brewery = beerData?.brewery;
 
   // HANDLER FUNCTIONS
   function handlePressBrewery() {
