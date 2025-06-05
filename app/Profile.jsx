@@ -1,6 +1,10 @@
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { FIRESTORE_DB } from "../firebaseconfig";
 
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,25 +12,39 @@ import {
   View,
 } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
-function Profile({ navigation }) {
-  const [user, setUser] = useState({
-    username: "Jesus G C",
-    followersCount: 0,
-    followingCount: 0,
-    avatarUri: null,
-  });
 
+function Profile() {
+  const { userId } = useLocalSearchParams();
+  const router = useRouter();
+
+  const [user, setUser] = useState(null);
   useEffect(() => {
     async function fetchUser() {
-      setUser({
-        username: "Manu G C",
-        followersCount: 42,
-        followingCount: 7,
-        avatarUri: "https://avatar.iran.liara.run/public",
-      });
+      try {
+        const docRef = doc(FIRESTORE_DB, "users", userId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setUser(docSnap.data());
+        } else {
+          console.log("No user profile found!");
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
     }
+
     fetchUser();
-  }, []);
+  }, [userId]);
+
+  // 💡 Don't render the profile until the user is loaded
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -41,24 +59,20 @@ function Profile({ navigation }) {
             rounded
             size="large"
             icon={{ name: "user", type: "feather" }}
-            source={user.avatarUri ? { uri: user.avatarUri } : null}
+            source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
             containerStyle={styles.avatar}
           />
           <Text style={styles.username}>{user.username}</Text>
           <View style={styles.statsContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("FollowersPage")}
-            >
+            <TouchableOpacity onPress={() => router.push("/FollowersPage")}>
               <Text style={styles.linkText}>
-                {user.followersCount} followers
+                {user.followers.length} followers
               </Text>
             </TouchableOpacity>
             <Text style={styles.dotSeparator}> · </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("FollowingPage")}
-            >
+            <TouchableOpacity onPress={() => router.push("/FollowingPage")}>
               <Text style={styles.linkText}>
-                {user.followingCount} following
+                {user.following.length} following
               </Text>
             </TouchableOpacity>
           </View>
@@ -68,21 +82,21 @@ function Profile({ navigation }) {
       {/* Sections */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("FavouriteBeers")}
+        onPress={() => router.push("/FavouriteBeers")}
       >
         <Text>Favourite beers</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("RecentReviews")}
+        onPress={() => router.push("/RecentReviews")}
       >
         <Text>Your most recent reviews</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("TasteProfile")}
+        onPress={() => router.push("/TasteProfile")}
       >
         <Text>Your taste profile</Text>
       </TouchableOpacity>
