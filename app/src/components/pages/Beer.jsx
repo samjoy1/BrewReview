@@ -1,7 +1,14 @@
 import { FIRESTORE_DB } from "@/firebaseconfig";
 import { useNavigation } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,8 +23,6 @@ import {
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-// TO DO BUT NEED TO WAIT
-// - dynamically get the required information from the database
 // - use params to take user to correct brewery page
 
 function Beer() {
@@ -25,29 +30,18 @@ function Beer() {
   const [liked, setLiked] = useState(false);
   const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
   const [beerData, setBeerData] = useState(null);
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      rating: 4,
-      date_created: "03 June 2025",
-      body: "I like this beer because beer is nice and beer beer beer",
-      title: "My review",
-      user: "Example Beer User",
-      votes: 9,
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
   const navigation = useNavigation();
 
   // FETCHING THE BEER DATA
   useEffect(() => {
-    const id = "carlsberg_export"; // get this later from route.params once katys page has been approved and merged
+    const id = "313_craft"; // get this later from route.params once katys page has been approved and merged
     const docRef = doc(FIRESTORE_DB, "beers", id);
 
     getDoc(docRef)
       .then((docSnap) => {
         if (docSnap.exists()) {
-          setBeerData(docSnap.data);
-          console.log("beer data: ", data)
+          setBeerData(docSnap.data());
         } else {
           console.log("Unable to find more information on that Beer!");
           Toast.show({
@@ -62,6 +56,31 @@ function Beer() {
         Toast.show({
           type: "error",
           text1: "Failed to fetch beer data",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
+  }, []);
+
+  // FETCHING REVIEW DATA
+  useEffect(() => {
+    const id = "313_craft"; // get this later from route.params...
+    const reviewsRef = collection(FIRESTORE_DB, "reviews");
+    const q = query(reviewsRef, where("beer_id", "==", id));
+
+    getDocs(q)
+      .then((querySnapshot) => {
+        const reviewsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setReviews(reviewsData);
+      })
+      .catch((err) => {
+        console.log("Error fetching reviews:", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to fetch reviews",
           text2: err.message,
           position: "bottom",
         });
