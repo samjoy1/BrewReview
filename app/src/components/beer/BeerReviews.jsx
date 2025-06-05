@@ -19,7 +19,7 @@ function BeerReviews({ reviews, onPostReviewButtonPress, onVoteButtonPress }) {
         <View key={review.id} className="border-b border-gray-200 mb-2 pb-2">
           <Text className="font-semibold text-lg">{review.title}</Text>
           <Text className="text-gray-600 text-sm mb-1">
-            By {review.user} on {review.date_created} --- Rating:{" "}
+            By {review.user_id} on {Date(review.created_at)} --- Rating:{" "}
             {review.rating}
           </Text>
           <Text className="mb-2">{review.body}</Text>
