@@ -36,7 +36,7 @@ export default function FeaturedBrewery() {
 
   return (
     <View className="items-center w-full px-4">
-      <View className="bg-yellow-100 border border-yellow-300 rounded-xl p-4 shadow w-full max-w-md">
+      <View className="bg-yellow-500 border border-yellow-300 rounded-xl p-4 shadow w-full max-w-md">
         <Text className="text-lg font-semibold text-center mb-1">
           Featured Brewery
         </Text>

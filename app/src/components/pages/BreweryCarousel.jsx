@@ -24,7 +24,7 @@ export default function BreweryCarousel() {
       className="items-center justify-center px-2"
       style={{ width: cardWidth }}
     >
-      <View className="bg-white border border-gray-300 rounded-xl p-4 shadow w-full h-24">
+      <View className="bg-yellow-500 border border-gray-500 rounded-xl p-4 w-full h-24">
         <Text className="text-base font-bold text-center">{item.name}</Text>
         <Text className="text-xs text-gray-600 text-center mt-1">
           {item.location}

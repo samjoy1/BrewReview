@@ -34,15 +34,15 @@ export default function FeaturedBeer() {
 
   return (
     <View className="items-center w-full px-4">
-      <View className="bg-yellow-100 border border-yellow-300 rounded-xl p-4 shadow w-full max-w-md">
+      <View className="bg-teal-500 border border-yellow-300 rounded-xl p-4 shadow w-full max-w-md">
         <Text className="text-lg font-semibold text-center mb-1">
           Featured Beer
         </Text>
         <Text className="text-base font-bold text-center">{beer.name}</Text>
-        <Text className="text-sm text-gray-600 text-center mt-1">
+        <Text className="text-sm text-white text-center mt-1">
           ABV : {beer.percentage}%
         </Text>
-        <Text className="text-sm text-gray-600 text-center mt-1">
+        <Text className="text-sm text-white text-center mt-1">
           {beer.country}
         </Text>
       </View>
