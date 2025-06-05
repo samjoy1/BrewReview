@@ -1,49 +1,111 @@
-import { useNavigation } from "@react-navigation/native";
+import { FIRESTORE_DB } from "@/firebaseconfig";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { useState } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import {
   BeerImage,
   BeerReviews,
-  Header,
+  IndividualBeerHeader,
   InfoButtons,
   ShareButton,
 } from "../beer/Index";
+import Header from "./HeaderNav";
+import Navbar from "./NavBar";
 
-// TO DO BUT NEED TO WAIT
-// - dynamically get the required information from the database
-// - use params to take user to correct brewery page
+// will throw an error at the moment because it isn't receiving a beer id from another page yet
 
-// TO TELL TEAM ABOUT
-// - toast being a global thing we can use
+// is set up to correctly receive a beerID via navigation params, from list of beers now just need to have it correctly navigate here by doing the following:
+// navigation.navigate("Beer", { beerID: beer.id })
+
+/*
+TO DO 
+1 - use params to go to the correct breweries page
+2 - look at beer list and make sure it links correctly to this
+3 - 
+*/
 
 function Beer() {
-  // placeholder data, to be replaced once databases have all required info
-  const name = "Tasty Bev";
-  const image =
-    "https://imgs.search.brave.com/HTnfzB4GPTeNE42Sm6aAH116T7QcNedDW2gE4mTiaks/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTQ1/ODY0NTU5L3Bob3Rv/L3VzYS1uZXctamVy/c2V5LWhhbmQtcG91/cmluZy1iZWVyLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1F/Y0R2MXRqbjM1eEJt/amtUR0dkMmRTYk9P/eWZ1U0dTSWhlNUtM/bE5xSjFVPQ";
-  const type = "IPA";
-  const country = "Germany";
-  const rating = 4.5;
-  const brewery = "Berlin Brewery";
-
   // HOOKS
   const [liked, setLiked] = useState(false);
   const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      rating: 4,
-      date_created: "03 June 2025",
-      body: "I like this beer because beer is nice and beer beer beer",
-      title: "My review",
-      user: "Example Beer User",
-      votes: 9,
-    },
-  ]);
+  const [beerData, setBeerData] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { beerID } = route.params || {};
+
+  // FETCHING THE BEER DATA
+  useEffect(() => {
+    const currentBeerID = beerID;
+    const docRef = doc(FIRESTORE_DB, "beers", currentBeerID);
+
+    getDoc(docRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          setBeerData(docSnap.data());
+        } else {
+          console.log("Unable to find more information on that Beer!");
+          Toast.show({
+            type: "error",
+            text1: "Unable to display more information on this beer",
+            position: "bottom",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching beer", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to fetch beer data",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
+  }, [beerID]);
+
+  // FETCHING REVIEW DATA
+  useEffect(() => {
+    const currentBeerID = beerID;
+    const reviewsRef = collection(FIRESTORE_DB, "reviews");
+    const q = query(reviewsRef, where("beer_id", "==", currentBeerID));
+
+    getDocs(q)
+      .then((querySnapshot) => {
+        const reviewsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setReviews(reviewsData);
+      })
+      .catch((err) => {
+        console.log("Error fetching reviews:", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to fetch reviews",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
+  }, [beerID]);
+
+  // USING THE BEER DATA
+  const name = beerData?.name || "Loading";
+  const image = beerData?.image;
+  const type = beerData?.category;
+  const country = beerData?.country;
+  const rating = beerData?.percentage;
+  const brewery = beerData?.brewery;
 
   // HANDLER FUNCTIONS
   function handlePressBrewery() {
@@ -98,8 +160,6 @@ function Beer() {
   }
 
   function handleShare() {
-    // this will be changed later to be dynamic
-    const beerID = "awesome-brew";
     // currently shares a development url, won't work without expo go
     const url = Linking.createURL(`/beer/${beerID}`);
 
@@ -129,12 +189,13 @@ function Beer() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
+      <Header />
       <ScrollView
         className="p-4"
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <Header
+        <IndividualBeerHeader
           name={name}
           liked={liked}
           onHeartButtonPress={handlePressHeartButton}
@@ -161,6 +222,7 @@ function Beer() {
 
         <ShareButton onShareButtonPress={handleShare} />
       </ScrollView>
+      <Navbar />
     </SafeAreaView>
   );
 }

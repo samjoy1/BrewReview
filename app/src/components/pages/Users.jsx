@@ -1,13 +1,28 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
-function Users({ navigation }) {
+function Users({ route, navigation }) {
   const [users, setUsers] = useState([]);
   const [followedUsers, setFollowedUsers] = useState({});
 
   useEffect(() => {
+    //if route is provided
+    const ids = route?.params?.userIds || null;
+    if (Array.isArray(ids)) {
+      Promise.all(
+        ids.map((uid) =>
+          getDoc(doc(FIRESTORE_DB, "users", uid)).then((snap) =>
+            snap.exists() ? { id: snap.id, ...snap.data() } : null
+          )
+        )
+      )
+        .then((results) => setUsers(results.filter((r) => r)))
+        .catch((err) => console.error(err));
+      return;
+    }
+
     getDocs(collection(FIRESTORE_DB, "users"))
       .then((snapshot) => {
         const usersArray = snapshot.docs.map((doc) => ({
@@ -17,7 +32,7 @@ function Users({ navigation }) {
         setUsers(usersArray);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [route?.params?.userIds]);
 
   //once Auth is set up this button will add/remove the user from the followers list
   const toggleFollow = (userId) => {
@@ -49,7 +64,7 @@ function Users({ navigation }) {
                   width: 40,
                   height: 40,
                   borderRadius: 20,
-                  marginRight: 12
+                  marginRight: 12,
                 }}
               />
             ) : (
@@ -59,7 +74,7 @@ function Users({ navigation }) {
                   height: 40,
                   borderRadius: 20,
                   backgroundColor: "lightgrey",
-                  marginRight: 12
+                  marginRight: 12,
                 }}
               ></View>
             )}
