@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import {
   Image,
@@ -13,9 +14,9 @@ export default function Header() {
   const DUMMY_USER_ID = "bigdog512";
   const auth = getAuth();
   const currentUser = auth.currentUser;
-  
+
   const [menuVisible, setMenuVisible] = useState(false);
-   const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
@@ -37,14 +38,14 @@ export default function Header() {
         />
       </TouchableOpacity>
       <TouchableOpacity
-              onPress={() => {
-                const userId = currentUser?.userId || DUMMY_USER_ID;
-                navigation.navigate("Profile", { userId });
-              }}
-              style={{ padding: 10, backgroundColor: "#eee", margin: 10 }}
-            >
-              <Text>Go to Profile</Text>
-            </TouchableOpacity>
+        onPress={() => {
+          const userId = currentUser?.userId || DUMMY_USER_ID;
+          navigation.navigate("Profile", { userId });
+        }}
+        style={{ padding: 10, backgroundColor: "#eee", margin: 10 }}
+      >
+        <Text>Go to Profile</Text>
+      </TouchableOpacity>
 
       <Modal
         visible={menuVisible}
