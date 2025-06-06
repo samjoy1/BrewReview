@@ -1,7 +1,8 @@
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { Linking, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { getBreweryById } from "../../../utilities";
 import BreweryImage from "../brewery/BreweryImage";
 import BreweryInfoButtons from "../brewery/BreweryInfoButtons";
@@ -14,6 +15,7 @@ function Brewery() {
   const [liked, setLiked] = useState(false);
   const [breweryData, setBreweryData] = useState(null);
   const route = useRoute();
+  const navigation = useNavigation();
   const { breweryID } = route.params || {};
 
   // FETCHING BREWERY DATA
@@ -38,19 +40,37 @@ function Brewery() {
   function handlePressHeartButton() {
     setLiked(!liked);
   }
-  // should go to all beers filtered by country
+  // make this filtered by country
   function handlePressCountry() {
-    navigation.navigate("Search");
+    navigation.navigate("BeerList");
   }
 
   // go to the url provided
   function handlePressUrl() {
-    navigation.navigate("Search");
+    if (typeof url === "" && url.startsWith("http")) {
+      Linking.openURL(url).catch((err) => {
+        console.log("Failed to open url", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to open website.",
+          text2:
+            "Unfortunately we do not have a url for this brewery's website, try a search engine.",
+          position: "bottom",
+        });
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Failed to open website.",
+        text2: "Unfortunately we do not have a url for this brewery.",
+        position: "bottom",
+      });
+    }
   }
 
-  // go to beers filtered by brewery selected
+  // make this filtered by the brewery
   function handlePressBeers() {
-    navigation.navigate("Search");
+    navigation.navigate("BeerList");
   }
 
   function handlePressCity() {
@@ -88,7 +108,7 @@ function Brewery() {
           foundedDate={foundedDate}
           onBeersButtonPress={handlePressBeers}
           onUrlButtonPress={handlePressUrl}
-          onCountyButtonPress={handlePressCountry}
+          onCountryButtonPress={handlePressCountry}
           onCityButtonPress={handlePressCity}
           name={name}
         />
