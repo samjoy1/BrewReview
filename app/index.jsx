@@ -26,7 +26,7 @@ const Stack = createNativeStackNavigator();
 
 export default function Index() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="BeerList">
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Beer" component={Beer} />
       <Stack.Screen name="BeerList" component={BeerList} />

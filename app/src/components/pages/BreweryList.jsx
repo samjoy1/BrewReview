@@ -28,7 +28,11 @@ function BreweryList({ navigation }) {
   }, []);
 
   return (
-    <ScrollView className="bg-gray-100 min-h-screen p-4">
+    <ScrollView
+      className="p-4"
+      contentContainerStyle={{ paddingBottom: 100 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View className="flex-row justify-center mb-6">
         <TouchableOpacity
           onPress={() => {
@@ -85,7 +89,7 @@ function BreweryList({ navigation }) {
 
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("Brewery", { id: brewery.id })
+                  navigation.navigate("Brewery", { breweryID: brewery.id })
                 }
                 className="bg-amber-700 rounded px-3 py-1.5 self-start"
               >
@@ -97,6 +101,6 @@ function BreweryList({ navigation }) {
       </View>
     </ScrollView>
   );
-};
+}
 
 export default BreweryList;

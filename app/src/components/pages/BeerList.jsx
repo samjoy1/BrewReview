@@ -28,7 +28,11 @@ function BeerList({ navigation }) {
   }, [sortField, sortDirection]);
 
   return (
-    <ScrollView className="bg-gray-100 min-h-screen p-4">
+    <ScrollView
+      className="p-4"
+      contentContainerStyle={{ paddingBottom: 100 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View className="flex-row justify-center mb-6">
         <TouchableOpacity
           onPress={() => {
