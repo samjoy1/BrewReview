@@ -1,6 +1,8 @@
 import "@/global.css";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { FIREBASE_AUTH } from "../firebaseconfig"
+import { onAuthStateChanged } from "firebase/auth"
 
 // components
 import {
@@ -25,6 +27,16 @@ import {
 const Stack = createNativeStackNavigator();
 
 export default function Index() {
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      setCurrentUser(user);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
