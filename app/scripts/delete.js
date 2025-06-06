@@ -63,5 +63,3 @@ export async function deleteUser (user_id, setLoading, setError) {
         if (setLoading) setLoading(false)
     })
 }
-
-deleteReview("313_craft#bitter_black")
