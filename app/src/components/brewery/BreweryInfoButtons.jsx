@@ -21,17 +21,17 @@ function BreweryInfoButtons({
           onPress={onBeersButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            See Beers from {name}!
+            Beer collection
           </Text>
         </TouchableOpacity>
 
-        {/* COUNTRY */}
+        {/* LOCATION */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
           onPress={onCountryButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            Country: {country}
+            Beers from {country}
           </Text>
         </TouchableOpacity>
       </View>
@@ -47,13 +47,13 @@ function BreweryInfoButtons({
           </Text>
         </TouchableOpacity>
 
-        {/* CITY */}
+        {/* MAP */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
           onPress={onCityButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            City: {city}
+            Map view
           </Text>
         </TouchableOpacity>
       </View>

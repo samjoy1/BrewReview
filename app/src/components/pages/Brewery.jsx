@@ -1,12 +1,14 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
+import * as Linking from "expo-linking";
 import { useEffect, useState } from "react";
-import { Linking, ScrollView } from "react-native";
+import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { getBreweryById } from "../../../utilities";
 import BreweryImage from "../brewery/BreweryImage";
 import BreweryInfoButtons from "../brewery/BreweryInfoButtons";
 import IndividualBreweryHeader from "../brewery/IndividualBreweryHeader";
+import ShareButton from "../brewery/ShareButton";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
@@ -47,7 +49,7 @@ function Brewery() {
 
   // go to the url provided
   function handlePressUrl() {
-    if (typeof url === "" && url.startsWith("http")) {
+    if (typeof url === "string" && url.startsWith("http")) {
       Linking.openURL(url).catch((err) => {
         console.log("Failed to open url", err);
         Toast.show({
@@ -74,8 +76,35 @@ function Brewery() {
   }
 
   function handlePressCity() {
-    // do something nice and cool, dno yet
+    // take user to a pin of the brewery on the map!!!
     navigation.navigate("Search");
+  }
+
+  function handleShare() {
+    const shareUrl = Linking.createURL(`/brewery/${breweryID}`);
+
+    Share.share({
+      message: `${name} was so cool I simply had to share it with you 🍻\n\n${shareUrl}`,
+    })
+      .then((result) => {
+        if (result.action === Share.sharedAction) {
+          console.log("brewery shared successfully");
+          Toast.show({
+            type: "success",
+            text1: "Shared successfully",
+            position: "bottom",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("There was an error sharing", err.message);
+        Toast.show({
+          type: "error",
+          text1: "Failed to share",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
   }
 
   // USING THE BREWERY DATA
@@ -97,6 +126,7 @@ function Brewery() {
         <IndividualBreweryHeader
           name={name}
           liked={liked}
+          foundedDate={foundedDate}
           onHeartButtonPress={handlePressHeartButton}
         />
         <BreweryImage image={image} />
@@ -112,6 +142,8 @@ function Brewery() {
           onCityButtonPress={handlePressCity}
           name={name}
         />
+
+        <ShareButton onShareButtonPress={handleShare} />
       </ScrollView>
       <Navbar />
     </SafeAreaView>
