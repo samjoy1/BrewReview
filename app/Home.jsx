@@ -12,7 +12,7 @@ export default function Home() {
       <TouchableOpacity
         // thhis line below, need updating the query params once we have authentication to have the
         // the userID from the signed in user
-        onPress={() => router.push("/Profile?userId=userId")}
+        onPress={() => router.push("/Profile?userId=bigdog512")}
         style={{ padding: 10, backgroundColor: "#eee", margin: 10 }}
       >
         <Text>Go to Profile</Text>
