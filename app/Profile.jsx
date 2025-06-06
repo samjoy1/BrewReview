@@ -1,9 +1,8 @@
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FIREBASE_APP, FIRESTORE_DB } from "../firebaseconfig";
+import { FIRESTORE_DB } from "../firebaseconfig";
 import Navbar from "./src/components/pages/NavBar";
 
 import {
@@ -37,21 +36,28 @@ function Profile() {
 
     if (!result.canceled) {
       const image = result.assets[0];
-      const response = await fetch(image.uri);
-      const blob = await response.blob();
+      /*
+        The commented code below is the better solution for a production environment but without upgrading the Firebase basic plan we cannot use Firebase Storage
+        
+        Therefore, the non-commented code is a temporary solution to at least be able to change the profile avatar picture for one session (when page is refreshed the avatar
+        will change back to the original one, as we do not have anywhere to persist it with the firebase free plan
+      */
 
-      const storage = getStorage(FIREBASE_APP);
-      const storageRef = ref(storage, `avatars/${userId}.jpg`);
-      await uploadBytes(storageRef, blob);
+      // const response = await fetch(image.uri);
+      // const blob = await response.blob();
 
-      const downloadURL = await getDownloadURL(storageRef);
+      // const storage = getStorage(FIREBASE_APP);
+      // const storageRef = ref(storage, `avatars/${userId}.jpg`);
+      // await uploadBytes(storageRef, blob);
 
-      const userRef = doc(FIRESTORE_DB, "users", userId);
-      await updateDoc(userRef, {
-        avatar_img_url: downloadURL,
-      });
+      // const downloadURL = await getDownloadURL(storageRef);
 
-      setUser({ ...user, avatar_img_url: downloadURL });
+      // const userRef = doc(FIRESTORE_DB, "users", userId);
+      // await updateDoc(userRef, {
+      //   avatar_img_url: downloadURL,
+      // });
+      // setUser({ ...user, avatar_img_url: downloadURL });
+      setUser({ ...user, avatar_img_url: image.uri });
     }
   };
   const [user, setUser] = useState(null);
