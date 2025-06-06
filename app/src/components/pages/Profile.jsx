@@ -1,9 +1,8 @@
 import * as ImagePicker from "expo-image-picker";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FIRESTORE_DB } from "../firebaseconfig";
-import Navbar from "./src/components/pages/NavBar";
+import { FIRESTORE_DB } from "../../../../firebaseconfig";
+import Navbar from "./NavBar";
 
 import {
   ActivityIndicator,
@@ -15,10 +14,10 @@ import {
 } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
-function Profile() {
-  const { userId } = useLocalSearchParams();
-  const router = useRouter();
+function Profile({ route, navigation }) {
+  const { userId } = route.params;
 
+  // Image uploader function
   const pickImageAndUpload = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -62,6 +61,10 @@ function Profile() {
   };
   const [user, setUser] = useState(null);
   useEffect(() => {
+    if (!userId) {
+      console.warn("No userId provided to Profile screen.");
+      return;
+    }
     async function fetchUser() {
       try {
         const docRef = doc(FIRESTORE_DB, "users", userId);
@@ -114,13 +117,17 @@ function Profile() {
             />
             <Text style={styles.username}>{user.username}</Text>
             <View style={styles.statsContainer}>
-              <TouchableOpacity onPress={() => router.push("/FollowersPage")}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("FollowersPage")}
+              >
                 <Text style={styles.linkText}>
                   {user.followers.length} followers
                 </Text>
               </TouchableOpacity>
               <Text style={styles.dotSeparator}> · </Text>
-              <TouchableOpacity onPress={() => router.push("/FollowingPage")}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("FollowingPage")}
+              >
                 <Text style={styles.linkText}>
                   {user.following.length} following
                 </Text>
@@ -134,21 +141,21 @@ function Profile() {
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/FavouriteBeers")}
+            onPress={() => navigation.navigate("FavouriteBeers")}
           >
             <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/RecentReviews")}
+            onPress={() => navigation.navigate("RecentReviews")}
           >
             <Text style={styles.buttonText}>📝 Recent Reviews</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/TasteProfile")}
+            onPress={() => navigation.navigate("TasteProfile")}
           >
             <Text style={styles.buttonText}>👅 Taste Profile</Text>
           </TouchableOpacity>
