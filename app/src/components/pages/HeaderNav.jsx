@@ -11,7 +11,7 @@ import {
 
 export default function Header() {
   const [menuVisible, setMenuVisible] = useState(false);
-   const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
@@ -79,6 +79,10 @@ export default function Header() {
 
             <TouchableOpacity onPress={() => handleNavigate("Settings")}>
               <Text className="py-2 text-gray-800">Settings</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleNavigate("Users")}>
+              <Text className="py-2 text-gray-800">All Users</Text>
             </TouchableOpacity>
           </View>
         </Pressable>

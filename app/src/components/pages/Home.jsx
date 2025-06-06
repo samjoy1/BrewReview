@@ -8,7 +8,7 @@ import FeaturedBeer from "./FeaturedBeer"
 import FeaturedBrewery from "./FeaturedBrewery";
 
 
-export default function Home() {
+export default function Home({navigation}) {
   return (
     <View className="flex-1 bg-white">
       <HeaderNav />

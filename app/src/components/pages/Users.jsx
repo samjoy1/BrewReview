@@ -1,11 +1,21 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, doc, getDoc, getDocs, arrayRemove, arrayUnion, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { FIRESTORE_DB } from "../../../../firebaseconfig";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../../../../firebaseconfig";
 
 function Users({ route, navigation }) {
   const [users, setUsers] = useState([]);
   const [followedUsers, setFollowedUsers] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
+
+//track logged in users
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      setCurrentUser(user);
+    });
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     //if route is provided
@@ -34,13 +44,29 @@ function Users({ route, navigation }) {
       .catch((err) => console.error(err));
   }, [route?.params?.userIds]);
 
-  //once Auth is set up this button will add/remove the user from the followers list
-  const toggleFollow = (userId) => {
+  //adds and removes users from follow list
+  const toggleFollow = (targetUserId) => {
+    if (!currentUser || currentUser.uid === targetUserId) return;
+  
+    const currentRef = doc(FIRESTORE_DB, "users", currentUser.uid);
+    const targetRef = doc(FIRESTORE_DB, "users", targetUserId);
+  
+    const isFollowing = followedUsers[targetUserId];
+  
+    updateDoc(currentRef, {
+      following: isFollowing ? arrayRemove(targetUserId) : arrayUnion(targetUserId),
+    }).catch((err) => console.error(err));
+  
+    updateDoc(targetRef, {
+      followers: isFollowing ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
+    }).catch((err) => console.error(err));
+  
     setFollowedUsers((prev) => ({
       ...prev,
-      [userId]: !prev[userId],
+      [targetUserId]: !isFollowing,
     }));
   };
+  
 
   return (
     <FlatList
