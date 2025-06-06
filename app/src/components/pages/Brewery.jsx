@@ -5,10 +5,12 @@ import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { getBreweryById } from "../../../utilities";
-import BreweryImage from "../brewery/BreweryImage";
-import BreweryInfoButtons from "../brewery/BreweryInfoButtons";
-import IndividualBreweryHeader from "../brewery/IndividualBreweryHeader";
-import ShareButton from "../brewery/ShareButton";
+import {
+  BreweryImage,
+  BreweryInfoButtons,
+  IndividualBreweryHeader,
+  ShareButton,
+} from "../brewery/Index";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
