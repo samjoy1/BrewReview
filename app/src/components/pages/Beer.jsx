@@ -23,7 +23,6 @@ import {
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-// will throw an error at the moment because it isn't receiving a beer id from another page yet
 
 // is set up to correctly receive a beerID via navigation params, from list of beers now just need to have it correctly navigate here by doing the following:
 // navigation.navigate("Beer", { beerID: beer.id })
