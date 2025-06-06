@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { FIREBASE_APP, FIRESTORE_DB } from "../firebaseconfig";
+import Navbar from "./src/components/pages/NavBar";
 
 import {
   ActivityIndicator,
@@ -83,66 +84,72 @@ function Profile() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.settingsIcon}>
-          <Icon name="settings" type="feather" color="#000" />
-        </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.settingsIcon}>
+            <Icon name="settings" type="feather" color="#000" />
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.avatarContainer}
-          onPress={pickImageAndUpload}
-        >
-          <Avatar
-            rounded
-            size="xlarge"
-            icon={{ name: "user", type: "feather" }}
-            source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
-            containerStyle={styles.avatar}
-          />
-          <Text style={styles.username}>{user.username}</Text>
-          <View style={styles.statsContainer}>
-            <TouchableOpacity onPress={() => router.push("/FollowersPage")}>
-              <Text style={styles.linkText}>
-                {user.followers.length} followers
-              </Text>
-            </TouchableOpacity>
-            <Text style={styles.dotSeparator}> · </Text>
-            <TouchableOpacity onPress={() => router.push("/FollowingPage")}>
-              <Text style={styles.linkText}>
-                {user.following.length} following
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.tapHint}>Tap to change avatar</Text>
-      </View>
+          <TouchableOpacity
+            style={styles.avatarContainer}
+            onPress={pickImageAndUpload}
+          >
+            <Avatar
+              rounded
+              size="xlarge"
+              icon={{ name: "user", type: "feather" }}
+              source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
+              containerStyle={styles.avatar}
+            />
+            <Text style={styles.username}>{user.username}</Text>
+            <View style={styles.statsContainer}>
+              <TouchableOpacity onPress={() => router.push("/FollowersPage")}>
+                <Text style={styles.linkText}>
+                  {user.followers.length} followers
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.dotSeparator}> · </Text>
+              <TouchableOpacity onPress={() => router.push("/FollowingPage")}>
+                <Text style={styles.linkText}>
+                  {user.following.length} following
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.tapHint}>Tap to change avatar</Text>
+        </View>
 
-      {/* Sections */}
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/FavouriteBeers")}
-        >
-          <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
-        </TouchableOpacity>
+        {/* Sections */}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/FavouriteBeers")}
+          >
+            <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/RecentReviews")}
-        >
-          <Text style={styles.buttonText}>📝 Recent Reviews</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/RecentReviews")}
+          >
+            <Text style={styles.buttonText}>📝 Recent Reviews</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push("/TasteProfile")}
-        >
-          <Text style={styles.buttonText}>👅 Taste Profile</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/TasteProfile")}
+          >
+            <Text style={styles.buttonText}>👅 Taste Profile</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      <Navbar />
+    </View>
   );
 }
 
