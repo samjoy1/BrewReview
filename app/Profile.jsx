@@ -20,7 +20,6 @@ function Profile() {
   const router = useRouter();
 
   const pickImageAndUpload = async () => {
-    // Ask for permissions
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -28,7 +27,6 @@ function Profile() {
       return;
     }
 
-    // Pick image
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -41,20 +39,17 @@ function Profile() {
       const response = await fetch(image.uri);
       const blob = await response.blob();
 
-      // Upload to Firebase Storage
       const storage = getStorage(FIREBASE_APP);
       const storageRef = ref(storage, `avatars/${userId}.jpg`);
       await uploadBytes(storageRef, blob);
 
       const downloadURL = await getDownloadURL(storageRef);
 
-      // Update Firestore user profile
       const userRef = doc(FIRESTORE_DB, "users", userId);
       await updateDoc(userRef, {
         avatar_img_url: downloadURL,
       });
 
-      // Update state to re-render
       setUser({ ...user, avatar_img_url: downloadURL });
     }
   };
@@ -78,10 +73,10 @@ function Profile() {
     fetchUser();
   }, [userId]);
 
-  // 💡 Don't render the profile until the user is loaded
+  // Don't render the profile until the user is loaded
   if (!user) {
     return (
-      <View style={styles.container}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#000" />
       </View>
     );
@@ -91,7 +86,7 @@ function Profile() {
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.settingsIcon}>
           <Icon name="settings" type="feather" color="#000" />
         </TouchableOpacity>
 
@@ -101,7 +96,7 @@ function Profile() {
         >
           <Avatar
             rounded
-            size="large"
+            size="xlarge"
             icon={{ name: "user", type: "feather" }}
             source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
             containerStyle={styles.avatar}
@@ -121,89 +116,115 @@ function Profile() {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-        <Text style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
-          Tap to change avatar
-        </Text>
+        <Text style={styles.tapHint}>Tap to change avatar</Text>
       </View>
 
       {/* Sections */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/FavouriteBeers")}
-      >
-        <Text>Favourite beers</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/FavouriteBeers")}
+        >
+          <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/RecentReviews")}
-      >
-        <Text>Your most recent reviews</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/RecentReviews")}
+        >
+          <Text style={styles.buttonText}>📝 Recent Reviews</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/TasteProfile")}
-      >
-        <Text>Your taste profile</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/TasteProfile")}
+        >
+          <Text style={styles.buttonText}>👅 Taste Profile</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#d7e6f6" },
-  header: { padding: 20, alignItems: "center", backgroundColor: "#d7e6f6" },
-  avatarContainer: { alignItems: "center", marginTop: 10 },
-  avatar: { backgroundColor: "#ccc" },
-  username: { fontSize: 14, fontWeight: "bold", marginTop: 10 },
-  stats: { fontSize: 14, color: "#666" },
-  sectionList: { padding: 20 },
-  sectionItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#ccc",
+  container: {
+    flex: 1,
+    backgroundColor: "#f1f5f9",
   },
-  button: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    marginVertical: 8,
-    borderWidth: 1,
-    alignItems: "center",
-  },
-  halfButton: {
-    width: "48%",
-    padding: 15,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: "center",
-  },
-  largeBox: {
-    width: "100%",
-    height: 100,
-    borderWidth: 1,
-    borderRadius: 8,
-    marginVertical: 8,
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f1f5f9",
+  },
+  header: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    backgroundColor: "#e2e8f0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  settingsIcon: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+  },
+  avatarContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  avatar: {
+    backgroundColor: "#ccc",
+  },
+  username: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 15,
+    color: "#111",
   },
   statsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 4,
+    marginTop: 8,
   },
   linkText: {
     color: "#007AFF",
-    fontWeight: "500",
+    fontWeight: "600",
+    fontSize: 14,
   },
   dotSeparator: {
-    marginHorizontal: 5,
+    marginHorizontal: 8,
+    fontSize: 14,
     color: "#555",
+  },
+  tapHint: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 6,
+  },
+  buttonsContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  button: {
+    padding: 15,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginVertical: 8,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#222",
   },
 });
 
