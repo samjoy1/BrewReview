@@ -42,9 +42,13 @@ export default function Header() {
           const userId = currentUser?.userId || DUMMY_USER_ID;
           navigation.navigate("Profile", { userId });
         }}
-        style={{ padding: 10, backgroundColor: "#eee", margin: 10 }}
       >
-        <Text>Go to Profile</Text>
+        <Image
+          source={{
+            uri: "https://avatar.iran.liara.run/public",
+          }}
+          className="w-10 h-10 rounded-full"
+        />
       </TouchableOpacity>
 
       <Modal
