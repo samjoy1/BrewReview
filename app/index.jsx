@@ -7,33 +7,57 @@ import "@/global.css";
 
 // components
 import {
+  Beer,
+  BeerList,
+  Brewery,
+  BreweryList,
+  Camera,
+  Categories,
+  FavouriteBeers,
+  FollowersPage,
+  FollowingPage,
   Home,
-  Search, Categories, BeerList, BreweryList, 
-  Beer, Brewery,
-  Camera, Map,
-  PostBeer, PostReview,
-  Login, Profile, Settings,
-  User, Users,
+  Login,
+  Map,
+  PostBeer,
+  PostReview,
+  Profile,
+  RecentReviews,
+  Search,
+  Settings,
+  User,
+  Users,
 } from "./src/components/pages/Componentsindex";
 
 // variables
-export const UserContext = createContext(null)
+export const UserContext = createContext(null);
 const Stack = createNativeStackNavigator();
 
 export default function Index() {
   // useStates
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-  const [loggedInUser, setLoggedInUser] = useState("brewcat108")
-  const [theme, setTheme] = useState("light")
-
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState("brewcat108");
+  const [theme, setTheme] = useState("light");
 
     <UserContext.Provider value={{isLoggedIn, setIsLoggedIn, loggedInUser, setLoggedInUser, theme, setTheme}}>
+  return (
+    <UserContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        loggedInUser,
+        setLoggedInUser,
+        theme,
+        setTheme,
+      }}
+    >
+
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />
         <Stack.Screen name="BeerList" component={BeerList} />
         <Stack.Screen name="Brewery" component={Brewery} />
-        <Stack.Screen name="BreweryList" component={BreweryList} />  
+        <Stack.Screen name="BreweryList" component={BreweryList} />
         <Stack.Screen name="Camera" component={Camera} />
         <Stack.Screen name="Categories" component={Categories} />
         <Stack.Screen name="Login" component={Login} />
@@ -45,7 +69,11 @@ export default function Index() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Users" component={Users} />
+        <Stack.Screen name="FollowersPage" component={FollowersPage} />
+        <Stack.Screen name="FollowingPage" component={FollowingPage} />
+        <Stack.Screen name="RecentReviews" component={RecentReviews} />
+        <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
       </Stack.Navigator>
     </UserContext.Provider>
-  )
+  );
 }
