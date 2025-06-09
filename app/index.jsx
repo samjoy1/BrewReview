@@ -5,6 +5,8 @@ import React, { createContext, useState } from "react";
 // styling
 import "@/global.css";
 
+const Stack = createNativeStackNavigator();
+
 // components
 import {
   Home,
@@ -12,7 +14,7 @@ import {
   Beer, Brewery,
   Camera, Map,
   PostBeer, PostReview,
-  Login, Profile, Settings,
+  Login, Profile, Settings, Recent Reviews, FollowingPage, FollowersPage, FavouriteBeers
   User, Users,
 } from "./src/components/pages/Componentsindex";
 
@@ -45,6 +47,10 @@ export default function Index() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Users" component={Users} />
+        <Stack.Screen name="FollowersPage" component={FollowersPage} />
+        <Stack.Screen name="FollowingPage" component={FollowingPage} />
+        <Stack.Screen name="RecentReviews" component={RecentReviews} />
+        <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
       </Stack.Navigator>
     </UserContext.Provider>
   )
