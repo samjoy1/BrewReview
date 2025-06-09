@@ -39,6 +39,7 @@ export default function Index() {
   const [loggedInUser, setLoggedInUser] = useState("brewcat108");
   const [theme, setTheme] = useState("light");
 
+    <UserContext.Provider value={{isLoggedIn, setIsLoggedIn, loggedInUser, setLoggedInUser, theme, setTheme}}>
   return (
     <UserContext.Provider
       value={{
@@ -50,6 +51,7 @@ export default function Index() {
         setTheme,
       }}
     >
+
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />

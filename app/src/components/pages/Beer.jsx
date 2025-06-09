@@ -24,16 +24,6 @@ import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
 
-// is set up to correctly receive a beerID via navigation params, from list of beers now just need to have it correctly navigate here by doing the following:
-// navigation.navigate("Beer", { beerID: beer.id })
-
-/*
-TO DO 
-1 - use params to go to the correct breweries page
-2 - look at beer list and make sure it links correctly to this
-3 - 
-*/
-
 function Beer() {
   // HOOKS
   const [liked, setLiked] = useState(false);
@@ -100,7 +90,7 @@ function Beer() {
 
   // USING THE BEER DATA
   const name = beerData?.name || "Loading";
-  const image = beerData?.image;
+  const image = beerData?.img_url;
   const type = beerData?.category;
   const country = beerData?.country;
   const rating = beerData?.percentage;
@@ -108,7 +98,7 @@ function Beer() {
 
   // HANDLER FUNCTIONS
   function handlePressBrewery() {
-    navigation.navigate("Brewery");
+    navigation.navigate("Brewery", { breweryID: beerData?.brewery });
   }
 
   function handlePressHeartButton() {

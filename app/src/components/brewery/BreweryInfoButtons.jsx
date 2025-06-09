@@ -1,28 +1,31 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-function InfoButtons({
-  type,
+function BreweryInfoButtons({
   country,
-  rating,
-  brewery,
-  onTypeButtonPress,
+  name,
+  city,
+  url,
+  foundedDate,
+  onBeersButtonPress,
+  onUrlButtonPress,
   onCountryButtonPress,
-  onRatingButtonPress,
-  onBreweryButtonPress,
+  onCityButtonPress
 }) {
   return (
     <>
       <View className="flex-row mb-2 px-1">
-        {/* TYPE */}
+        {/* BEERS */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-          onPress={onTypeButtonPress}
+          onPress={onBeersButtonPress}
         >
-          <Text className="text-base font-bold text-center">{type}'s</Text>
+          <Text className="text-base font-bold text-center">
+            Beer collection
+          </Text>
         </TouchableOpacity>
 
-        {/* COUNTRY */}
+        {/* LOCATION */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
           onPress={onCountryButtonPress}
@@ -34,24 +37,23 @@ function InfoButtons({
       </View>
 
       <View className="flex-row mb-4 px-1">
-        {/* RATING */}
-
+        {/* URL */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-          onPress={onRatingButtonPress}
+          onPress={onUrlButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            Rating: {rating}
+            Website
           </Text>
         </TouchableOpacity>
 
-        {/* BREWERY */}
+        {/* MAP */}
         <TouchableOpacity
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
-          onPress={onBreweryButtonPress}
+          onPress={onCityButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            The Brewery
+            Map view
           </Text>
         </TouchableOpacity>
       </View>
@@ -59,4 +61,4 @@ function InfoButtons({
   );
 }
 
-export default InfoButtons;
+export default BreweryInfoButtons;
