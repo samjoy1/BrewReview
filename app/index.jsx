@@ -5,37 +5,57 @@ import React, { createContext, useState } from "react";
 // styling
 import "@/global.css";
 
-const Stack = createNativeStackNavigator();
-
 // components
 import {
+  Beer,
+  BeerList,
+  Brewery,
+  BreweryList,
+  Camera,
+  Categories,
+  FavouriteBeers,
+  FollowersPage,
+  FollowingPage,
   Home,
-  Search, Categories, BeerList, BreweryList, 
-  Beer, Brewery,
-  Camera, Map,
-  PostBeer, PostReview,
-  Login, Profile, Settings, Recent Reviews, FollowingPage, FollowersPage, FavouriteBeers
-  User, Users,
+  Login,
+  Map,
+  PostBeer,
+  PostReview,
+  Profile,
+  RecentReviews,
+  Search,
+  Settings,
+  User,
+  Users,
 } from "./src/components/pages/Componentsindex";
 
 // variables
-export const UserContext = createContext(null)
+export const UserContext = createContext(null);
 const Stack = createNativeStackNavigator();
 
 export default function Index() {
   // useStates
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-  const [loggedInUser, setLoggedInUser] = useState("brewcat108")
-  const [theme, setTheme] = useState("light")
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState("brewcat108");
+  const [theme, setTheme] = useState("light");
 
   return (
-    <UserContext.Provider value={{isLoggedIn, setIsLoggedIn, loggedInUser, setLoggedInUser, theme, setTheme}}>
+    <UserContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        loggedInUser,
+        setLoggedInUser,
+        theme,
+        setTheme,
+      }}
+    >
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />
         <Stack.Screen name="BeerList" component={BeerList} />
         <Stack.Screen name="Brewery" component={Brewery} />
-        <Stack.Screen name="BreweryList" component={BreweryList} />  
+        <Stack.Screen name="BreweryList" component={BreweryList} />
         <Stack.Screen name="Camera" component={Camera} />
         <Stack.Screen name="Categories" component={Categories} />
         <Stack.Screen name="Login" component={Login} />
@@ -53,5 +73,5 @@ export default function Index() {
         <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
       </Stack.Navigator>
     </UserContext.Provider>
-  )
+  );
 }
