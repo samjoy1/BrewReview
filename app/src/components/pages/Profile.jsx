@@ -118,18 +118,28 @@ function Profile({ route, navigation }) {
             <Text style={styles.username}>{user.username}</Text>
             <View style={styles.statsContainer}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("FollowersPage")}
+                onPress={() =>
+                  navigation.navigate("Users", {
+                    userIds: user.followers || [],
+                  })
+                }
               >
                 <Text style={styles.linkText}>
-                  {user.followers.length} followers
+                  {Array.isArray(user.followers) ? user.followers.length : 0}{" "}
+                  followers
                 </Text>
               </TouchableOpacity>
               <Text style={styles.dotSeparator}> · </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("FollowingPage")}
+                onPress={() =>
+                  navigation.navigate("Users", {
+                    userIds: user.following || [],
+                  })
+                }
               >
                 <Text style={styles.linkText}>
-                  {user.following.length} following
+                  {Array.isArray(user.following) ? user.following.length : 0}{" "}
+                  following
                 </Text>
               </TouchableOpacity>
             </View>
