@@ -1,3 +1,4 @@
+import { FIREBASE_APP } from "@/firebaseconfig";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
@@ -12,7 +13,7 @@ import {
 
 export default function Header() {
   const DUMMY_USER_ID = "bigdog512";
-  const auth = getAuth();
+  const auth = getAuth(FIREBASE_APP);
   const currentUser = auth.currentUser;
 
   const [menuVisible, setMenuVisible] = useState(false);
