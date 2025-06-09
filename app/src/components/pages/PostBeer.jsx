@@ -1,7 +1,7 @@
 // IMPORTS
 import { useContext, useEffect, useState } from "react";
-import { ImageBackground, ScrollView, Text, View } from "react-native-web";
 import Toast from 'react-native-toast-message';
+import { ImageBackground, ScrollView, Text, View } from "react-native-web";
 
 import { UserContext } from "../../../index.jsx";
 // SCRIPTS
