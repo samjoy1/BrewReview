@@ -1,7 +1,13 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-function BeerReviews({ reviews, onPostReviewButtonPress, onVoteButtonPress }) {
+function BeerReviews({
+  reviews,
+  onPostReviewButtonPress,
+  onVoteButtonPress,
+  hasVotedOnReviewID,
+  loggedInUser,
+}) {
   return (
     <View className="bg-white border border-gray-300 rounded-xl p-4 mb-4">
       <View className="flex-row justify-between items-center mb-4">
@@ -15,25 +21,39 @@ function BeerReviews({ reviews, onPostReviewButtonPress, onVoteButtonPress }) {
         </TouchableOpacity>
       </View>
 
-      {reviews.map((review) => (
-        <View key={review.id} className="border-b border-gray-200 mb-2 pb-2">
-          <Text className="font-semibold text-lg">{review.title}</Text>
-          <Text className="text-gray-600 text-sm mb-1">
-            By {review.user_id} on {Date(review.created_at)} --- Rating:{" "}
-            {review.rating}
-          </Text>
-          <Text className="mb-2">{review.body}</Text>
-          <View className="flex-row items-center justify-between">
-            <Text>Votes: {review.votes}</Text>
-            <TouchableOpacity
-              className="bg-blue-500 px-3 py-1 rounded"
-              onPress={() => onVoteButtonPress(review.id)}
-            >
-              <Text className="text-white">Vote +1</Text>
-            </TouchableOpacity>
+      {reviews.map((review) => {
+        // Calculate vote count from the array length
+        const voteCount = review.votes ? review.votes.length : 0;
+        // Determine if the vote button should be disabled
+        const isVoteDisabled =
+          !loggedInUser || hasVotedOnReviewID.includes(review.id);
+
+        return (
+          <View key={review.id} className="border-b border-gray-200 mb-2 pb-2">
+            <Text className="font-semibold text-lg">{review.title}</Text>
+            <Text className="text-gray-600 text-sm mb-1">
+              By {review.user_id} on{" "}
+              {new Date(review.created_at).toLocaleDateString()} --- Rating:{" "}
+              {/* Correct Date format */}
+              {review.rating}
+            </Text>
+            <Text className="mb-2">{review.body}</Text>
+            <View className="flex-row items-center justify-between">
+              {/* Display vote count from array length */}
+              <Text>Votes: {voteCount}</Text>
+              <TouchableOpacity
+                className={`px-3 py-1 rounded ${
+                  isVoteDisabled ? "bg-gray-400" : "bg-blue-500"
+                }`} // Change button color when disabled
+                onPress={() => onVoteButtonPress(review.id)}
+                disabled={isVoteDisabled} // Disable the button
+              >
+                <Text className="text-white">Vote +1</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }

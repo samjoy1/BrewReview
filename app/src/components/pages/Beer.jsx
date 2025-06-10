@@ -10,6 +10,7 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
@@ -37,7 +38,6 @@ function Beer() {
   const route = useRoute();
   const { beerID } = route.params || {};
   const { loggedInUser } = useContext(UserContext);
-  console.log("Logged in user:", loggedInUser);
 
   // ADDING TO FAVOURITES DATA
   const userRef = doc(FIRESTORE_DB, "users", loggedInUser);
@@ -52,12 +52,14 @@ function Beer() {
       .catch((err) => {
         console.log("Error reading favourites", err);
       });
-  }, [beerID, loggedInUser]);
+  }, [beerID, loggedInUser, userRef]);
 
   // FETCHING THE BEER DATA
   useEffect(() => {
-    console.log("Logged in user:", loggedInUser);
     const currentBeerID = beerID;
+
+    if (!currentBeerID) return;
+
     const docRef = doc(FIRESTORE_DB, "beers", currentBeerID);
 
     getDoc(docRef)
@@ -84,10 +86,11 @@ function Beer() {
       });
   }, [beerID]);
 
-  // FETCHING REVIEW DATA
+  // FETCHING REVIEW DATA AND INITIALISING hasVotedOnReviewID
   useEffect(() => {
-    console.log("Logged in user:", loggedInUser);
     const currentBeerID = beerID;
+    if (!currentBeerID) return;
+
     const reviewsRef = collection(FIRESTORE_DB, "reviews");
     const q = query(reviewsRef, where("beer_id", "==", currentBeerID));
 
@@ -95,10 +98,22 @@ function Beer() {
       .then((querySnapshot) => {
         const reviewsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
+          votes: doc.data().votes || [],
           ...doc.data(),
         }));
         setReviews(reviewsData);
-      })
+
+        // Initialize hasVotedOnReviewID for the current logged-in user
+        // This block should be INSIDE the .then() to access reviewsData
+        if (loggedInUser) {
+          const votedReviewIds = reviewsData
+            .filter((review) => review.votes.includes(loggedInUser))
+            .map((review) => review.id);
+          setHasVotedOnReviewID(votedReviewIds);
+        } else {
+          setHasVotedOnReviewID([]); // Clear if no user logged in
+        }
+      }) // <--- This closing parenthesis is now in the correct place
       .catch((err) => {
         console.log("Error fetching reviews:", err);
         Toast.show({
@@ -108,7 +123,7 @@ function Beer() {
           position: "bottom",
         });
       });
-  }, [beerID]);
+  }, [beerID, loggedInUser]);
 
   // USING THE BEER DATA
   const name = beerData?.name || "Loading";
@@ -124,6 +139,15 @@ function Beer() {
   }
 
   function handlePressHeartButton() {
+    if (!loggedInUser) {
+      Toast.show({
+        type: "error",
+        text1: "Please log in to add to favourites",
+        position: "bottom",
+      });
+      return;
+    }
+
     const action = liked ? arrayRemove(beerID) : arrayUnion(beerID);
 
     setDoc(
@@ -171,6 +195,17 @@ function Beer() {
   }
 
   function handleVote(reviewId) {
+    // 1. Check if user is logged in
+    if (!loggedInUser) {
+      Toast.show({
+        type: "error",
+        text1: "Please log in to vote on reviews",
+        position: "bottom",
+      });
+      return;
+    }
+
+    // 2. Check if user has already voted on this specific review
     if (hasVotedOnReviewID.includes(reviewId)) {
       Toast.show({
         type: "info",
@@ -180,18 +215,42 @@ function Beer() {
       return;
     }
 
-    setReviews((prevReviews) =>
-      prevReviews.map((review) =>
-        review.id === reviewId ? { ...review, votes: review.votes + 1 } : review
-      )
-    );
+    // Prepare for Firestore update
+    const reviewDocRef = doc(FIRESTORE_DB, "reviews", reviewId);
 
-    setHasVotedOnReviewID((prevReviews) => [...prevReviews, reviewId]);
-    Toast.show({
-      type: "success",
-      text1: "Vote added",
-      position: "bottom",
-    });
+    // Update Firestore: Add the loggedInUser's ID to the 'votes' array
+    updateDoc(reviewDocRef, {
+      votes: arrayUnion(loggedInUser),
+    })
+      .then(() => {
+        // Update local state:
+        // Add reviewId to hasVotedOnReviewID so user can't vote again this session
+        setHasVotedOnReviewID((prevReviews) => [...prevReviews, reviewId]);
+
+        // Optimistically update the reviews state to reflect the new vote count
+        setReviews((prevReviews) =>
+          prevReviews.map((review) =>
+            review.id === reviewId
+              ? { ...review, votes: [...review.votes, loggedInUser] } // Add user ID to local votes array
+              : review
+          )
+        );
+
+        Toast.show({
+          type: "success",
+          text1: "Vote added",
+          position: "bottom",
+        });
+      })
+      .catch((err) => {
+        console.error("Error casting vote:", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to add vote",
+          text2: err.message,
+          position: "bottom",
+        });
+      });
   }
 
   function handleShare() {
@@ -253,6 +312,8 @@ function Beer() {
           reviews={reviews}
           onPostReviewButtonPress={handlePressPostReview}
           onVoteButtonPress={handleVote}
+          hasVotedOnReviewID={hasVotedOnReviewID}
+          loggedInUser={loggedInUser}
         />
 
         <ShareButton onShareButtonPress={handleShare} />
