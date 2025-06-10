@@ -17,7 +17,10 @@ const firebaseConfig = {
   measurementId: "G-0EEZPKE3H6",
 };
 
-
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
 
+console.log(
+  "firebaseconfig.js DEBUG: FIRESTORE_DB is (should be an object):",
+  FIRESTORE_DB
+);

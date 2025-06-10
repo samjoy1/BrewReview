@@ -2,17 +2,21 @@ import { FIRESTORE_DB } from "@/firebaseconfig";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { UserContext } from "../../../index";
 import {
   BeerImage,
   BeerReviews,
@@ -23,7 +27,6 @@ import {
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-
 function Beer() {
   // HOOKS
   const [liked, setLiked] = useState(false);
@@ -33,9 +36,27 @@ function Beer() {
   const navigation = useNavigation();
   const route = useRoute();
   const { beerID } = route.params || {};
+  const { loggedInUser } = useContext(UserContext);
+  console.log("Logged in user:", loggedInUser);
+
+  // ADDING TO FAVOURITES DATA
+  const userRef = doc(FIRESTORE_DB, "users", loggedInUser);
+  useEffect(() => {
+    getDoc(userRef)
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          const favs = docSnap.data().favourite_beers || [];
+          setLiked(favs.includes(beerID));
+        }
+      })
+      .catch((err) => {
+        console.log("Error reading favourites", err);
+      });
+  }, [beerID, loggedInUser]);
 
   // FETCHING THE BEER DATA
   useEffect(() => {
+    console.log("Logged in user:", loggedInUser);
     const currentBeerID = beerID;
     const docRef = doc(FIRESTORE_DB, "beers", currentBeerID);
 
@@ -65,6 +86,7 @@ function Beer() {
 
   // FETCHING REVIEW DATA
   useEffect(() => {
+    console.log("Logged in user:", loggedInUser);
     const currentBeerID = beerID;
     const reviewsRef = collection(FIRESTORE_DB, "reviews");
     const q = query(reviewsRef, where("beer_id", "==", currentBeerID));
@@ -102,7 +124,31 @@ function Beer() {
   }
 
   function handlePressHeartButton() {
-    setLiked(!liked);
+    const action = liked ? arrayRemove(beerID) : arrayUnion(beerID);
+
+    setDoc(
+      userRef,
+      {
+        favourite_beers: action,
+        ...(liked ? {} : { created_at: new Date() }),
+      },
+      { merge: true }
+    )
+      .then(() => {
+        setLiked(!liked);
+        Toast.show({
+          type: "success",
+          text1: liked ? "Removed from favourites" : "Added to favourites",
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to toggle favourite:", err);
+        Toast.show({
+          type: "error",
+          text1: "Failed to update favourites",
+          text2: err.message,
+        });
+      });
   }
 
   // should go to all beers filtered by country
