@@ -1,7 +1,7 @@
 // components
 import RecentReviews from "./RecentReviews";
 import Beer from "./Beer";
-import BeerList from "../beer-list/BeerList"
+import BeerList from "./BeerList"
 import BreweryList from "./BreweryList"
 import Brewery from "./Brewery";
 import Camera from "./Camera";

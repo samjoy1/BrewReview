@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { getBreweryById } from "../../../utilities";
+import { getBreweryById } from "../../../scripts/fetch"
 import {
   BreweryImage,
   BreweryInfoButtons,

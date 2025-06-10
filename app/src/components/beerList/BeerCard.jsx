@@ -4,7 +4,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 const defaultBeerImage = require("../../../../assets/images/default-beer-image.png");
 
 function BeerCard({ beer, navigation, cardWidth }) {
-  const isTwoColumn = cardWidth === "48%";
+  const isTwoColumn = cardWidth === "47%";
   return (
     <View
       key={beer.id}

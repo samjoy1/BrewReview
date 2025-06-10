@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { UserContext } from "../../../index";
 import { getBeerById, getUserById } from "../../../scripts/fetch";
-import BeerCard from "../beer-list/BeerCard";
+import BeerCard from "../beerList/BeerCard";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
@@ -74,7 +74,7 @@ function FavouriteBeers({ navigation }) {
           data={favouriteBeers}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <BeerCard beer={item} navigation={navigation} />
+            <BeerCard beer={item} navigation={navigation} cardWidth="47%" />
           )}
           ListEmptyComponent={() => (
             <Text style={{ textAlign: "center", marginTop: 20 }}>
