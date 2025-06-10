@@ -1,9 +1,9 @@
-import { Picker } from "@react-native-picker/picker";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
+import { SortBy } from "../beerList/Index";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
@@ -60,22 +60,12 @@ function BeerList({ navigation }) {
 
           <View className="bg-white rounded-lg p-2 mb-4">
             <Text className="font-semibold text-gray-700 mb-1">Sort by:</Text>
-            <Picker
-              selectedValue={sortField}
-              onValueChange={(itemValue) => setSortField(itemValue)}
-            >
-              <Picker.Item label="Votes" value="votes" />
-              <Picker.Item label="Name" value="name" />
-              <Picker.Item label="ABV" value="percentage" />
-            </Picker>
-
-            <Picker
-              selectedValue={sortDirection}
-              onValueChange={(itemValue) => setSortDirection(itemValue)}
-            >
-              <Picker.Item label="Descending" value="desc" />
-              <Picker.Item label="Ascending" value="asc" />
-            </Picker>
+            <SortBy
+              sortField={sortField}
+              setSortField={setSortField}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+            />
           </View>
 
           <View className="flex-row flex-wrap space-between">
@@ -85,7 +75,7 @@ function BeerList({ navigation }) {
                 className="bg-white rounded-lg shadow-md mb-4 p-3"
                 style={{
                   elevation: 3,
-                  width: "48%",
+                  width: "50%",
                   flexDirection: "column",
                   alignItems: "center",
                   overflow: "hidden",
