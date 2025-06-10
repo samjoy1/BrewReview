@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { FlatList, Image, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { UserContext } from "../../../index";
 import { getBeerById, getUserById } from "../../../scripts/fetch";
+import BeerCard from "../beer-list/BeerCard";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-function FavouriteBeers() {
+function FavouriteBeers({ navigation }) {
   const { loggedInUser } = useContext(UserContext);
   const [favouriteBeers, setFavouriteBeers] = useState([]);
 
@@ -69,22 +70,11 @@ function FavouriteBeers() {
         <FlatList
           style={{ flex: 1 }}
           contentContainerStyle={{ paddingBottom: 100 }}
+          numColumns={2}
           data={favouriteBeers}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View
-              style={{
-                flexDirection: "row",
-                padding: 16,
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={{ uri: item.img_url }}
-                style={{ width: 60, height: 60, borderRadius: 8 }}
-              />
-              <Text style={{ marginLeft: 16, fontSize: 16 }}>{item.name}</Text>
-            </View>
+            <BeerCard beer={item} navigation={navigation} />
           )}
           ListEmptyComponent={() => (
             <Text style={{ textAlign: "center", marginTop: 20 }}>
