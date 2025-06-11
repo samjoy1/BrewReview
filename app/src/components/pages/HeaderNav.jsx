@@ -71,6 +71,14 @@ export default function Header() {
               <Text className="py-2 text-gray-800">All Beers</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BreweryList");
+              }}
+            >
+              <Text className="py-2 text-gray-800">All Breweries</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={() => handleNavigate("Search")}>
               <Text className="py-2 text-gray-800">Search</Text>
             </TouchableOpacity>
