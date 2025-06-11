@@ -52,7 +52,7 @@ export default function Index() {
     "reviews": ["hells", "313_craft"],
     "following": [],
     "followers": [],
-    "preferences": { "background": "white", "navbarColour": "bg-stone-900", "keepLoggedIn": false, "sendEmailNotifications": false }
+    "preferences": { "background": "black", "navbarColour": "bg-stone-900", "keepLoggedIn": false, "sendEmailNotifications": false }
   });
   const [background, setBackground] = useState( isLoggedIn ? loggedInUser.preferences.background : "black")
   const [navbarColour, setNavbarColour] = useState( isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900")
