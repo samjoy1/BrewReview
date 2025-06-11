@@ -1,7 +1,7 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { Dimensions, StyleSheet, Linking} from "react-native";
+import MapView, { Marker} from "react-native-maps";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 export default function Map() {
@@ -26,14 +26,6 @@ export default function Map() {
       .catch(console.error);
   }, []);
 
-  if (Platform.OS === "web") {
-    return (
-      <View style={styles.center}>
-        <Text>Map is only available on iOS/Android</Text>
-      </View>
-    );
-  }
-  const { default: MapView, Marker } = require("react-native-maps");
 
   return (
     <MapView style={styles.map} initialRegion={region}>
@@ -42,7 +34,8 @@ export default function Map() {
           key={brew.id}
           coordinate={{ latitude: brew.latitude, longitude: brew.longitude }}
           title={brew.name}
-          description={brew.location}
+          description={brew.url}
+          onCalloutPress={() => Linking.openURL(brew.url)}
         />
       ))}
     </MapView>
