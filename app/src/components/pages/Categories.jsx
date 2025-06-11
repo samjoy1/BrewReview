@@ -5,13 +5,16 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { collection, getDocs } from "firebase/firestore";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 import Navbar from "./NavBar";
 import HeaderNav from "./HeaderNav";
-import { FilterDropdown } from "./FilterDropdown";
+import { FilterDropdown } from "../CategoriesComponents/FilterDropdown";
+import SearchBarWithSuggestions from "../CategoriesComponents/SearchBarWithSuggestions"; // 👈 New import
 
 export default function Categories() {
   const [allBeers, setAllBeers] = useState([]);
@@ -37,12 +40,12 @@ export default function Categories() {
         const uniqueCountries = [
           ...new Set(beers.map((b) => b.country).filter(Boolean)),
         ];
-        setCountries(uniqueCountries);
+        setCountries([...uniqueCountries]);
 
         const uniqueCategories = [
           ...new Set(beers.map((b) => b.category).filter(Boolean)),
         ];
-        setCategories(uniqueCategories);
+        setCategories([...uniqueCategories]);
       } catch (err) {
         console.error("Error fetching beers:", err);
       } finally {
@@ -56,16 +59,16 @@ export default function Categories() {
   useEffect(() => {
     let filtered = allBeers;
 
-    if (selectedCountry) {
+    if (selectedCountry && selectedCountry !== "All") {
       filtered = filtered.filter((beer) => beer.country === selectedCountry);
     }
 
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== "All") {
       filtered = filtered.filter((beer) => beer.category === selectedCategory);
     }
 
     setFilteredBeers(filtered);
-  }, [selectedCountry, selectedCategory]);
+  }, [selectedCountry, selectedCategory, allBeers]);
 
   const renderBeer = ({ item }) => (
     <TouchableOpacity
@@ -80,10 +83,14 @@ export default function Categories() {
   );
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white"
+    >
       <HeaderNav />
 
       <View className="flex-1 px-4 py-2">
+       
+        <SearchBarWithSuggestions data={allBeers} />
+
         <Text className="text-xl font-semibold mb-4">Filter Beers</Text>
 
         <FilterDropdown
@@ -99,7 +106,7 @@ export default function Categories() {
           selectedValue={selectedCategory}
           onSelect={setSelectedCategory}
         />
-
+        
         {loading ? (
           <ActivityIndicator size="large" className="mt-20" />
         ) : (
@@ -107,7 +114,7 @@ export default function Categories() {
             data={filteredBeers}
             keyExtractor={(item) => item.id}
             renderItem={renderBeer}
-            contentContainerStyle={{ paddingBottom: 100 }} // prevents overlap
+            contentContainerStyle={{ paddingBottom: 100 }}
             ListEmptyComponent={
               selectedCountry || selectedCategory ? (
                 <Text>No beers match these filters.</Text>

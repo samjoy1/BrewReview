@@ -28,7 +28,7 @@ export function FilterDropdown({ label, items, selectedValue, onSelect }) {
             onSelect("");
             closeMenu();
           }}
-          title={`Any`}
+          title={`Any ${label}`}
         />
         {items.map((item) => (
           <Menu.Item
