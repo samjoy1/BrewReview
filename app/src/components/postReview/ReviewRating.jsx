@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import StarRating from 'react-native-star-rating-widget';
-import { Text, View, TouchableOpacity } from "react-native-web";
+import { Text, View, TouchableOpacity } from "react-native";
 
 function ReviewRating ( { posting_user_id, posting_beer_id, submitReview } ) {
     const [rating, setRating] = useState(0)
@@ -25,7 +25,9 @@ function ReviewRating ( { posting_user_id, posting_beer_id, submitReview } ) {
 
     return (
         <View>
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">Leave a Rating</View>
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Leave a Rating</Text>
+            </View>
             <View className="flex w-full bg-stone-900/90 rounded-xl mb-8 p-4 border border-amber-300/90">
                 <View className="flex-row justify-center m-5 bg-gray-500 rounded-xl">
                         <StarRating                                                 // Rating                                                 

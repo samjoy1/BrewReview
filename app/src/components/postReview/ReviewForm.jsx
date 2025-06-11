@@ -4,7 +4,7 @@ import StarRating from 'react-native-star-rating-widget';
 
 // COMPONENTS
 import BeerCardTextBox from "../postReview/BeerCardTextBox";
-import SelectTags from "../postReview/SelectTags"
+import SelectTags from "../postReview/SelectTags";
 
 function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
     const [brewery, setBrewery] = useState({})
@@ -67,9 +67,10 @@ function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
     return (
         <View>
             {/* BEER CARD */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">Preview</View>
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Preview</Text>
+            </View>
             <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
-                
                 <View className="flex-1">
                     <BeerCardTextBox text={posting_beer ? posting_beer.name : ""} placeholder={"Name"} />
                     <BeerCardTextBox text={posting_beer ? posting_beer.category : ""} placeholder={"Category"} />
@@ -83,7 +84,9 @@ function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
                 </View>
             </View>
 
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">Write a Review</View>
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Write a Review</Text>
+            </View>
             <View className="w-full bg-stone-900/80 rounded-xl p-4 border border-amber-300/90">
                 <TextInput style={styles.text_input}                            // set title
                     placeholder="Enter a title for your review..."
@@ -138,7 +141,6 @@ const styles = StyleSheet.create({
     beer_img: {
     width: '200px',
     height: '200px',
-    aspectRatio: '1/1 auto',
     borderRadius: '5%',
     marginLeft: 64
   }
