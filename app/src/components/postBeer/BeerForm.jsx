@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     height: '200px',
     aspectRatio: '1/1 auto',
     borderRadius: '5%',
+    marginLeft: 64
   }
 })
 

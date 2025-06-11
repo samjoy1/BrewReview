@@ -36,8 +36,6 @@ function SelectCategory ({ setCategory }) {
     <View className="flex-row m-2">
       <SelectDropdown
         data={categories}
-        // defaultValueByIndex={8} // use default value by index or default value
-        // defaultValue={{title: 'kiss', icon: 'emoticon-kiss-outline'}} // use default value by index or default value
         onSelect={(selectedItem, index) => {
           setCategory(selectedItem)
         }}
@@ -81,76 +79,6 @@ function SelectCategory ({ setCategory }) {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 50,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 116,
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: 90,
-    backgroundColor: '#E9ECEF',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 16,
-  },
-  headerTxt: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#151E26',
-  },
-  dropdownButtonStyle: {
-    width: 350,
-    height: 50,
-    backgroundColor: '#E9ECEF',
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-  },
-  dropdownButtonTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#151E26',
-    textAlign: 'center',
-  },
-  dropdownMenuStyle: {
-    backgroundColor: '#E9ECEF',
-    borderRadius: 8,
-  },
-  dropdownSearchInputStyle: {
-    backgroundColor: '#E9ECEF',
-    borderRadius: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B1BDC8',
-  },
-  dropdownItemStyle: {
-    width: '100%',
-    flexDirection: 'row',
-    paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B1BDC8',
-  },
-  dropdownItemTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#151E26',
-    textAlign: 'center',
-  },
-  dropdownItemIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
-  },
   ////////////// dropdown1
   dropdown1ButtonStyle: {
     width: '80%',

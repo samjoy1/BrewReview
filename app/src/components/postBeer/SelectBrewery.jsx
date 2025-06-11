@@ -36,8 +36,6 @@ function SelectBrewery ({ setBrewery }) {
     <View className="flex-row m-2">
       <SelectDropdown
         data={breweries}
-        // defaultValueByIndex={8} // use default value by index or default value
-        // defaultValue={{title: 'kiss', icon: 'emoticon-kiss-outline'}} // use default value by index or default value
         onSelect={(selectedItem, index) => {
           setBrewery(selectedItem)
         }}
