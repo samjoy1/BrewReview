@@ -37,6 +37,7 @@ function BeerCard({ beer, navigation, cardWidth }) {
           <Text className="text-white font-semibold">View More</Text>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 }
