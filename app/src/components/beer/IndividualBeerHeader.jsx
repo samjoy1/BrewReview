@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 function IndividualBeerHeader({ name, liked, onHeartButtonPress }) {
   return (
-    <View className="flex-row justify-between items-center mb-4">
+    <View className="flex-row h-16 justify-between items-center mb-4 rounded-xl bg-yellow-500 border-2 border-yellow-400 px-4 shadow-lg">
       <Text className="text-xl font-bold">{name}</Text>
       <TouchableOpacity onPress={onHeartButtonPress}>
         <Heart
