@@ -1,5 +1,5 @@
 // IMPORTS
-import { View, Text } from "react-native-web"
+import { View, Text } from "react-native"
 
 // STYLING
 let text_box = "text-white bg-zinc-800 m-1 p-1 rounded-xl h-7 align-middle"

@@ -92,9 +92,8 @@ function PostBeer ({ navigation }) {
                         Beer</TouchableOpacity>
                 </View>
 
-
                 <View className="p-6">
-                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
+                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
                     <BeerForm submitBeer={submitBeer}/>
                 </View>
             </ImageBackground>
