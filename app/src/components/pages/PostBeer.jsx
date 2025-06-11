@@ -2,7 +2,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import Toast from 'react-native-toast-message';
-import { ImageBackground, ScrollView, SafeAreaView, Text, TouchableOpacity, View } from "react-native-web";
+import { ImageBackground, ScrollView, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 
 import { UserContext } from "../../../index.jsx";
 // SCRIPTS
