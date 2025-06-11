@@ -1,9 +1,10 @@
 // IMPORTS
 import { useContext, useEffect, useState } from "react";
+import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from 'react-native-toast-message';
-import { ImageBackground, ScrollView, Text, View } from "react-native-web";
 
 import { UserContext } from "../../../index.jsx";
+
 // SCRIPTS
 import { postBeer } from "../../../scripts/post";
 
@@ -12,8 +13,12 @@ import HeaverNav from "../pages/HeaderNav";
 import NavBar from "../pages/NavBar";
 import BeerForm from "../postBeer/BeerForm.jsx";
 
+// STYLING
+let review_rating_button_selected = "font-bold text-center bg-sky-500 w-40 p-3"
+let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
 
-function PostBeer () {
+
+function PostBeer ({ navigation }) {
     // STATES
     const { loggedInUser } = useContext(UserContext)
 
@@ -78,9 +83,17 @@ function PostBeer () {
             <ImageBackground source={ require("../../../../assets/images/BR-bg.png") }
                     className="relative flex-shrink p-2">
                 <HeaverNav className=""/>
+                <View className="flex-row justify-center mt-4">
+                    <TouchableOpacity onPress={() => { navigation.navigate("PostReview")}}
+                        className={review_rating_button_unselected+" rounded-l-xl"}>
+                        Review</TouchableOpacity>
+                    <TouchableOpacity onPress={() => { }}
+                        className={review_rating_button_selected+" rounded-r-xl"}>
+                        Beer</TouchableOpacity>
+                </View>
 
                 <View className="p-6">
-                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
+                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
                     <BeerForm submitBeer={submitBeer}/>
                 </View>
             </ImageBackground>

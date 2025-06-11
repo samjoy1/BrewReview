@@ -7,46 +7,44 @@ import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function SelectBrewery ({ setBrewery }) {
-    const [breweries, setBreweries] = useState([{}])
+function SelectTags ({ addReviewTag }) {
+    const [tags, setTags] = useState([])
     
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    async function getBreweries () {
+    async function getTags () {
         setLoading(true)
         
-        await getDocs(collection(FIRESTORE_DB, "breweries"))
+        await getDocs(collection(FIRESTORE_DB, "tags"))
         .then((snapshot) => {
-            let breweriesArray = []
+            let tagsArray = []
             snapshot.forEach((doc) => {
-                breweriesArray.push(doc.data())
+                tagsArray.push(doc.data())
             })
-            setBreweries(breweriesArray)
+            setTags(tagsArray)
         })
         .catch((err) => { setError(err) })
         .finally(() => { setLoading(false) })
     }
 
     useEffect(() => {
-        getBreweries()
+        getTags()
     }, [])
 
   return (
     <View className="flex-row m-2">
       <SelectDropdown
-        data={breweries}
-        // defaultValueByIndex={8} // use default value by index or default value
-        // defaultValue={{title: 'kiss', icon: 'emoticon-kiss-outline'}} // use default value by index or default value
+        data={tags}
         onSelect={(selectedItem, index) => {
-          setBrewery(selectedItem)
+          addReviewTag(selectedItem)
         }}
         renderButton={(selectedItem, isOpen) => {
           return (
             <View className="flex-row bg-gray-700 rounded-xl py-2 w-full">
               {/* <Icon name={selectedItem ? selectedItem.icon : 'emoticon'} style={styles.dropdown1ButtonIconStyle} /> */}
               <Text style={styles.dropdown1ButtonTxtStyle}>
-                { selectedItem ? (selectedItem.name) : 'Select a Brewery'}
+                { selectedItem ? (selectedItem.name) : 'Select a Tag'}
               </Text>
               <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} style={styles.dropdown1ButtonArrowStyle} />
             </View>
@@ -54,14 +52,13 @@ function SelectBrewery ({ setBrewery }) {
         }}
         renderItem={(item, index, isSelected) => {
           return (
-            loading ? <View><Text>Loading Breweries...</Text></View> :
+            loading ? <View><Text>Loading Tags...</Text></View> :
                 <View
                 style={{
                     ...styles.dropdown1ItemStyle,
                     ...(isSelected && {backgroundColor: 'grey'}),
                 }}>
                     <Text style={styles.dropdown1ItemTxtStyle}>{item.name}</Text>
-                    <Text style={styles.dropdown1ItemTxtStyle}>{item.category}</Text>
                 </View> 
           );
         }}
@@ -140,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectBrewery
+export default SelectTags

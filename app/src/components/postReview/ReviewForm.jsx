@@ -1,0 +1,149 @@
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import StarRating from 'react-native-star-rating-widget';
+
+// COMPONENTS
+import BeerCardTextBox from "../postReview/BeerCardTextBox";
+import SelectTags from "../postReview/SelectTags";
+
+function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
+    const [brewery, setBrewery] = useState({})
+    const [category, setCategory] = useState({})
+    
+    const [titleInput, setTitleInput] = useState("")
+    const [bodyInput, setBodyInput] = useState("")
+    const [rating, setRating] = useState(0)
+    const [tags, setTags] = useState([])
+
+    const [titleError, setTitleError] = useState(false)
+    const [bodyError, setBodyError] = useState(false)
+
+    // SET FUNCTIONS
+    function handleInput(event, type) {
+        switch (type) {
+            case "title":
+                setTitleInput(event)
+                break
+            case "body":
+                setBodyInput(event)
+            case "tags":
+                setTagsInput(event)
+        }
+    }
+
+    function addReviewTag (tag) {
+        let tagsCopy = [...tags]
+        tagsCopy.push(tag)
+        setTags(tagsCopy)
+    }
+
+    function createReview () {
+        let review_id = ""
+        if (posting_beer && posting_beer.id) {
+            review_id = posting_beer.id+"#"+posting_user_id
+        }
+
+        const newReview = {
+            "id": review_id,
+            "type": "review",
+            "user_id": posting_user_id,
+            "beer_id": posting_beer.id,
+            "title": titleInput,
+            "body": bodyInput,
+            "tags": tags,
+            "rating": rating,
+            "created_at": Date.now(),
+            "votes": []
+        }
+        if (!titleInput) {
+            setTitleError(true)
+        }
+        submitReview(newReview)
+    }
+
+    useEffect(() => {
+    }, [])
+
+    return (
+        <View>
+            {/* BEER CARD */}
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Preview</Text>
+            </View>
+            <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
+                <View className="flex-1">
+                    <BeerCardTextBox text={posting_beer ? posting_beer.name : ""} placeholder={"Name"} />
+                    <BeerCardTextBox text={posting_beer ? posting_beer.category : ""} placeholder={"Category"} />
+                    <BeerCardTextBox text={posting_beer ? posting_beer.brewery: ""} placeholder={"Brewery"} />
+                    <BeerCardTextBox text={posting_beer ? posting_beer.country: ""} placeholder={"Country"} />
+                    <BeerCardTextBox text={"tags"} placeholder={"Tags"} />
+                </View>
+                <View className="flex-1">
+                    <Image source={require("../../../../assets/images/default-beer-image.png")}
+                    style={styles.beer_img} className="" />
+                </View>
+            </View>
+
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Write a Review</Text>
+            </View>
+            <View className="w-full bg-stone-900/80 rounded-xl p-4 border border-amber-300/90">
+                <TextInput style={styles.text_input}                            // set title
+                    placeholder="Enter a title for your review..."
+                    onChangeText={(event) => { handleInput(event, "title")}} />
+
+                <TextInput style={styles.text_input}                            // set body
+                    placeholder="Enter your review..."
+                    editable
+                    multiline
+                    numberOfLines={8}
+                    onChangeText={(event) => { handleInput(event, "body")}}/>
+
+                <SelectTags addReviewTag={addReviewTag}/>
+
+                <View className="flex-row justify-center m-5 bg-gray-500 rounded-xl">
+                    <StarRating                                                 // Rating                                                 
+                        rating={rating}
+                        onChange={setRating}
+                        enableHalfStar={false}
+                        starSize={64}
+                    />
+                </View> 
+                
+                <TouchableOpacity                                               // Submit Button
+                    onPress={() => { createReview() }}
+                    className="flex-row justify-center bg-green-400 rounded-xl px-6 py-6 mx-4 mb-6 shadow-sm hover:bg-green-300"
+                >
+                    <Text className="text-black text-lg font-bold">Submit Review</Text>
+                </TouchableOpacity>                                          
+            </View>
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+  text_input: {
+    color: 'black',
+    backgroundColor: 'white',
+    borderRadius: 6,
+    margin: 8,
+    padding: 8
+  },
+  text_input_error: {
+    color: 'black',
+    backgroundColor: 'white',
+    border: 'solid',
+    borderColor: 'red',
+    borderRadius: 6,
+    margin: 8,
+    padding: 6
+  },
+    beer_img: {
+    width: '200px',
+    height: '200px',
+    borderRadius: '5%',
+    marginLeft: 64
+  }
+})
+
+export default ReviewForm
