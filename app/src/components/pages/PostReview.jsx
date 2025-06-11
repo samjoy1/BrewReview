@@ -1,9 +1,8 @@
 
 // IMPORTS
-import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import Toast from 'react-native-toast-message';
-import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native-web";
+import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { UserContext } from "../../../index.jsx";
 
@@ -19,11 +18,9 @@ import { ReviewForm, ReviewRating, SelectBeer } from "../postReview/index.jsx";
 let review_rating_button_selected = "font-bold text-center bg-sky-500 w-40 p-3"
 let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
 
-function PostReview () {
+function PostReview ({ navigation }) {
     // STATES
-    const { loggedInUser } = useContext(UserContext)
-
-    const navigation = useNavigation()
+    const { loggedInUser, background, navbarColour } = useContext(UserContext)
 
     const [posting_beer, setPosting_beer] = useState({
         id: "",
@@ -92,15 +89,15 @@ function PostReview () {
     return (
         <SafeAreaView className="flex-1">
             {/* <ImageBackground source={
-                    loggedInUser.preferences.background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-                    loggedInUser.preferences.background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-                    loggedInUser.preferences.background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-                    loggedInUser.preferences.background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                    loggedInUser.preferences.background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                    loggedInUser.preferences.background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                    require("../../../../assets/images/BR-bg-black.png")
-                 } */
-                    /* className="relative flex-shrink"> */}
+                background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+                background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+                background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+                background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                loggedInUser.preferences.background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                require("../../../../assets/images/BR-bg-black.png")}
+                className="relative flex-shrink"
+                > */}
                 <HeaderNav className=""/>
                 <ScrollView className="relative flex-1">
 
