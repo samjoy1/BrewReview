@@ -88,17 +88,17 @@ function PostReview ({ navigation }) {
 
     return (
         <SafeAreaView className="flex-1">
-            {/* <ImageBackground source={
+            <ImageBackground source={
                 background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
                 background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
                 background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
                 background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                loggedInUser.preferences.background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+                background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
                 require("../../../../assets/images/BR-bg-black.png")}
                 className="relative flex-shrink"
-                > */}
-                <HeaderNav className=""/>
+            >
+                <HeaderNav colour={navbarColour}/>
                 <ScrollView className="relative flex-1">
 
                 <View className="flex-row justify-center mt-4">
@@ -132,8 +132,8 @@ function PostReview ({ navigation }) {
                     
                 </View>
                 </ScrollView>
-                <Navbar />
-            {/* </ImageBackground> */}
+                <Navbar colour={navbarColour}/>
+            </ImageBackground>
         </SafeAreaView>
     )
 }
