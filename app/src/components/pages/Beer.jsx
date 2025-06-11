@@ -175,23 +175,21 @@ function Beer() {
       });
   }
 
-  // should go to all beers filtered by country
   function handlePressCountry() {
-    navigation.navigate("Search");
+    navigation.navigate("Categories", { filterCountry: country });
   }
 
-  // should go to all beers filtered by type
   function handlePressType() {
-    navigation.navigate("Search");
+    navigation.navigate("Categories", { filterCategory: type });
   }
 
   // should go to all beers filtered by high to low rating
   function handlePressRating() {
-    navigation.navigate("Search");
+    navigation.navigate("Categories", { sortByRating: true });
   }
 
   function handlePressPostReview() {
-    navigation.navigate("PostReview");
+    navigation.navigate("PostReview", { beerID: beerID });
   }
 
   function handleVote(reviewId) {
