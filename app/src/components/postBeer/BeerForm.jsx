@@ -81,7 +81,9 @@ function BeerForm ({ submitBeer }) {
         
         <View>
             {/* BEER CARD */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">Preview</View>
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>Preview</Text>
+            </View>
             <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
                 
                 <View className="flex-1">
@@ -98,7 +100,11 @@ function BeerForm ({ submitBeer }) {
             </View>
 
             {/* BEER FORM */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">Create a Beer</View>
+            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
+                <Text>
+                    Create a Beer
+                </Text>
+            </View>
             <View className="w-full bg-stone-900/90 rounded-xl p-8 border border-amber-300/90 shadow-lg">
                 <TextInput className={text_input+" min-h-9"}                           // set name
                     placeholder="Enter the name of your beer..."
@@ -149,7 +155,6 @@ function BeerForm ({ submitBeer }) {
                     <Text className="text-black text-lg font-bold">Submit Beer</Text>
                 </TouchableOpacity>                                          
             </View>
-
         </View>
 
     )
@@ -176,7 +181,6 @@ const styles = StyleSheet.create({
   beer_img: {
     width: '200px',
     height: '200px',
-    aspectRatio: '1/1 auto',
     borderRadius: '5%',
     marginLeft: 64
   }
