@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
   beer_img: {
     width: '200px',
     height: '200px',
-    aspectRatio: '1/1 auto',
     borderRadius: '5%',
   }
 })
