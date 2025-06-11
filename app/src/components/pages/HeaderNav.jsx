@@ -1,23 +1,22 @@
+// FIREBASE
 import { FIREBASE_APP } from "@/firebaseconfig";
-import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
-import React, { useState } from "react";
-import {
-  Image,
-  Modal,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
 
-export default function Header() {
-  const DUMMY_USER_ID = "bigdog512";
+// IMPORTS
+import React, { useContext, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Image, Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
+
+import { UserContext } from "../../../index"
+
+export default function Header({ colour }) {
   const auth = getAuth(FIREBASE_APP);
   const currentUser = auth.currentUser;
 
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
+
+  let { isLoggedIn, loggedInUser } = useContext(UserContext)
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
@@ -25,7 +24,7 @@ export default function Header() {
   };
 
   return (
-    <View className="h-16 bg-teal-500 flex-row items-center justify-between px-4 relative">
+    <View className={"h-16 flex-row items-center justify-between border-solid border-32 border-red-500 shadow-md px-4 relative m-4 rounded-xl "+colour}>
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
         <Text className="text-white text-3xl">☰</Text>
       </TouchableOpacity>
@@ -35,14 +34,10 @@ export default function Header() {
           source={{
             uri: "https://i.imgur.com/NcshsBa.png",
           }}
-          className="w-28 h-10 rounded-full"
+          className="w-32 h-12 rounded-full bg-violet-900"
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          const userId = currentUser?.userId || DUMMY_USER_ID;
-          navigation.navigate("Profile", { userId });
-        }}
+      <TouchableOpacity onPress={() => { isLoggedIn ? navigation.navigate("Profile") : console.log("not logged in!") }}
       >
         <Image
           source={{
