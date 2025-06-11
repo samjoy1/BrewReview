@@ -1,12 +1,11 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import Navbar from "./NavBar";
 import HeaderNav from "./HeaderNav"
 import BeerCarousel from "../HomepageComponents/BeerCarousel";
 import BreweryCarousel from "../HomepageComponents/BreweryCarousel";
 import FeaturedBeer from "../HomepageComponents/FeaturedBeer"
 import FeaturedBrewery from "../HomepageComponents/FeaturedBrewery";
-
 
 export default function Home() {
   return (

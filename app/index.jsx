@@ -1,7 +1,13 @@
-import "@/global.css";
+// imports
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+
 import { Provider as PaperProvider } from "react-native-paper";
+
+import React, { createContext, useState } from "react";
+
+// styling
+import "@/global.css";
+
 
 // components
 import {
@@ -11,23 +17,45 @@ import {
   BreweryList,
   Camera,
   Categories,
+  FavouriteBeers,
+  FollowersPage,
+  FollowingPage,
   Home,
   Login,
   Map,
   PostBeer,
   PostReview,
   Profile,
+  RecentReviews,
   Search,
   Settings,
   User,
   Users,
 } from "./src/components/pages/Componentsindex";
 
+// variables
+export const UserContext = createContext(null);
 const Stack = createNativeStackNavigator();
 
 export default function Index() {
+  // useStates
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState("brewcat108");
+  const [theme, setTheme] = useState("light");
+
   return (
-    <PaperProvider>
+
+    <UserContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        loggedInUser,
+        setLoggedInUser,
+        theme,
+        setTheme,
+      }}
+    >
+     <PaperProvider>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />
@@ -45,7 +73,12 @@ export default function Index() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Users" component={Users} />
+        <Stack.Screen name="FollowersPage" component={FollowersPage} />
+        <Stack.Screen name="FollowingPage" component={FollowingPage} />
+        <Stack.Screen name="RecentReviews" component={RecentReviews} />
+        <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
       </Stack.Navigator>
     </PaperProvider>
+  </UserContext.Provider>
   );
 }

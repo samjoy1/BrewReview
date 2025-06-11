@@ -1,4 +1,6 @@
+import { FIREBASE_APP } from "@/firebaseconfig";
 import { useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import {
   Image,
@@ -10,8 +12,12 @@ import {
 } from "react-native";
 
 export default function Header() {
+  const DUMMY_USER_ID = "bigdog512";
+  const auth = getAuth(FIREBASE_APP);
+  const currentUser = auth.currentUser;
+
   const [menuVisible, setMenuVisible] = useState(false);
-   const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
@@ -32,8 +38,12 @@ export default function Header() {
           className="w-28 h-10 rounded-full"
         />
       </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+      <TouchableOpacity
+        onPress={() => {
+          const userId = currentUser?.userId || DUMMY_USER_ID;
+          navigation.navigate("Profile", { userId });
+        }}
+      >
         <Image
           source={{
             uri: "https://avatar.iran.liara.run/public",
