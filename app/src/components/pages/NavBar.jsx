@@ -6,8 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../../index"
 
 export default function Navbar({ colour }) {
-  let { navBarColour } = useContext(UserContext)
-
   const navigation = useNavigation();
 
   return (
