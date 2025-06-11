@@ -41,8 +41,26 @@ const Stack = createNativeStackNavigator();
 export default function Index() {
   // useStates
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [loggedInUser, setLoggedInUser] = useState("brewcat108");
-  const [theme, setTheme] = useState("light");
+  const [loggedInUser, setLoggedInUser] = useState({
+    "id": "brewcat108",
+    "username": "brewcat108",
+    "name": "Vibha Kouser",
+    "email": "vibha.kouser@example.com",
+    "password": "astro",
+    "phone": 8147444873,
+    "country": "India",
+    "avatar_img_url": "https://randomuser.me/api/portraits/women/27.jpg",
+    "created_at": 1690359120,
+    "favourite_beers": ["hells", "double_ghost"],
+    "favourite_categories": ["IPA", "golden_ale", "brown_ale", "pilsner", "lager"],
+    "favourite_tags": [],
+    "reviews": ["hells", "313_craft"],
+    "following": [],
+    "followers": [],
+    "preferences": { "background": "black", "navbarColour": "bg-stone-900", "keepLoggedIn": false, "sendEmailNotifications": false }
+  });
+  const [background, setBackground] = useState( isLoggedIn ? loggedInUser.preferences.background : "black")
+  const [navbarColour, setNavbarColour] = useState( isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900")
 
   return (
 
@@ -52,8 +70,10 @@ export default function Index() {
         setIsLoggedIn,
         loggedInUser,
         setLoggedInUser,
-        theme,
-        setTheme,
+        background,
+        setBackground,
+        navbarColour,
+        setNavbarColour
       }}
     >
      <PaperProvider>

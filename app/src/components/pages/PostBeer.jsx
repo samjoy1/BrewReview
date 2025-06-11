@@ -1,7 +1,10 @@
 // IMPORTS
+import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from 'react-native-toast-message';
+
+import { ImageBackground, ScrollView, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 
 import { UserContext } from "../../../index.jsx";
 
@@ -17,10 +20,11 @@ import BeerForm from "../postBeer/BeerForm.jsx";
 let review_rating_button_selected = "font-bold text-center bg-sky-500 w-40 p-3"
 let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
 
-
 function PostBeer ({ navigation }) {
     // STATES
     const { loggedInUser } = useContext(UserContext)
+
+    const navigation = useNavigation()
 
     const [beer, setBeer] = useState({
         id: "",
@@ -79,15 +83,24 @@ function PostBeer ({ navigation }) {
     }, [])
 
     return (
-        <ScrollView className="relative flex-1">
-            <ImageBackground source={ require("../../../../assets/images/BR-bg.png") }
-                    className="relative flex-shrink p-2">
-                <HeaverNav className=""/>
+        <SafeAreaView className="flex-1">
+            <ImageBackground source={
+                loggedInUser.preferences.background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+                loggedInUser.preferences.background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+                loggedInUser.preferences.background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+                loggedInUser.preferences.background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                loggedInUser.preferences.background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                loggedInUser.preferences.background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                require("../../../../assets/images/BR-bg-black.png")
+                }
+                className="relative flex-shrink">
+            <HeaverNav />
+            <ScrollView className="relative flex-1">
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => { navigation.navigate("PostReview")}}
                         className={review_rating_button_unselected+" rounded-l-xl"}>
                         Review</TouchableOpacity>
-                    <TouchableOpacity onPress={() => { }}
+                    <TouchableOpacity onPress={() => {}}
                         className={review_rating_button_selected+" rounded-r-xl"}>
                         Beer</TouchableOpacity>
                 </View>
@@ -96,9 +109,11 @@ function PostBeer ({ navigation }) {
                     <Text className="bg-zinc-800/90 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
                     <BeerForm submitBeer={submitBeer}/>
                 </View>
+                
+            </ScrollView>
             </ImageBackground>
             <NavBar />
-        </ScrollView>
+        </SafeAreaView>
     )
 }
 
