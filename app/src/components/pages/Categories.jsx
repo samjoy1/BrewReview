@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
 import { FilterDropdown } from "../CategoriesComponents/FilterDropdown";
-import SearchBarWithSuggestions from "../CategoriesComponents/SearchBarWithSuggestions"; // 👈 New import
+import SearchBarWithSuggestions from "../CategoriesComponents/SearchBarWithSuggestions";
 import HeaderNav from "./HeaderNav";
 import Navbar from "./NavBar";
 
@@ -23,12 +23,15 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [breweriesForDropdown, setBreweriesForDropdown] = useState([]);
+  const [selectedBreweryId, setSelectedBreweryId] = useState("All");
   const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { filterCountry, filterCategory, sortByRating } = route.params || {};
+  const { filterCountry, filterCategory, sortByRating, filterBreweryId } =
+    route.params || {};
 
   useEffect(() => {
     if (filterCountry && countries.includes(filterCountry)) {
@@ -41,52 +44,88 @@ export default function Categories() {
     } else {
       setSelectedCategory("All");
     }
-  }, [filterCountry, filterCategory, countries, categories]);
+    if (
+      filterBreweryId &&
+      breweriesForDropdown.some((b) => b.id === filterBreweryId)
+    ) {
+      setSelectedBreweryId(filterBreweryId);
+    } else {
+      setSelectedBreweryId("All");
+    }
+  }, [
+    filterCountry,
+    filterCategory,
+    filterBreweryId,
+    countries,
+    categories,
+    breweriesForDropdown,
+  ]);
 
   useEffect(() => {
-    const fetchBeers = async () => {
+    const fetchBeersAndDropdowns = async () => {
       try {
+        setLoading(true);
         const beersRef = collection(FIRESTORE_DB, "beers");
-        const snapshot = await getDocs(beersRef);
-        const beers = snapshot.docs.map((doc) => ({
+        const beersSnapshot = await getDocs(beersRef);
+        const fetchedBeers = beersSnapshot.docs.map((doc) => ({
           id: doc.id,
+          brewery_id: doc.data().brewery,
           ...doc.data(),
         }));
-        setAllBeers(beers);
+        setAllBeers(fetchedBeers);
+
+        const breweriesRef = collection(FIRESTORE_DB, "breweries");
+        const breweriesSnapshot = await getDocs(breweriesRef);
+        const fetchedBreweries = breweriesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+        }));
 
         const uniqueCountries = [
           "All",
-          ...new Set(beers.map((b) => b.country).filter(Boolean)),
+          ...new Set(fetchedBeers.map((b) => b.country).filter(Boolean)),
         ].sort();
         setCountries([...uniqueCountries]);
 
         const uniqueCategories = [
           "All",
-          ...new Set(beers.map((b) => b.category).filter(Boolean)),
+          ...new Set(fetchedBeers.map((b) => b.category).filter(Boolean)),
         ].sort();
         setCategories([...uniqueCategories]);
+
+        const breweryDropdownItems = [
+          { id: "All", name: "All" },
+          ...fetchedBreweries.sort((a, b) => a.name.localeCompare(b.name)),
+        ];
+        setBreweriesForDropdown(breweryDropdownItems);
       } catch (err) {
-        console.error("Error fetching beers:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBeers();
+    fetchBeersAndDropdowns();
   }, []);
 
   useEffect(() => {
     let currentFiltered = [...allBeers];
 
-    if (selectedCountry && selectedCountry !== "All") {
+    if (selectedCountry !== "All") {
       currentFiltered = currentFiltered.filter(
         (beer) => beer.country === selectedCountry
       );
     }
 
-    if (selectedCategory && selectedCategory !== "All") {
+    if (selectedCategory !== "All") {
       currentFiltered = currentFiltered.filter(
         (beer) => beer.category === selectedCategory
+      );
+    }
+
+    if (selectedBreweryId !== "All") {
+      currentFiltered = currentFiltered.filter(
+        (beer) => beer.brewery_id === selectedBreweryId
       );
     }
 
@@ -95,7 +134,13 @@ export default function Categories() {
     }
 
     setFilteredBeers(currentFiltered);
-  }, [selectedCountry, selectedCategory, sortByRating, allBeers]);
+  }, [
+    selectedCountry,
+    selectedCategory,
+    selectedBreweryId,
+    sortByRating,
+    allBeers,
+  ]);
 
   const renderBeer = ({ item }) => (
     <TouchableOpacity
@@ -106,8 +151,24 @@ export default function Categories() {
       <Text className="text-gray-600">
         {item.category} - {item.country}
       </Text>
+      {item.percentage && (
+        <Text className="text-gray-600">Rating: {item.percentage}%</Text>
+      )}
+      {item.brewery_name && (
+        <Text className="text-gray-600">Brewery: {item.brewery_name}</Text>
+      )}
     </TouchableOpacity>
   );
+
+  const getSelectedBreweryDisplayName = () => {
+    if (selectedBreweryId === "All") {
+      return "All";
+    }
+    const brewery = breweriesForDropdown.find(
+      (b) => b.id === selectedBreweryId
+    );
+    return brewery ? brewery.name : "All";
+  };
 
   return (
     <View className="flex-1 bg-white">
@@ -136,6 +197,18 @@ export default function Categories() {
             onSelect={setSelectedCategory}
           />
 
+          <FilterDropdown
+            label="Brewery"
+            items={breweriesForDropdown.map((b) => b.name)}
+            selectedValue={getSelectedBreweryDisplayName()}
+            onSelect={(selectedName) => {
+              const brewery = breweriesForDropdown.find(
+                (b) => b.name === selectedName
+              );
+              setSelectedBreweryId(brewery ? brewery.id : "All");
+            }}
+          />
+
           {loading ? (
             <ActivityIndicator size="large" className="mt-20" />
           ) : (
@@ -147,6 +220,7 @@ export default function Categories() {
               ListEmptyComponent={
                 selectedCountry !== "All" ||
                 selectedCategory !== "All" ||
+                selectedBreweryId !== "All" ||
                 sortByRating ? (
                   <Text style={{ textAlign: "center", marginTop: 20 }}>
                     No beers match these filters/sort.

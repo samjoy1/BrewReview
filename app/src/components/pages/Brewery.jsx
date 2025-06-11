@@ -118,12 +118,10 @@ function Brewery() {
     }
   }
 
-  // make this filtered by country
   function handlePressCountry() {
-    navigation.navigate("BeerList");
+    navigation.navigate("Categories", {filterCountry: country});
   }
 
-  // go to the url provided
   function handlePressUrl() {
     if (typeof url === "string" && url.startsWith("http")) {
       Linking.openURL(url).catch((err) => {
@@ -146,14 +144,12 @@ function Brewery() {
     }
   }
 
-  // make this filtered by the brewery
   function handlePressBeers() {
-    navigation.navigate("BeerList");
+    navigation.navigate("Categories", {filterBrewery: breweryID});
   }
 
   function handlePressCity() {
-    // take user to a pin of the brewery on the map!!!
-    navigation.navigate("Search");
+    navigation.navigate("Map");
   }
 
   function handleShare() {
