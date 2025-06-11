@@ -1,9 +1,8 @@
 // components
-import RecentReviews from "./RecentReviews";
 import Beer from "./Beer";
-import BeerList from "./BeerList"
-import BreweryList from "./BreweryList"
+import BeerList from "./BeerList";
 import Brewery from "./Brewery";
+import BreweryList from "./BreweryList";
 import Camera from "./Camera";
 import Categories from "./Categories";
 import FavouriteBeers from "./FavouriteBeers";
@@ -15,14 +14,17 @@ import Map from "./Map";
 import PostBeer from "./PostBeer";
 import PostReview from "./PostReview";
 import Profile from "./Profile";
+import RecentReviews from "./RecentReviews";
 import Search from "./Search";
 import Settings from "./Settings";
 import User from "./User";
 import Users from "./Users";
-
+import FavouriteBreweries from "./FavouriteBreweries"
 
 module.exports = {
-  Beer, BeerList, BreweryList,
+  Beer,
+  BeerList,
+  BreweryList,
   Brewery,
   Camera,
   Categories,
@@ -37,6 +39,7 @@ module.exports = {
   User,
   Users,
   FavouriteBeers,
+  FavouriteBreweries,
   FollowersPage,
   RecentReviews,
   FollowingPage,

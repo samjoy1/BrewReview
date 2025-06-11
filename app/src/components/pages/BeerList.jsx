@@ -1,6 +1,6 @@
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
@@ -68,13 +68,15 @@ function BeerList({ navigation }) {
           </View>
 
           <View className="flex-row flex-wrap space-between">
-            {beers.length === 0 ? (
-              <Text>No Beers Found</Text>
-            ) : (
-              beers.map((beer, i) => (
-                <BeerCard key={i} beer={beer} navigation={navigation} />
-              ))
-            )}
+            {beers.map((beer) => (
+              <BeerCard
+                key={beer.id}
+                beer={beer}
+                navigation={navigation}
+                cardWidth="47%"
+              />
+            ))}
+
           </View>
         </ScrollView>
       </View>
