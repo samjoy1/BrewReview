@@ -39,25 +39,6 @@ function BreweryList({ navigation }) {
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-row justify-center mb-6">
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("BeerList");
-              }}
-              className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4"
-            >
-              <Text className="text-black text-lg font-bold">Beers</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("BreweryList");
-              }}
-              className="bg-white border border-gray-300 rounded-xl px-6 py-2 mx-4"
-            >
-              <Text className="text-black text-lg font-bold">Breweries</Text>
-            </TouchableOpacity>
-          </View>
-
           <View className="flex-row flex-wrap space-between">
             {breweries.map((brewery) => (
               <View
