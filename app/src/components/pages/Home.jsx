@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { ImageBackground, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { UserContext } from "../../../index";
+
+import { BeerCarousel, BreweryCarousel, FeaturedBeer, FeaturedBrewery } from "../home/index"
+
+import HeaderNav from "./HeaderNav";
 import Navbar from "./NavBar";
-import HeaderNav from "./HeaderNav"
-import BeerCarousel from "../HomepageComponents/BeerCarousel";
-import BreweryCarousel from "../HomepageComponents/BreweryCarousel";
-import FeaturedBeer from "../HomepageComponents/FeaturedBeer"
-import FeaturedBrewery from "../HomepageComponents/FeaturedBrewery";
 
 export default function Home() {
   let { loggedInUser, background, navbarColour } = useContext(UserContext)
@@ -18,8 +17,8 @@ export default function Home() {
         background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
         background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
         background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-        background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
-        background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
         require("../../../../assets/images/BR-bg-black.png")
       }
         className="relative flex-shrink bg-scroll">

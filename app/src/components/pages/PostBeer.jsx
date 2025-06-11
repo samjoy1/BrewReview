@@ -1,10 +1,7 @@
 // IMPORTS
-import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
-import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from 'react-native-toast-message';
-
-import { ImageBackground, ScrollView, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 
 import { UserContext } from "../../../index.jsx";
 
@@ -22,9 +19,7 @@ let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
 
 function PostBeer ({ navigation }) {
     // STATES
-    const { loggedInUser } = useContext(UserContext)
-
-    const navigation = useNavigation()
+    const { loggedInUser, background, navbarColour } = useContext(UserContext)
 
     const [beer, setBeer] = useState({
         id: "",
@@ -85,16 +80,16 @@ function PostBeer ({ navigation }) {
     return (
         <SafeAreaView className="flex-1">
             <ImageBackground source={
-                loggedInUser.preferences.background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-                loggedInUser.preferences.background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-                loggedInUser.preferences.background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-                loggedInUser.preferences.background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                loggedInUser.preferences.background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                loggedInUser.preferences.background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+                background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+                background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+                background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+                background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+                background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
                 require("../../../../assets/images/BR-bg-black.png")
                 }
                 className="relative flex-shrink">
-            <HeaverNav />
+            <HeaverNav colour={navbarColour}/>
             <ScrollView className="relative flex-1">
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => { navigation.navigate("PostReview")}}
@@ -112,7 +107,7 @@ function PostBeer ({ navigation }) {
                 
             </ScrollView>
             </ImageBackground>
-            <NavBar />
+            <NavBar colour={navbarColour}/>
         </SafeAreaView>
     )
 }
