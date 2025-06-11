@@ -1,9 +1,13 @@
 // imports
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { Provider as PaperProvider } from "react-native-paper";
+
 import React, { createContext, useState } from "react";
 
 // styling
 import "@/global.css";
+
 
 // components
 import {
@@ -40,6 +44,7 @@ export default function Index() {
   const [theme, setTheme] = useState("light");
 
   return (
+
     <UserContext.Provider
       value={{
         isLoggedIn,
@@ -50,12 +55,13 @@ export default function Index() {
         setTheme,
       }}
     >
+     <PaperProvider>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />
         <Stack.Screen name="BeerList" component={BeerList} />
-        <Stack.Screen name="Brewery" component={Brewery} />
         <Stack.Screen name="BreweryList" component={BreweryList} />
+        <Stack.Screen name="Brewery" component={Brewery} />
         <Stack.Screen name="Camera" component={Camera} />
         <Stack.Screen name="Categories" component={Categories} />
         <Stack.Screen name="Login" component={Login} />
@@ -72,6 +78,7 @@ export default function Index() {
         <Stack.Screen name="RecentReviews" component={RecentReviews} />
         <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
       </Stack.Navigator>
-    </UserContext.Provider>
+    </PaperProvider>
+  </UserContext.Provider>
   );
 }
