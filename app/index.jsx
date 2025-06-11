@@ -14,6 +14,7 @@ import {
   Camera,
   Categories,
   FavouriteBeers,
+  FavouriteBreweries,
   FollowersPage,
   FollowingPage,
   Home,
@@ -71,6 +72,10 @@ export default function Index() {
         <Stack.Screen name="FollowingPage" component={FollowingPage} />
         <Stack.Screen name="RecentReviews" component={RecentReviews} />
         <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+        <Stack.Screen
+          name="FavouriteBreweries"
+          component={FavouriteBreweries}
+        />
       </Stack.Navigator>
     </UserContext.Provider>
   );

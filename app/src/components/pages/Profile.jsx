@@ -158,6 +158,13 @@ function Profile({ route, navigation }) {
 
           <TouchableOpacity
             style={styles.button}
+            onPress={() => navigation.navigate("FavouriteBreweries")}
+          >
+            <Text style={styles.buttonText}>🍺 Favourite Breweries</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => navigation.navigate("RecentReviews")}
           >
             <Text style={styles.buttonText}>📝 Recent Reviews</Text>
@@ -169,6 +176,7 @@ function Profile({ route, navigation }) {
           >
             <Text style={styles.buttonText}>👅 Taste Profile</Text>
           </TouchableOpacity>
+          
         </View>
       </ScrollView>
       <Navbar />
