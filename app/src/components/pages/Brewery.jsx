@@ -1,10 +1,13 @@
+import { FIRESTORE_DB } from "@/firebaseconfig";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { useEffect, useState } from "react";
+import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useEffect, useState, useContext } from "react";
 import { ScrollView, Share } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { getBreweryById } from "../../../utilities";
+import { UserContext } from "../../../index";
+import { getBreweryById } from "../../../scripts/fetch"
 import {
   BreweryImage,
   BreweryInfoButtons,
@@ -21,6 +24,32 @@ function Brewery() {
   const route = useRoute();
   const navigation = useNavigation();
   const { breweryID } = route.params || {};
+  const { loggedInUser } = useContext(UserContext)
+
+  const userRef = loggedInUser
+    ? doc(FIRESTORE_DB, "users", loggedInUser)
+    : null;
+
+    useEffect(() => {
+      if (!loggedInUser || !userRef) {
+        setLiked(false); 
+        return;
+      }
+  
+      getDoc(userRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            const favs = docSnap.data().favourite_breweries || [];
+            setLiked(favs.includes(breweryID));
+          } else {
+            setLiked(false);
+          }
+        })
+        .catch((err) => {
+          console.log("Error reading favourite breweries", err);
+          setLiked(false); 
+        });
+    }, [breweryID, loggedInUser, userRef]); 
 
   // FETCHING BREWERY DATA
   useEffect(() => {
@@ -41,15 +70,58 @@ function Brewery() {
   }, [breweryID]);
 
   // HANDLER FUNCTIONS
-  function handlePressHeartButton() {
-    setLiked(!liked);
-  }
-  // make this filtered by country
-  function handlePressCountry() {
-    navigation.navigate("BeerList");
+  async function handlePressHeartButton() {
+    if (!loggedInUser) {
+      Toast.show({
+        type: "error",
+        text1: "Please log in to add to favourites",
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (!userRef) {
+      Toast.show({
+        type: "error",
+        text1: "User reference not available",
+        position: "bottom",
+      });
+      return;
+    }
+
+    const action = liked ? arrayRemove(breweryID) : arrayUnion(breweryID);
+
+    try {
+      await setDoc(
+        userRef,
+        {
+          favourite_breweries: action,
+        },
+        { merge: true } 
+      );
+      setLiked(!liked);
+      Toast.show({
+        type: "success",
+        text1: liked
+          ? "Removed from favourite breweries"
+          : "Added to favourite breweries",
+        position: "bottom",
+      });
+    } catch (err) {
+      console.error("Failed to toggle favourite brewery:", err);
+      Toast.show({
+        type: "error",
+        text1: "Failed to update favourites",
+        text2: err.message,
+        position: "bottom",
+      });
+    }
   }
 
-  // go to the url provided
+  function handlePressCountry() {
+    navigation.navigate("Categories", {filterCountry: country});
+  }
+
   function handlePressUrl() {
     if (typeof url === "string" && url.startsWith("http")) {
       Linking.openURL(url).catch((err) => {
@@ -72,14 +144,12 @@ function Brewery() {
     }
   }
 
-  // make this filtered by the brewery
   function handlePressBeers() {
-    navigation.navigate("BeerList");
+    navigation.navigate("Categories", {filterBrewery: breweryID});
   }
 
   function handlePressCity() {
-    // take user to a pin of the brewery on the map!!!
-    navigation.navigate("Search");
+    navigation.navigate("Map");
   }
 
   function handleShare() {

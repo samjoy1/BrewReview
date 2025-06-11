@@ -28,9 +28,9 @@ function SortBy({ sortField, setSortField, sortDirection, setSortDirection }) {
         itemStyle={{ height: 40 }}
         dropdownIconColor="#000"
       >
-        <Picker.Item label="Votes" value="votes" />
-        <Picker.Item label="Name" value="name" />
         <Picker.Item label="ABV" value="percentage" />
+        <Picker.Item label="Name" value="name" />
+        <Picker.Item label="Country" value="country" />
       </Picker>
 
       <TouchableOpacity

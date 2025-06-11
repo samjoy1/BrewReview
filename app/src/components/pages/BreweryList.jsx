@@ -1,12 +1,11 @@
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
+import BreweryCard from "../breweryList/BreweryCard";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
-
-const defaultBeerImage = require("../../../../assets/images/default-brewery-image.png");
 
 function BreweryList({ navigation }) {
   const [breweries, setBrewery] = useState([]);
@@ -15,18 +14,16 @@ function BreweryList({ navigation }) {
     const breweryRef = collection(FIRESTORE_DB, "breweries");
     getDocs(breweryRef)
       .then((querySnapshot) => {
-        let breweries = [];
-        let newBrewery = {};
-        querySnapshot.docs.map((doc) => {
-          newBrewery = { ...doc.data() };
-          newBrewery.id = doc.id;
-          breweries.push(newBrewery);
+        let compiledBreweries = [];
+        querySnapshot.docs.forEach((doc) => {
+          let newBrewery = { ...doc.data(), id: doc.id };
+          compiledBreweries.push(newBrewery);
         });
-
-        return breweries;
+        setBrewery(compiledBreweries);
       })
-      .then((result) => {
-        setBrewery(result);
+      .catch((err) => {
+        console.error("Error fetching breweries:", err);
+        // add a Toast.show here?
       });
   }, []);
 
@@ -58,53 +55,14 @@ function BreweryList({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row flex-wrap space-between">
+          <View className="flex-row flex-wrap justify-between">
             {breweries.map((brewery) => (
-              <View
+              <BreweryCard
                 key={brewery.id}
-                className="bg-white rounded-lg shadow-md mb-4 p-3"
-                style={{
-                  elevation: 3,
-                  width: "48%",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  overflow: "hidden",
-                  minHeight: 100,
-                }}
-              >
-                <Image
-                  source={
-                    brewery.img_url
-                      ? { uri: brewery.img_url }
-                      : defaultBeerImage
-                  }
-                  className="w-24 h-24"
-                  style={{ height: 80, width: 80 }}
-                />
-                <View className="flex-1">
-                  <Text className="text-lg font-semibold text-gray-900">
-                    {brewery.name}
-                  </Text>
-                  <Text className="text-sm text-gray-600 mb-1">
-                    {brewery.brewery}
-                  </Text>
-                  <Text className="text-sm text-gray-700">
-                    Country: {brewery.country}
-                  </Text>
-                  <Text className="text-sm text-gray-500 mb-2">
-                    City: {brewery.location}
-                  </Text>
-
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Brewery", { breweryID: brewery.id })
-                    }
-                    className="bg-amber-700 rounded px-3 py-1.5 self-start"
-                  >
-                    <Text className="text-white font-semibold">View More</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+                brewery={brewery}
+                navigation={navigation}
+                cardWidth="48%"
+              />
             ))}
           </View>
         </ScrollView>

@@ -1,9 +1,13 @@
 // imports
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { Provider as PaperProvider } from "react-native-paper";
+
 import React, { createContext, useState } from "react";
 
 // styling
 import "@/global.css";
+
 
 // components
 import {
@@ -14,6 +18,7 @@ import {
   Camera,
   Categories,
   FavouriteBeers,
+  FavouriteBreweries,
   FollowersPage,
   FollowingPage,
   Home,
@@ -58,6 +63,7 @@ export default function Index() {
   const [navbarColour, setNavbarColour] = useState( isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900")
 
   return (
+
     <UserContext.Provider
       value={{
         isLoggedIn,
@@ -70,12 +76,13 @@ export default function Index() {
         setNavbarColour
       }}
     >
+     <PaperProvider>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Beer" component={Beer} />
         <Stack.Screen name="BeerList" component={BeerList} />
-        <Stack.Screen name="Brewery" component={Brewery} />
         <Stack.Screen name="BreweryList" component={BreweryList} />
+        <Stack.Screen name="Brewery" component={Brewery} />
         <Stack.Screen name="Camera" component={Camera} />
         <Stack.Screen name="Categories" component={Categories} />
         <Stack.Screen name="Login" component={Login} />
@@ -91,7 +98,12 @@ export default function Index() {
         <Stack.Screen name="FollowingPage" component={FollowingPage} />
         <Stack.Screen name="RecentReviews" component={RecentReviews} />
         <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+        <Stack.Screen
+          name="FavouriteBreweries"
+          component={FavouriteBreweries}
+        />
       </Stack.Navigator>
-    </UserContext.Provider>
+    </PaperProvider>
+  </UserContext.Provider>
   );
 }

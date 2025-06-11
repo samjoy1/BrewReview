@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { ImageBackground, SafeAreaView, ScrollView, Text, View } from "react-native";
-
-// IMPORTS
-import { BeerCarousel, BreweryCarousel, FeaturedBeer, FeaturedBrewery } from "../home/index.jsx";
-import HeaderNav from "./HeaderNav";
-import Navbar from "./NavBar";
-
 import { UserContext } from "../../../index";
+import Navbar from "./NavBar";
+import HeaderNav from "./HeaderNav"
+import BeerCarousel from "../HomepageComponents/BeerCarousel";
+import BreweryCarousel from "../HomepageComponents/BreweryCarousel";
+import FeaturedBeer from "../HomepageComponents/FeaturedBeer"
+import FeaturedBrewery from "../HomepageComponents/FeaturedBrewery";
 
 export default function Home() {
   let { loggedInUser, background, navbarColour } = useContext(UserContext)
