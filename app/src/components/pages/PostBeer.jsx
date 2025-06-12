@@ -1,4 +1,7 @@
 // IMPORTS
+import { FIRESTORE_DB } from "@/firebaseconfig.js";
+import { doc, setDoc } from "firebase/firestore"
+
 import { useContext, useEffect, useState } from "react";
 import {
   ImageBackground,
@@ -68,6 +71,22 @@ function PostBeer({ navigation }) {
     return true;
   }
 
+  function postBeer(beerToPost) {
+    setDoc(doc(FIRESTORE_DB, "beers", beerToPost.id), {beerToPost} )
+  }
+
+  // SUBMIT
+  function submitBeer(newBeer) {
+    setBeer(newBeer);
+    if (isBeerValid(newBeer)) {
+      postBeer(newBeer);
+      Toast.show({
+        type: "success",
+        text1: "You just created a new Beer! Why not give it a rating?",
+      });
+    }
+    // should reload the page
+  }
     return (
         <SafeAreaView className="flex-1">
             <ImageBackground source={
@@ -105,17 +124,6 @@ function PostBeer({ navigation }) {
     )
 }
 
-  // SUBMIT
-  function submitBeer(newBeer) {
-    setBeer(newBeer);
-    if (isBeerValid(newBeer)) {
-      postBeer(newBeer);
-      Toast.show({
-        type: "success",
-        text1: "You just created a new Beer! Why not give it a rating?",
-      });
-    }
-    // should reload the page
-  }
+
 
 export default PostBeer;

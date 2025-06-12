@@ -19,7 +19,7 @@ function ReviewForm({ posting_user_id, posting_beer, submitReview }) {
   const [titleInput, setTitleInput] = useState("");
   const [bodyInput, setBodyInput] = useState("");
   const [rating, setRating] = useState(0);
-  const [tags, setTags] = useState([]);
+  const [tags, setTagsInput] = useState([]);
 
   const [titleError, setTitleError] = useState(false);
   const [bodyError, setBodyError] = useState(false);
