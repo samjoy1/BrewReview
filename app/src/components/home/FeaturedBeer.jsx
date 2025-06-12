@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, TouchableOpacity } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-
+import { useNavigation } from "@react-navigation/native";
 
 export default function FeaturedBeer() {
   const [beer, setBeer] = useState(null);
+  const navigation = useNavigation()
 
   useEffect(() => {
     const fetchRandomBeer = async () => {
@@ -33,19 +34,30 @@ export default function FeaturedBeer() {
   }
 
   return (
-    <View className="items-center w-full px-4">
-      <View className="bg-yellow-600 border-4 border-yellow-500 rounded-full p-4 w-full h-36 shadow-lg">
-        <Text className="bg-teal-400 mx-32 mb-4 rounded-full text-base font-bold text-center shadow-lg">
-          Featured Beer
-        </Text>
-        <Text className="bg-yellow-500 mx-32 rounded-full text-base font-bold text-center shadow-lg">{beer.name}</Text>
-        <Text className="text-sm text-white text-center mt-1">
-          ABV : {beer.percentage}%
-        </Text>
-        <Text className="text-sm text-white text-center mt-1">
-          {beer.country}
-        </Text>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("Beer", { beerID: beer.id })
+      }
+    >
+      <View className="items-center w-full px-4">
+        <View className="bg-yellow-600 border-4 border-yellow-500 rounded-full p-4 w-full h-48 shadow-lg">
+          <Text className="bg-teal-400 mx-32 mb-4 rounded-full text-base font-bold text-center shadow-lg">
+            Featured Beer
+          </Text>
+          <Text className="bg-yellow-500 mx-32 rounded-full text-base font-bold text-center shadow-lg">
+            {beer.name}
+          </Text>
+          <Text className="text-sm text-white text-center mt-1">
+            ABV : {beer.percentage}%
+          </Text>
+          <Text className="text-sm text-white text-center mt-1">
+            {beer.country}
+          </Text>
+          <Text className="text-sm text-white text-center mt-1">
+            {beer.brewery}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
