@@ -19,7 +19,9 @@ function InfoButtons({
           className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
           onPress={onTypeButtonPress}
         >
-          <Text className="text-base font-bold text-center">{type}'s</Text>
+          <Text className="text-base font-bold text-center">
+            { type ? `${type}` : "Category"}
+          </Text>
         </TouchableOpacity>
 
         {/* COUNTRY */}
@@ -28,7 +30,7 @@ function InfoButtons({
           onPress={onCountryButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            Beers from {country}
+            { country ? `Beers from ${country}` : "Country"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -41,7 +43,7 @@ function InfoButtons({
           onPress={onRatingButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            Rating: {rating}
+            { rating ? `Rating: ${rating}` : "No Rating"}
           </Text>
         </TouchableOpacity>
 
@@ -51,7 +53,7 @@ function InfoButtons({
           onPress={onBreweryButtonPress}
         >
           <Text className="text-base font-bold text-center">
-            The Brewery
+            { brewery ? `Brewery: ${brewery}` : "Brewery"}
           </Text>
         </TouchableOpacity>
       </View>

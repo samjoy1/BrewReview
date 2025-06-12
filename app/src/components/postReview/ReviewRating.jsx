@@ -1,18 +1,22 @@
+// IMPORTS
 import { useState } from 'react';
 import StarRating from 'react-native-star-rating-widget';
 import { Text, View, TouchableOpacity } from "react-native";
 
-function ReviewRating ( { posting_user_id, posting_beer_id, submitReview } ) {
+// COMPONENTS
+import { BeerImage, InfoButtons } from "../beer/Index"
+
+function ReviewRating ( { posting_beer, posting_user_id, submitReview } ) {
     const [rating, setRating] = useState(0)
 
     function createReview () {
-        let review_id = posting_beer_id+"#"+posting_user_id
+        let review_id = posting_beer.id+"#"+posting_user_id
 
         const newReview = {
             "id": review_id,
             "type": "rating",
             "user_id": posting_user_id,
-            "beer_id": posting_beer_id,
+            "beer_id": posting_beer.id,
             "title": "",
             "body": "",
             "tags": [],
@@ -23,12 +27,36 @@ function ReviewRating ( { posting_user_id, posting_beer_id, submitReview } ) {
         submitReview(newReview)
     }
 
+    function handlePressBrewery() {
+    }
+
+    function handlePressCountry() {  
+    }
+
+    function handlePressType() {
+    }
+
+    // should go to all beers filtered by high to low rating
+    function handlePressRating() {
+    }
+
     return (
         <View>
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text className='text-white'>Leave a Rating</Text>
+            <View className="text-white w-32 bg-violet-900 rounded-t-xl ml-6 p-2">
+                <Text className="text-white font-bold">Leave a Rating</Text>
             </View>
-            <View className="flex w-full bg-stone-900/90 rounded-xl mb-8 p-4 border border-amber-300/90">
+            <View className="flex w-full bg-yellow-700/80 rounded-xl mb-8 p-4 border border-amber-300/90">
+                <BeerImage image={posting_beer.img_url} percentage={posting_beer.percentage}/>
+                    <InfoButtons
+                        type={posting_beer.category}
+                        country={posting_beer.country}
+                        rating={posting_beer.rating}
+                        brewery={posting_beer.brewery}
+                        onTypeButtonPress={handlePressType}
+                        onCountryButtonPress={handlePressCountry}
+                        onRatingButtonPress={handlePressRating}
+                        onBreweryButtonPress={handlePressBrewery}
+                    />
                 <View className="flex-row justify-center m-5 bg-gray-500 rounded-xl">
                         <StarRating                                                 // Rating                                                 
                             rating={rating}
