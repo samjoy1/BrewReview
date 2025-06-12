@@ -41,6 +41,7 @@ function PostBeer({ navigation }) {
     reviews: [],
   });
 
+
   // VALIDATION
   function isBeerValid(newBeer) {
     if (!newBeer.name) {
@@ -66,6 +67,7 @@ function PostBeer({ navigation }) {
     }
     return true;
   }
+
 
   // SUBMIT
   function submitBeer(newBeer) {
