@@ -1,27 +1,31 @@
-
 // FIREBASE
-import { FIRESTORE_DB } from "../../../../firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
+import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 // IMPORTS
 import { useContext, useEffect, useState } from "react";
-import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { UserContext } from "../../../index"
+import { UserContext } from "../../../index";
 
 // COMPONENTS
+import BreweryCard from "../breweryList/BreweryCard";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
-import BreweryCard from "../breweryList/BreweryCard";
 
 // STYLING
-let review_rating_button_selected = "font-bold text-center bg-sky-500 w-40 p-3"
-let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
-
+let review_rating_button_selected = "bg-sky-500 w-40 p-3";
+let review_rating_button_unselected = "bg-white w-40 p-3";
 
 function BreweryList({ navigation }) {
-  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+  let { loggedInUser, background, navbarColour } = useContext(UserContext);
 
   const [breweries, setBrewery] = useState([]);
 
@@ -45,31 +49,48 @@ function BreweryList({ navigation }) {
 
   return (
     <SafeAreaView className="flex-1">
-      <ImageBackground source={
-        background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-        background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-        background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-        background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
-        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
-        require("../../../../assets/images/BR-bg-black.png")
-      }
-      className="relative flex-shrink">
-
-        <Header colour={navbarColour}/>
+      <ImageBackground
+        source={
+          background === "black"
+            ? require("../../../../assets/images/BR-bg-black.png")
+            : background === "white"
+            ? require("../../../../assets/images/BR-bg-white.png")
+            : background === "green"
+            ? require("../../../../assets/images/BR-bg-green.png")
+            : background === "yellow"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : background === "blue"
+            ? require("../../../../assets/images/BR-bg-blue.png")
+            : background === "brown"
+            ? require("../../../../assets/images/BR-bg-brown.png")
+            : require("../../../../assets/images/BR-bg-black.png")
+        }
+        className="relative flex-shrink"
+      >
+        <Header colour={navbarColour} />
         <ScrollView
           className="p-8"
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-row justify-center mb-4">
-            <TouchableOpacity onPress={() => { navigation.navigate("BeerList")}}
-                className={review_rating_button_unselected+" rounded-l-xl"}>
-                Beers
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BeerList");
+              }}
+              className={review_rating_button_unselected + " rounded-l-xl"}
+            >
+              <Text className="font-bold text-center text-black">Beers</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { navigation.navigate("BreweryList")}}
-                className={review_rating_button_selected+" rounded-r-xl"}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BreweryList");
+              }}
+              className={review_rating_button_selected + " rounded-r-xl"}
+            >
+              <Text className="font-bold text-center text-white">
                 Breweries
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -84,7 +105,7 @@ function BreweryList({ navigation }) {
             ))}
           </View>
         </ScrollView>
-        <Navbar colour={navbarColour}/>
+        <Navbar colour={navbarColour} />
       </ImageBackground>
     </SafeAreaView>
   );
