@@ -15,8 +15,13 @@ import { Avatar, Icon } from "react-native-elements";
 
 import { UserContext } from "../../../index.jsx";
 
-// COMPONENTS
-import { BgColourPicker, ConfirmButton, DeleteAccountButton, LogoutButton, NavColourPicker } from "../profile/index.jsx";
+import {
+  BgColourPicker,
+  ConfirmButton,
+  DeleteAccountButton,
+  LogoutButton,
+  NavColourPicker,
+} from "../profile/index.jsx";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
@@ -25,12 +30,9 @@ function Profile({ navigation }) {
     useContext(UserContext);
   const user = loggedInUser;
 
-  const [tempBackground, setTempBackground] = useState("black")
-  const [tempNavbarColour, setTempNavbarColour] = useState("bg-zinc-800")
+  const [tempBackground, setTempBackground] = useState("black");
+  const [tempNavbarColour, setTempNavbarColour] = useState("bg-zinc-800");
 
-  // const [user, setUser] = useState(null);
-
-  // Image uploader function
   const pickImageAndUpload = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,60 +50,14 @@ function Profile({ navigation }) {
 
     if (!result.canceled) {
       const image = result.assets[0];
-      /*
-        The commented code below is the better solution for a production environment but without upgrading the Firebase basic plan we cannot use Firebase Storage
-        
-        Therefore, the non-commented code is a temporary solution to at least be able to change the profile avatar picture for one session (when page is refreshed the avatar
-        will change back to the original one, as we do not have anywhere to persist it with the firebase free plan
-      */
-
-      // const response = await fetch(image.uri);
-      // const blob = await response.blob();
-
-      // const storage = getStorage(FIREBASE_APP);
-      // const storageRef = ref(storage, `avatars/${userId}.jpg`);
-      // await uploadBytes(storageRef, blob);
-
-      // const downloadURL = await getDownloadURL(storageRef);
-
-      // const userRef = doc(FIRESTORE_DB, "users", userId);
-      // await updateDoc(userRef, {
-      //   avatar_img_url: downloadURL,
-      // });
-      // setUser({ ...user, avatar_img_url: downloadURL });
       setLoggedInUser({ ...user, avatar_img_url: image.uri });
     }
   };
 
-  // useEffect(() => {
-  //   if (!loggedInUser || !loggedInUser.id) {
-  //     console.warn("No valid user ID in loggedInUser.");
-  //     return;
-  //   }
-  //   async function fetchUser() {
-  //     try {
-  //       const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
-  //       const docSnap = await getDoc(docRef);
-
-  //       if (docSnap.exists()) {
-  //         setUser(docSnap.data());
-  //       } else {
-  //         console.log("No user profile found!");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user profile:", error);
-  //     }
-  //   }
-
-  //   fetchUser();
-  // }, [loggedInUser]);
-
-  // Set user from context directly
   useEffect(() => {
     console.log("loggedInUser from context:", loggedInUser);
   }, [loggedInUser]);
 
-  // Don't render the profile until the user is loaded
   if (!user) {
     return (
       <View style={styles.loadingContainer}>
@@ -132,7 +88,7 @@ function Profile({ navigation }) {
       >
         <Header colour={tempNavbarColour} />
         <ScrollView
-         className="p-4"
+          className="p-4"
           style={styles.container}
           contentContainerStyle={{ paddingBottom: 100 }}
         >
@@ -217,14 +173,26 @@ function Profile({ navigation }) {
               <Text style={styles.buttonText}>👅 Taste Profile</Text>
             </TouchableOpacity>
           </View>
-          <BgColourPicker tempBackground={tempBackground} setTempBackground={setTempBackground}/>
-          <NavColourPicker tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour}/>
+          <BgColourPicker
+            tempBackground={tempBackground}
+            setTempBackground={setTempBackground}
+          />
+          <NavColourPicker
+            tempNavbarColour={tempNavbarColour}
+            setTempNavbarColour={setTempNavbarColour}
+          />
           <View>
-            <ConfirmButton user={user} tempBackground={tempBackground} tempNavBarColour={tempNavbarColour}/>
-            <LogoutButton navigation={navigation}/>
-            <DeleteAccountButton tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour}/>
+            <ConfirmButton
+              user={user}
+              tempBackground={tempBackground}
+              tempNavBarColour={tempNavbarColour}
+            />
+            <LogoutButton navigation={navigation} />
+            <DeleteAccountButton
+              tempNavbarColour={tempNavbarColour}
+              setTempNavbarColour={setTempNavbarColour}
+            />
           </View>
-
         </ScrollView>
         <Navbar colour={tempNavbarColour} />
       </ImageBackground>

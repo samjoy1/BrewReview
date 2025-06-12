@@ -15,7 +15,6 @@ import {
   View,
 } from "react-native";
 
-// import { UserContext } from "../../../index"
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -25,7 +24,6 @@ export default function Header({ colour }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
-  // let { isLoggedIn, loggedInUser } = useContext(UserContext);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
