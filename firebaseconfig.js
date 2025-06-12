@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -19,7 +20,7 @@ const firebaseConfig = {
 
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
-
+export const auth = getAuth(FIREBASE_APP);
 console.log(
   "firebaseconfig.js DEBUG: FIRESTORE_DB is (should be an object):",
   FIRESTORE_DB

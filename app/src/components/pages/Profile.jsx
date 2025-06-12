@@ -1,11 +1,16 @@
-// FIRESTORE
-import { doc, getDoc } from "firebase/firestore";
-import { FIRESTORE_DB } from "../../../../firebaseconfig";
-
 // IMPORTS
 import * as ImagePicker from "expo-image-picker";
-import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect } from "react";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
 import { UserContext } from "../../../index.jsx";
@@ -13,16 +18,21 @@ import { UserContext } from "../../../index.jsx";
 // COMPONENTS
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
-import { BgColourPicker, NavColourPicker, ConfirmButton, LogoutButton, DeleteAccountButton } from "../profile/index"
+import {
+  BgColourPicker,
+  NavColourPicker,
+  ConfirmButton,
+  LogoutButton,
+  DeleteAccountButton,
+} from "../profile/index";
 import { Delete } from "lucide-react-native";
 
 function Profile({ navigation }) {
-  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+  let { loggedInUser, setLoggedInUser, background, navbarColour } =
+    useContext(UserContext);
+  const user = loggedInUser;
 
-  const [tempBackground, setTempBackground] = useState(background)
-  const [tempNavbarColour, setTempNavbarColour] = useState(navbarColour)
-
-  const [user, setUser] = useState(loggedInUser);
+  // const [user, setUser] = useState(null);
 
   // Image uploader function
   const pickImageAndUpload = async () => {
@@ -63,31 +73,36 @@ function Profile({ navigation }) {
       //   avatar_img_url: downloadURL,
       // });
       // setUser({ ...user, avatar_img_url: downloadURL });
-      setUser({ ...user, avatar_img_url: image.uri });
+      setLoggedInUser({ ...user, avatar_img_url: image.uri });
     }
   };
 
+  // useEffect(() => {
+  //   if (!loggedInUser || !loggedInUser.id) {
+  //     console.warn("No valid user ID in loggedInUser.");
+  //     return;
+  //   }
+  //   async function fetchUser() {
+  //     try {
+  //       const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
+  //       const docSnap = await getDoc(docRef);
+
+  //       if (docSnap.exists()) {
+  //         setUser(docSnap.data());
+  //       } else {
+  //         console.log("No user profile found!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user profile:", error);
+  //     }
+  //   }
+
+  //   fetchUser();
+  // }, [loggedInUser]);
+
+  // Set user from context directly
   useEffect(() => {
-    if (!loggedInUser) {
-      console.warn("No userId provided to Profile screen.");
-      return;
-    }
-    async function fetchUser() {
-      try {
-        const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setUser(docSnap.data());
-        } else {
-          console.log("No user profile found!");
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    }
-
-    fetchUser();
+    console.log("loggedInUser from context:", loggedInUser);
   }, [loggedInUser]);
 
   // Don't render the profile until the user is loaded
@@ -101,23 +116,31 @@ function Profile({ navigation }) {
 
   return (
     <SafeAreaView className="flex-1">
-      <ImageBackground source={
-          tempBackground==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-          tempBackground==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-          tempBackground==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-          tempBackground==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-          tempBackground==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
-          tempBackground==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
-          require("../../../../assets/images/BR-bg-black.png")}
-          className="relative flex-1"
+      <ImageBackground
+        source={
+          tempBackground === "black"
+            ? require("../../../../assets/images/BR-bg-black.png")
+            : tempBackground === "white"
+            ? require("../../../../assets/images/BR-bg-white.png")
+            : tempBackground === "green"
+            ? require("../../../../assets/images/BR-bg-green.png")
+            : tempBackground === "yellow"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : tempBackground === "blue"
+            ? require("../../../../assets/images/BR-bg-blue.png")
+            : tempBackground === "brown"
+            ? require("../../../../assets/images/BR-bg-brown.png")
+            : require("../../../../assets/images/BR-bg-black.png")
+        }
+        className="relative flex-shrink"
       >
-      <Header colour={tempNavbarColour}/>
-      <ScrollView className="flex-1 p-8"
-      >
-        {/* Header */}
-        <Text className="text-white text-center font-bold w-48 bg-violet-900 rounded-t-xl ml-8 p-3">Your Profile</Text>
-        <View className="bg-gray-500/80 rounded-xl mb-4 shadow-lg">
-          <View className="bg-white rounded-xl h-200 w-full mb-4 shadow-lg">
+        <Header colour={navbarColour} />
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{ paddingBottom: 100 }}
+        >
+          {/* Header */}
+          <View style={styles.header}>
             <TouchableOpacity style={styles.settingsIcon}>
               <Icon name="settings" type="feather" color="#000" />
             </TouchableOpacity>
@@ -130,7 +153,9 @@ function Profile({ navigation }) {
                 rounded
                 size="xlarge"
                 icon={{ name: "user", type: "feather" }}
-                source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
+                source={
+                  user.avatar_img_url ? { uri: user.avatar_img_url } : null
+                }
                 containerStyle={styles.avatar}
               />
               <Text style={styles.username}>{user.username}</Text>
@@ -162,11 +187,11 @@ function Profile({ navigation }) {
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
-            <Text className="text-center text-zinc-600 mb-2">Tap to change avatar</Text>
+            <Text style={styles.tapHint}>Tap to change avatar</Text>
           </View>
 
           {/* Sections */}
-          <View className="bg-gray-200 rounded-xl px-2 py-4">
+          <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.navigate("FavouriteBeers")}
@@ -195,23 +220,8 @@ function Profile({ navigation }) {
               <Text style={styles.buttonText}>👅 Taste Profile</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        
-          <BgColourPicker tempBackground={tempBackground} setTempBackground={setTempBackground} />
-          <NavColourPicker tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour} />
-
-          {/* <View className="bg-white rounded-xl p-3 mb-8">
-                  <Text className="bg-gray-200 rounded-md text-lg mb-2"> Display Me as</Text>
-                  <Text className="bg-gray-200 text-lg mb-2"> Keep me logged in</Text>
-                  <Text className="bg-gray-200 text-lg"> Send me email notifications</Text>
-          </View> */}
-
-          <ConfirmButton />
-          <LogoutButton />
-          <DeleteAccountButton />
-          
-      </ScrollView>
-      <Navbar colour={tempNavbarColour} />
+        </ScrollView>
+        <Navbar colour={navbarColour} />
       </ImageBackground>
     </SafeAreaView>
   );

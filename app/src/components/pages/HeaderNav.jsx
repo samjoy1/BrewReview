@@ -1,10 +1,11 @@
 // FIREBASE
-import { FIREBASE_APP } from "@/firebaseconfig";
-import { getAuth } from "firebase/auth";
+// import { FIREBASE_APP } from "@/firebaseconfig";
+import { auth, FIRESTORE_DB } from "@/firebaseconfig";
+// import { getAuth } from "firebase/auth";
 
 // IMPORTS
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Modal,
@@ -14,20 +15,45 @@ import {
   View,
 } from "react-native";
 
-import { UserContext } from "../../../index";
+// import { UserContext } from "../../../index"
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Header({ colour }) {
-  const auth = getAuth(FIREBASE_APP);
-  const currentUser = auth.currentUser;
-
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
-  let { isLoggedIn, loggedInUser } = useContext(UserContext);
+  // let { isLoggedIn, loggedInUser } = useContext(UserContext);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      if (user) {
+        const docRef = doc(FIRESTORE_DB, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        setUserData(docSnap.exists() ? docSnap.data() : null);
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
     navigation.navigate(screen);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setMenuVisible(false);
+      navigation.reset({ index: 0, routes: [{ name: "Login" }] });
+    } catch (error) {
+      alert("Sign out failed: " + error.message);
+    }
   };
 
   return (
@@ -43,26 +69,39 @@ export default function Header({ colour }) {
 
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <Image
-          source={{
-            uri: "https://i.imgur.com/NcshsBa.png",
-          }}
+          source={{ uri: "https://i.imgur.com/NcshsBa.png" }}
           className="w-32 h-12 rounded-full bg-violet-900"
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          isLoggedIn
-            ? navigation.navigate("Profile")
-            : console.log("not logged in!");
-        }}
-      >
-        <Image
-          source={{
-            uri: "https://avatar.iran.liara.run/public",
-          }}
-          className="w-10 h-10 rounded-full"
-        />
-      </TouchableOpacity>
+
+      {userData && (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", { userId: currentUser.uid })
+            }
+          >
+            <Image
+              source={{
+                uri:
+                  userData.avatar_img_url ||
+                  "https://randomuser.me/api/portraits/men/17.jpg",
+              }}
+              style={{ width: 32, height: 32, borderRadius: 16 }}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              marginLeft: 10,
+              fontSize: 16,
+            }}
+          >
+            {userData.username || "Guest"}
+          </Text>
+        </View>
+      )}
 
       <Modal
         visible={menuVisible}
@@ -106,6 +145,13 @@ export default function Header({ colour }) {
             <TouchableOpacity onPress={() => handleNavigate("Settings")}>
               <Text className="py-2 text-gray-800">Settings</Text>
             </TouchableOpacity>
+            <View className="border-t border-gray-200 mt-2 pt-2">
+              <TouchableOpacity onPress={handleSignOut}>
+                <Text className="py-2 text-red-500 font-semibold">
+                  Sign Out
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Pressable>
       </Modal>
