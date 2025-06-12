@@ -118,18 +118,18 @@ function Profile({ navigation }) {
     <SafeAreaView className="flex-1">
       <ImageBackground
         source={
-          background === "black"
+          tempBackground === "black"
             ? require("../../../../assets/images/BR-bg-black.png")
-            : background === "white"
+            : tempBackground === "white"
             ? require("../../../../assets/images/BR-bg-white.png")
-            : background === "green"
+            : tempBackground === "green"
             ? require("../../../../assets/images/BR-bg-green.png")
-            : background === "yellow"
+            : tempBackground === "yellow"
             ? require("../../../../assets/images/BR-bg-yellow.png")
-            : background === "blue"
-            ? require("../../../../assets/images/BR-bg-yellow.png")
-            : background === "brown"
-            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : tempBackground === "blue"
+            ? require("../../../../assets/images/BR-bg-blue.png")
+            : tempBackground === "brown"
+            ? require("../../../../assets/images/BR-bg-brown.png")
             : require("../../../../assets/images/BR-bg-black.png")
         }
         className="relative flex-shrink"

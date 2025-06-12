@@ -82,7 +82,7 @@ function BeerForm ({ submitBeer }) {
         <View>
             {/* BEER CARD */}
             <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>Preview</Text>
+                <Text className="text-white">Preview</Text>
             </View>
             <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
                 
@@ -91,7 +91,7 @@ function BeerForm ({ submitBeer }) {
                     <BeerCardTextBox text={category.name} placeholder={"Category"} />
                     <BeerCardTextBox text={brewery.name} placeholder={"Brewery"} />
                     <BeerCardTextBox text={countryInput} placeholder={"Country"} />
-                    <BeerCardTextBox text={"tags"} placeholder={"Tags"} />
+                    <BeerCardTextBox text={"Tags"} placeholder={"Tags"} />
                 </View>
                 <View className="flex-1">
                     <Image source={require("../../../../assets/images/default-beer-image.png")}
@@ -101,7 +101,7 @@ function BeerForm ({ submitBeer }) {
 
             {/* BEER FORM */}
             <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>
+                <Text className="text-white">
                     Create a Beer
                 </Text>
             </View>
@@ -179,10 +179,11 @@ const styles = StyleSheet.create({
     padding: 6
   },
   beer_img: {
-    width: '200px',
-    height: '200px',
-    borderRadius: '5%',
-    marginLeft: 64
+    width: '85%',
+    height: '130',
+    borderRadius: '10%',
+    marginLeft: 25,
+    marginTop: 10
   }
 })
 
