@@ -9,7 +9,7 @@ export function FilterDropdown({ label, items, selectedValue, onSelect }) {
   const closeMenu = () => setVisible(false);
 
   return (
-    <View style={{ marginBottom: 16 }}>
+    <View style={{ marginBottom: 4 }}>
       <Menu
         visible={visible}
         onDismiss={closeMenu}

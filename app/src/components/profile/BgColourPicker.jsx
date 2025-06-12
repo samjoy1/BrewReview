@@ -9,7 +9,7 @@ export default function BgColourPicker ({ tempBackground, setTempBackground }) {
     return (
         <View className="mb-6">
             <Text className="text-white text-center font-bold w-48 bg-violet-900 rounded-t-xl ml-8 p-3">Background Colour</Text>
-            <View className="flex-row bg-white rounded-full p-1 shadow-lg">
+            <View className="flex-row flex-wrap justify-center bg-white rounded-full p-1 shadow-lg">
                 <TouchableOpacity onPress={() => {setTempBackground("black")}}
                     className={"bg-black "+ baseStyling + (tempBackground==="black" ? "border-green-500" : "border-stone-400")}/>
                 <TouchableOpacity onPress={() => {setTempBackground("white")}}
