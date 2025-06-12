@@ -1,11 +1,12 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Linking} from "react-native";
-import MapView, { Marker} from "react-native-maps";
+import { Dimensions, Linking, StyleSheet } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
+import Header from "./HeaderNav";
+import Navbar from "./NavBar";
 
 export default function Map() {
-  
   const [breweries, setBreweries] = useState([]);
   const region = {
     latitude: 55.3781,
@@ -26,19 +27,22 @@ export default function Map() {
       .catch(console.error);
   }, []);
 
-
   return (
-    <MapView style={styles.map} initialRegion={region}>
-      {breweries.map((brew) => (
-        <Marker
-          key={brew.id}
-          coordinate={{ latitude: brew.latitude, longitude: brew.longitude }}
-          title={brew.name}
-          description={brew.url}
-          onCalloutPress={() => Linking.openURL(brew.url)}
-        />
-      ))}
-    </MapView>
+    <>
+      <Header />
+      <MapView style={styles.map} initialRegion={region}>
+        {breweries.map((brew) => (
+          <Marker
+            key={brew.id}
+            coordinate={{ latitude: brew.latitude, longitude: brew.longitude }}
+            title={brew.name}
+            description={brew.url}
+            onCalloutPress={() => Linking.openURL(brew.url)}
+          />
+        ))}
+      </MapView>
+      <Navbar />
+    </>
   );
 }
 
