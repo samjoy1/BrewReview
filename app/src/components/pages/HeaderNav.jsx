@@ -3,11 +3,18 @@ import { FIREBASE_APP } from "@/firebaseconfig";
 import { getAuth } from "firebase/auth";
 
 // IMPORTS
-import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Image, Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  Image,
+  Modal,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import { UserContext } from "../../../index"
+import { UserContext } from "../../../index";
 
 export default function Header({ colour }) {
   const auth = getAuth(FIREBASE_APP);
@@ -16,7 +23,7 @@ export default function Header({ colour }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
-  let { isLoggedIn, loggedInUser } = useContext(UserContext)
+  let { isLoggedIn, loggedInUser } = useContext(UserContext);
 
   const handleNavigate = (screen) => {
     setMenuVisible(false);
@@ -24,7 +31,12 @@ export default function Header({ colour }) {
   };
 
   return (
-    <View className={"h-16 flex-row items-center justify-between border-solid border-32 border-red-500 shadow-md px-4 relative m-4 rounded-xl "+colour}>
+    <View
+      className={
+        "h-16 flex-row items-center justify-between border-solid border-32 border-red-500 shadow-md px-4 relative m-4 rounded-xl " +
+        colour
+      }
+    >
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
         <Text className="text-white text-3xl">☰</Text>
       </TouchableOpacity>
@@ -37,7 +49,13 @@ export default function Header({ colour }) {
           className="w-32 h-12 rounded-full bg-violet-900"
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => { isLoggedIn ? navigation.navigate("Profile") : console.log("not logged in!") }}>
+      <TouchableOpacity
+        onPress={() => {
+          isLoggedIn
+            ? navigation.navigate("Profile")
+            : console.log("not logged in!");
+        }}
+      >
         <Image
           source={{
             uri: "https://avatar.iran.liara.run/public",
@@ -73,16 +91,12 @@ export default function Header({ colour }) {
               <Text className="py-2 text-gray-800">All Breweries</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => handleNavigate("Search")}>
-              <Text className="py-2 text-gray-800">Search</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity onPress={() => handleNavigate("PostReview")}>
               <Text className="py-2 text-gray-800">Add Review</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleNavigate("Categories")}>
-              <Text className="py-2 text-gray-800">More Categories</Text>
+              <Text className="py-2 text-gray-800">Search / Categories</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleNavigate("Map")}>
