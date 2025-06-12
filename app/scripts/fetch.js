@@ -13,22 +13,48 @@ export async function fetchData(collection, id) {
     );
     console.log("fetch.js DEBUG: 'collection' argument is:", collection);
     console.log("fetch.js DEBUG: 'id' argument is:", id);
-    const docRef = doc(FIRESTORE_DB, collection, id);
-    const docSnap = await getDoc(docRef);
 
-    resolve(docSnap);
+    // 💡 Fix: Make sure id is a string
+    const safeId =
+      typeof id === "string"
+        ? id
+        : typeof id === "object" && id?.id
+        ? id.id
+        : null;
+
+    if (!collection || typeof collection !== "string" || !safeId) {
+      console.error("fetchData: Invalid collection or id", { collection, id });
+      reject(new Error("Invalid collection or id"));
+      return;
+    }
+
+    try {
+      const docRef = doc(FIRESTORE_DB, collection, safeId);
+      const docSnap = await getDoc(docRef);
+      resolve(docSnap);
+    } catch (err) {
+      console.error("fetchData: Failed to fetch doc", err);
+      reject(err);
+    }
   });
 }
 
-// GET BY ID
+// GET BY ID (with ID sanitisation for beer_id)
 export async function getBeerById(beer_id, setFunction) {
-  return fetchData("beers", beer_id)
+  const safeId = typeof beer_id === "string" ? beer_id : beer_id?.id;
+  if (!safeId) {
+    console.warn("getBeerById: Invalid beer_id passed:", beer_id);
+    return null;
+  }
+
+  return fetchData("beers", safeId)
     .then((beer) => {
       if (setFunction) setFunction(beer.data());
       return beer.data();
     })
     .catch((err) => {
-      return console.log(err);
+      console.error("getBeerById error:", err);
+      return null;
     });
 }
 
@@ -39,7 +65,8 @@ export async function getBreweryById(brewery_id, setFunction) {
       return brewery.data();
     })
     .catch((err) => {
-      return console.log(err);
+      console.error("getBreweryById error:", err);
+      return null;
     });
 }
 
@@ -50,7 +77,8 @@ export async function getCategoryById(category_id, setFunction) {
       return category.data();
     })
     .catch((err) => {
-      return console.log(err);
+      console.error("getCategoryById error:", err);
+      return null;
     });
 }
 
@@ -61,7 +89,8 @@ export async function getReviewById(review_id, setFunction) {
       return review.data();
     })
     .catch((err) => {
-      return console.log(err);
+      console.error("getReviewById error:", err);
+      return null;
     });
 }
 
@@ -72,6 +101,7 @@ export async function getUserById(user_id, setFunction) {
       return user.data();
     })
     .catch((err) => {
-      return console.log(err);
+      console.error("getUserById error:", err);
+      return null;
     });
 }
