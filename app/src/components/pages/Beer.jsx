@@ -280,7 +280,7 @@ function Beer({ navigation }) {
         background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
         background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
         require("../../../../assets/images/BR-bg-black.png")
-      } className="relative flex-shrink">
+      } className="relative flex-1 bg-scroll h-full">
 
         <Header colour={navbarColour}/>
         <ScrollView

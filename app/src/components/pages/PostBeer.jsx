@@ -88,7 +88,7 @@ function PostBeer ({ navigation }) {
                 background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
                 require("../../../../assets/images/BR-bg-black.png")
                 }
-                className="relative flex-shrink">
+                className="relative flex-1 bg-scroll h-full">
             <HeaverNav colour={navbarColour}/>
             <ScrollView className="relative flex-1">
                 <View className="flex-row justify-center mt-4">

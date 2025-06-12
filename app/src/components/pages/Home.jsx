@@ -23,7 +23,7 @@ export default function Home() {
         background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
         require("../../../../assets/images/BR-bg-black.png")
       }
-        className="relative flex-shrink bg-scroll">
+        className="relative flex-1 bg-scroll h-full">
         <HeaderNav colour={navbarColour}/>  
         <ScrollView className=""
             contentContainerStyle={{ paddingBottom: 200 }}
