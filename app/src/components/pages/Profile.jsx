@@ -109,7 +109,7 @@ function Profile({ navigation }) {
           tempBackground==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
           tempBackground==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
           require("../../../../assets/images/BR-bg-black.png")}
-          className="relative flex-shrink"
+          className="relative flex-1"
       >
       <Header colour={tempNavbarColour}/>
       <ScrollView className="flex-1 p-8"
