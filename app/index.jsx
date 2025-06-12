@@ -93,7 +93,6 @@ export default function Index() {
           <Stack.Screen name="PostBeer" component={PostBeer} />
           <Stack.Screen name="PostReview" component={PostReview} />
           <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="User" component={User} />
           <Stack.Screen name="Users" component={Users} />
