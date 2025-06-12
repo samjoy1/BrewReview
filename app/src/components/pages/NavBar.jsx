@@ -25,9 +25,11 @@ return (
       <Text className="text-xl">🏠</Text>
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+
+    <TouchableOpacity onPress={() => navigation.navigate("Categories")}>
       <Text className="text-xl">🔍</Text>
     </TouchableOpacity>
+
 
     <TouchableOpacity onPress={() => navigation.navigate("PostBeer")}>
       <View className="bg-green-400 rounded-full w-20 h-20 justify-center items-center border-4 border-gray">

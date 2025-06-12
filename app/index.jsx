@@ -28,7 +28,6 @@ import {
   PostReview,
   Profile,
   RecentReviews,
-  Search,
   Settings,
   User,
   Users,
@@ -75,10 +74,11 @@ export default function Index() {
         setNavbarColour,
       }}
     >
+
       <PaperProvider>
         <Stack.Navigator
           screenOptions={{
-            headerShown: false, // This hides the header on all screens
+            headerShown: false, 
           }}
         >
           <Stack.Screen name="Home" component={Home} />
@@ -108,5 +108,6 @@ export default function Index() {
         </Stack.Navigator>
       </PaperProvider>
     </UserContext.Provider>
+
   );
 }
