@@ -1,22 +1,27 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { collection, getDocs } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+
+// FIREBASE
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-import { FilterDropdown } from "../CategoriesComponents/FilterDropdown";
-import SearchBarWithSuggestions from "../CategoriesComponents/SearchBarWithSuggestions";
+import { collection, getDocs } from "firebase/firestore";
+
+// IMPORTS
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, ImageBackground, FlatList, KeyboardAvoidingView, 
+  Platform, Text, SafeAreaView, 
+  TouchableOpacity, View,
+} from "react-native";
+
+import { UserContext } from "../../../index"
+
+// COMPONENTS
+import { FilterDropdown } from "../categories/FilterDropdown";
+import SearchBarWithSuggestions from "../categories/SearchBarWithSuggestions";
 import HeaderNav from "./HeaderNav";
 import Navbar from "./NavBar";
 
 export default function Categories() {
+  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+
   const [allBeers, setAllBeers] = useState([]);
   const [filteredBeers, setFilteredBeers] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -171,14 +176,24 @@ export default function Categories() {
   };
 
   return (
-    <View className="flex-1 bg-white">
-      <HeaderNav />
+    <SafeAreaView className="flex-1">
+      <ImageBackground source={
+        background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+        background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+        background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+        background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
+        require("../../../../assets/images/BR-bg-black.png")
+        }
+        className="relative flex-shrink">
+      <HeaderNav colour={navbarColour}/>
 
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        className="flex-1 p-8"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View className="flex-1 px-4 py-2">
+        <View className="bg-white flex-1 p-8 rounded-xl shadow-lg">
           <SearchBarWithSuggestions data={allBeers} />
 
           <Text className="text-xl font-semibold mb-4">Filter Beers</Text>
@@ -235,7 +250,8 @@ export default function Categories() {
           )}
         </View>
       </KeyboardAvoidingView>
-      <Navbar />
-    </View>
+      <Navbar colour={navbarColour}/>
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
