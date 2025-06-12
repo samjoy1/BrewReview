@@ -20,11 +20,14 @@ import Settings from "./Settings";
 import SignUp from "./SignUp";
 import User from "./User";
 import Users from "./Users";
+import FavouriteBreweries from "./FavouriteBreweries";
 
 module.exports = {
   SignUp,
   Beer,
+
   BeerList,
+
   BreweryList,
   Brewery,
   Camera,
@@ -40,6 +43,7 @@ module.exports = {
   User,
   Users,
   FavouriteBeers,
+  FavouriteBreweries,
   FollowersPage,
   RecentReviews,
   FollowingPage,

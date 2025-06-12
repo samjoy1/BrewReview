@@ -21,3 +21,7 @@ const firebaseConfig = {
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
 export const auth = getAuth(FIREBASE_APP);
+console.log(
+  "firebaseconfig.js DEBUG: FIRESTORE_DB is (should be an object):",
+  FIRESTORE_DB
+);

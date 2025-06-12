@@ -3,7 +3,7 @@ import { Image, View } from "react-native";
 
 function BeerImage({ image }) {
   return (
-    <View className="w-full h-48 bg-gray-200 rounded-xl justify-center items-center mb-4">
+    <View className="w-full h-80 bg-stone-900 rounded-xl justify-center items-center mb-4 px-4 shadow-lg">
       <Image
         source={{
           uri:

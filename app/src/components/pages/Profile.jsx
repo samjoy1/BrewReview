@@ -1,21 +1,23 @@
-import * as ImagePicker from "expo-image-picker";
+// FIRESTORE
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-import Navbar from "./NavBar";
 
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+// IMPORTS
+import * as ImagePicker from "expo-image-picker";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
-function Profile({ route, navigation }) {
-  const { userId } = route.params;
+import { UserContext } from "../../../index.jsx";
+
+// COMPONENTS
+import Header from "./HeaderNav";
+import Navbar from "./NavBar";
+
+function Profile({ navigation }) {
+  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+
+  const [user, setUser] = useState(null);
 
   // Image uploader function
   const pickImageAndUpload = async () => {
@@ -59,15 +61,15 @@ function Profile({ route, navigation }) {
       setUser({ ...user, avatar_img_url: image.uri });
     }
   };
-  const [user, setUser] = useState(null);
+
   useEffect(() => {
-    if (!userId) {
+    if (!loggedInUser) {
       console.warn("No userId provided to Profile screen.");
       return;
     }
     async function fetchUser() {
       try {
-        const docRef = doc(FIRESTORE_DB, "users", userId);
+        const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -81,7 +83,7 @@ function Profile({ route, navigation }) {
     }
 
     fetchUser();
-  }, [userId]);
+  }, [loggedInUser]);
 
   // Don't render the profile until the user is loaded
   if (!user) {
@@ -93,7 +95,18 @@ function Profile({ route, navigation }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView className="flex-1">
+      <ImageBackground source={
+          background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+          background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+          background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+          background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+          background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
+          background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
+          require("../../../../assets/images/BR-bg-black.png")}
+          className="relative flex-shrink"
+      >
+      <Header colour={navbarColour}/>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{ paddingBottom: 100 }}
@@ -158,6 +171,13 @@ function Profile({ route, navigation }) {
 
           <TouchableOpacity
             style={styles.button}
+            onPress={() => navigation.navigate("FavouriteBreweries")}
+          >
+            <Text style={styles.buttonText}>🍺 Favourite Breweries</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => navigation.navigate("RecentReviews")}
           >
             <Text style={styles.buttonText}>📝 Recent Reviews</Text>
@@ -169,10 +189,12 @@ function Profile({ route, navigation }) {
           >
             <Text style={styles.buttonText}>👅 Taste Profile</Text>
           </TouchableOpacity>
+          
         </View>
       </ScrollView>
-      <Navbar />
-    </View>
+      <Navbar colour={navbarColour} />
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 

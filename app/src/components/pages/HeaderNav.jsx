@@ -1,9 +1,11 @@
+// FIREBASE
+// import { FIREBASE_APP } from "@/firebaseconfig";
 import { auth, FIRESTORE_DB } from "@/firebaseconfig";
-import { useNavigation } from "@react-navigation/native";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+// import { getAuth } from "firebase/auth";
 
+// IMPORTS
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   Image,
   Modal,
@@ -13,6 +15,10 @@ import {
   View,
 } from "react-native";
 
+// import { UserContext } from "../../../index"
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+
 export default function Header() {
   // const DUMMY_USER_ID = "bigdog512";
   // const auth = getAuth(FIREBASE_APP);
@@ -21,6 +27,8 @@ export default function Header() {
 
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
+
+  let { isLoggedIn, loggedInUser } = useContext(UserContext);
 
   // Listen for auth state changes and set current user
   useEffect(() => {
@@ -63,7 +71,12 @@ export default function Header() {
   };
 
   return (
-    <View className="h-16 bg-teal-500 flex-row items-center justify-between px-4 relative">
+    <View
+      className={
+        "h-16 flex-row items-center justify-between border-solid border-32 border-red-500 shadow-md px-4 relative m-4 rounded-xl " +
+        colour
+      }
+    >
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
         <Text className="text-white text-3xl">☰</Text>
       </TouchableOpacity>
@@ -73,9 +86,10 @@ export default function Header() {
           source={{
             uri: "https://i.imgur.com/NcshsBa.png",
           }}
-          className="w-28 h-10 rounded-full"
+          className="w-32 h-12 rounded-full bg-violet-900"
         />
       </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => { isLoggedIn ? navigation.navigate("Profile") : console.log("not logged in!") }}> */}
 
       {userData && (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -107,6 +121,7 @@ export default function Header() {
           </Text>
         </View>
       )}
+      {/* </TouchableOpacity> */}
 
       <Modal
         visible={menuVisible}
@@ -125,6 +140,14 @@ export default function Header() {
               }}
             >
               <Text className="py-2 text-gray-800">All Beers</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BreweryList");
+              }}
+            >
+              <Text className="py-2 text-gray-800">All Breweries</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleNavigate("Search")}>

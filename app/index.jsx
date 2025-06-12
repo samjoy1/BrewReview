@@ -1,16 +1,15 @@
 // imports
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { createContext, useEffect, useState } from "react";
+
+import React, { createContext, useState } from "react";
 
 // styling
 import "@/global.css";
 
 // Firebase
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebaseconfig";
 
 // components
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import {
   Beer,
   BeerList,
@@ -19,6 +18,7 @@ import {
   Camera,
   Categories,
   FavouriteBeers,
+  FavouriteBreweries,
   FollowersPage,
   FollowingPage,
   Home,
@@ -41,6 +41,43 @@ const Stack = createNativeStackNavigator();
 
 export default function Index() {
   // useStates
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState({
+    id: "brewcat108",
+    username: "brewcat108",
+    name: "Vibha Kouser",
+    email: "vibha.kouser@example.com",
+    password: "astro",
+    phone: 8147444873,
+    country: "India",
+    avatar_img_url: "https://randomuser.me/api/portraits/women/27.jpg",
+    created_at: 1690359120,
+    favourite_beers: ["hells", "double_ghost"],
+    favourite_categories: [
+      "IPA",
+      "golden_ale",
+      "brown_ale",
+      "pilsner",
+      "lager",
+    ],
+    favourite_tags: [],
+    reviews: ["hells", "313_craft"],
+    following: [],
+    followers: [],
+    preferences: {
+      background: "black",
+      navbarColour: "bg-stone-900",
+      keepLoggedIn: false,
+      sendEmailNotifications: false,
+    },
+  });
+  const [background, setBackground] = useState(
+    isLoggedIn ? loggedInUser.preferences.background : "black"
+  );
+  const [navbarColour, setNavbarColour] = useState(
+    isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900"
+  );
+
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   // const [loading, setLoading] = useState(false);
@@ -71,8 +108,10 @@ export default function Index() {
       value={{
         user,
         setUser,
-        theme,
-        setTheme,
+        background,
+        setBackground,
+        navbarColour,
+        setNavbarColour,
       }}
     >
       <Stack.Navigator>
@@ -81,8 +120,8 @@ export default function Index() {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Beer" component={Beer} />
             <Stack.Screen name="BeerList" component={BeerList} />
-            <Stack.Screen name="Brewery" component={Brewery} />
             <Stack.Screen name="BreweryList" component={BreweryList} />
+            <Stack.Screen name="Brewery" component={Brewery} />
             <Stack.Screen name="Camera" component={Camera} />
             <Stack.Screen name="Categories" component={Categories} />
             <Stack.Screen name="Map" component={Map} />
@@ -97,6 +136,10 @@ export default function Index() {
             <Stack.Screen name="FollowingPage" component={FollowingPage} />
             <Stack.Screen name="RecentReviews" component={RecentReviews} />
             <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+            <Stack.Screen
+              name="FavouriteBreweries"
+              component={FavouriteBreweries}
+            />
           </>
         ) : (
           <>
