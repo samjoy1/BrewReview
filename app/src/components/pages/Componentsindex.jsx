@@ -16,13 +16,17 @@ import PostReview from "./PostReview";
 import Profile from "./Profile";
 import RecentReviews from "./RecentReviews";
 import Settings from "./Settings";
+import SignUp from "./SignUp";
 import User from "./User";
 import Users from "./Users";
-import FavouriteBreweries from "./FavouriteBreweries"
+import FavouriteBreweries from "./FavouriteBreweries";
 
 module.exports = {
+  SignUp,
   Beer,
+
   BeerList,
+
   BreweryList,
   Brewery,
   Camera,

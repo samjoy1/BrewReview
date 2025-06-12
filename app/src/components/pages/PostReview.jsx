@@ -1,4 +1,3 @@
-
 // IMPORTS
 import { useContext, useState } from "react";
 import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -99,19 +98,57 @@ function PostReview ({ navigation }) {
             }
         }
         // should reload the page
-    }
 
-    return (
-        <SafeAreaView className="flex-1">
-            <ImageBackground source={
-                background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-                background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-                background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-                background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-                background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
-                background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
-                require("../../../../assets/images/BR-bg-black.png")}
-                className="relative flex-shrink"
+    }
+    if (!newReview.body) {
+      Toast.show({
+        type: "error",
+        text1: "Please enter a review",
+      });
+      return false;
+    }
+    return true;
+  }
+
+  // SUBMIT
+  function submitReview(newReview) {
+    setReview(newReview);
+    if (isReviewValid(newReview)) {
+      postReview(newReview);
+      Toast.show({
+        type: "success",
+        text1: "You just posted a review!",
+      });
+    }
+    // should reload the page
+  }
+
+  return (
+    <SafeAreaView className="flex-1">
+      <ImageBackground
+        source={
+          background === "black"
+            ? require("../../../../assets/images/BR-bg-black.png")
+            : background === "white"
+            ? require("../../../../assets/images/BR-bg-white.png")
+            : background === "green"
+            ? require("../../../../assets/images/BR-bg-green.png")
+            : background === "yellow"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : background === "blue"
+            ? require("../../../../assets/images/BR-bg-blue.png")
+            : background === "brown"
+            ? require("../../../../assets/images/BR-bg-brown.png")
+            : require("../../../../assets/images/BR-bg-black.png")
+        }
+        className="relative flex-1"
+      >
+        <HeaderNav colour={navbarColour} />
+        <ScrollView className="relative flex-1">
+          <View className="flex-row justify-center mt-4">
+            <TouchableOpacity
+              onPress={() => {}}
+              className={review_rating_button_selected + " rounded-l-xl"}
             >
                 <HeaderNav colour={navbarColour}/>
                 <ScrollView className="relative flex-1">
@@ -157,7 +194,4 @@ function PostReview ({ navigation }) {
     )
 }
 
-export default PostReview
-
-
-
+export default PostReview;

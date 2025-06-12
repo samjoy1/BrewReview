@@ -1,7 +1,14 @@
 // IMPORTS
 import { useContext, useEffect, useState } from "react";
-import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Toast from 'react-native-toast-message';
+import {
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 
 import { UserContext } from "../../../index.jsx";
 
@@ -14,12 +21,12 @@ import NavBar from "../pages/NavBar";
 import BeerForm from "../postBeer/BeerForm.jsx";
 
 // STYLING
-let review_rating_button_selected = "font-bold text-center bg-sky-500 w-40 p-3"
-let review_rating_button_unselected = "font-bold text-center bg-white w-40 p-3"
+let review_rating_button_selected = "bg-sky-500 w-40 p-3";
+let review_rating_button_unselected = "bg-white w-40 p-3";
 
-function PostBeer ({ navigation }) {
-    // STATES
-    const { loggedInUser, background, navbarColour } = useContext(UserContext)
+function PostBeer({ navigation }) {
+  // STATES
+  const { loggedInUser, background, navbarColour } = useContext(UserContext);
 
     const [beer, setBeer] = useState({
         id: "",
@@ -35,51 +42,31 @@ function PostBeer ({ navigation }) {
         rating: 0
     })
 
-    // VALIDATION
-    function isBeerValid (newBeer) {
-        if (!newBeer.name) {
-            Toast.show({
-                type: "error",
-                text1: "Please Enter a Name for your Beer",
-                position: "bottom"
-            })
-            return false
-        }
-        if (!newBeer.country) {
-            Toast.show({
-                type: "error",
-                text1: "Please Enter the Country your Beer is From",
-                position: "bottom"
-            })
-            return false
-        }
-        if (!newBeer.category) {
-            Toast.show({
-                type: "error",
-                text1: "Please Select a Category",
-                position: "bottom"
-            })
-            return false
-        }
-        return true
+  // VALIDATION
+  function isBeerValid(newBeer) {
+    if (!newBeer.name) {
+      Toast.show({
+        type: "error",
+        text1: "Please enter a name for your beer",
+      });
+      return false;
     }
-
-    // SUBMIT
-    function submitBeer (newBeer) {
-        setBeer(newBeer)
-        if (isBeerValid(newBeer)) {
-            postBeer(newBeer)
-            Toast.show({
-                type: "success",
-                text1: "You Just Created a New Beer! Why Not Give it a Rating?"
-            })
-        }
-        // should reload the page
+    if (!newBeer.country) {
+      Toast.show({
+        type: "error",
+        text1: "Please enter the country your beer is from",
+      });
+      return false;
     }
-        
-
-    useEffect(() => {
-    }, [])
+    if (!newBeer.category) {
+      Toast.show({
+        type: "error",
+        text1: "Please select a category",
+      });
+      return false;
+    }
+    return true;
+  }
 
     return (
         <SafeAreaView className="flex-1">
@@ -118,7 +105,17 @@ function PostBeer ({ navigation }) {
     )
 }
 
-export default PostBeer
+  // SUBMIT
+  function submitBeer(newBeer) {
+    setBeer(newBeer);
+    if (isBeerValid(newBeer)) {
+      postBeer(newBeer);
+      Toast.show({
+        type: "success",
+        text1: "You just created a new Beer! Why not give it a rating?",
+      });
+    }
+    // should reload the page
+  }
 
-
-
+export default PostBeer;

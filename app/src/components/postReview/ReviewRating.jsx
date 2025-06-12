@@ -62,7 +62,7 @@ function ReviewRating ( { posting_beer, posting_user_id, submitReview } ) {
                             rating={rating}
                             onChange={setRating}
                             enableHalfStar={false}
-                            starSize={64}
+                            starSize={40}
                         />
                 </View>
                 <TouchableOpacity                                           // Submit Button

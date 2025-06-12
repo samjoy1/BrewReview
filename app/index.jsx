@@ -1,15 +1,22 @@
 // imports
+import { FIRESTORE_DB } from "@/firebaseconfig";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { doc, getDoc } from "firebase/firestore";
+import React, { createContext, useEffect, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 
-import React, { createContext, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+
+import { auth } from "@/firebaseconfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 // styling
 import "@/global.css";
 
+// Firebase
 
 // components
+import { StyleSheet } from "react-native";
 import {
   Beer,
   BeerList,
@@ -29,6 +36,7 @@ import {
   Profile,
   RecentReviews,
   Settings,
+  SignUp,
   User,
   Users,
 } from "./src/components/pages/Componentsindex";
@@ -39,69 +47,152 @@ const Stack = createNativeStackNavigator();
 
 export default function Index() {
   // useStates
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [loggedInUser, setLoggedInUser] = useState({
-    "id": "brewcat108",
-    "username": "brewcat108",
-    "name": "Vibha Kouser",
-    "email": "vibha.kouser@example.com",
-    "password": "astro",
-    "phone": 8147444873,
-    "country": "India",
-    "avatar_img_url": "https://randomuser.me/api/portraits/women/27.jpg",
-    "created_at": 1690359120,
-    "favourite_beers": ["hells", "double_ghost"],
-    "favourite_categories": ["IPA", "golden_ale", "brown_ale", "pilsner", "lager"],
-    "favourite_tags": [],
-    "reviews": ["hells", "313_craft"],
-    "following": [],
-    "followers": [],
-    "preferences": { "background": "black", "navbarColour": "bg-stone-900", "keepLoggedIn": false, "sendEmailNotifications": false }
-  });
-  const [background, setBackground] = useState( isLoggedIn ? loggedInUser.preferences.background : "black")
-  const [navbarColour, setNavbarColour] = useState( isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900")
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [background, setBackground] = useState("black");
+  const [navbarColour, setNavbarColour] = useState("bg-stone-900");
+
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setIsLoggedIn(true);
+        // Fetch user profile from Firestore
+        try {
+          const userDocRef = doc(FIRESTORE_DB, "users", firebaseUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setLoggedInUser({ id: firebaseUser.uid, ...userData });
+
+            // Set theming preferences from fetched user
+            setBackground(userData.preferences?.background || "black");
+            setNavbarColour(
+              userData.preferences?.navbarColour || "bg-stone-900"
+            );
+          } else {
+            // No user profile found, set minimal data
+            setLoggedInUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              preferences: {
+                background: "black",
+                navbarColour: "bg-stone-900",
+              },
+            });
+            setBackground("black");
+            setNavbarColour("bg-stone-900");
+          }
+        } catch (error) {
+          console.warn("Failed to fetch user data:", error);
+          setLoggedInUser(null);
+          setBackground("black");
+          setNavbarColour("bg-stone-900");
+        }
+      } else {
+        setIsLoggedIn(false);
+        setLoggedInUser(null);
+        setBackground("black");
+        setNavbarColour("bg-stone-900");
+      }
+      setInitializing(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     setBackground(loggedInUser.preferences.background);
+  //     setNavbarColour(loggedInUser.preferences.navbarColour);
+  //   } else {
+  //     setBackground("black");
+  //     setNavbarColour("bg-stone-900");
+  //   }
+  // }, [isLoggedIn, loggedInUser]);
+
+  if (initializing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  console.log("Setting context: loggedInUser", loggedInUser);
 
   return (
-
     <UserContext.Provider
       value={{
-        isLoggedIn,
-        setIsLoggedIn,
-        loggedInUser,
-        setLoggedInUser,
+        user,
+        setUser,
         background,
         setBackground,
         navbarColour,
-        setNavbarColour
+        setNavbarColour,
+        isLoggedIn,
+        loggedInUser,
       }}
     >
-     <PaperProvider>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Beer" component={Beer} />
-        <Stack.Screen name="BeerList" component={BeerList} />
-        <Stack.Screen name="BreweryList" component={BreweryList} />
-        <Stack.Screen name="Brewery" component={Brewery} />
-        <Stack.Screen name="Camera" component={Camera} />
-        <Stack.Screen name="Categories" component={Categories} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="PostBeer" component={PostBeer} />
-        <Stack.Screen name="PostReview" component={PostReview} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="User" component={User} />
-        <Stack.Screen name="Users" component={Users} />
-        <Stack.Screen name="FollowersPage" component={FollowersPage} />
-        <Stack.Screen name="FollowingPage" component={FollowingPage} />
-        <Stack.Screen name="RecentReviews" component={RecentReviews} />
-        <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
-        <Stack.Screen
-          name="FavouriteBreweries"
-          component={FavouriteBreweries}
-        />
-      </Stack.Navigator>
-    </PaperProvider>
-  </UserContext.Provider>
+      <PaperProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          {isLoggedIn ? (
+            <>
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Beer" component={Beer} />
+              <Stack.Screen name="BeerList" component={BeerList} />
+              <Stack.Screen name="BreweryList" component={BreweryList} />
+              <Stack.Screen name="Brewery" component={Brewery} />
+              <Stack.Screen name="Camera" component={Camera} />
+              <Stack.Screen name="Categories" component={Categories} />
+              <Stack.Screen name="Map" component={Map} />
+              <Stack.Screen name="PostBeer" component={PostBeer} />
+              <Stack.Screen name="PostReview" component={PostReview} />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Settings" component={Settings} />
+              <Stack.Screen name="User" component={User} />
+              <Stack.Screen name="Users" component={Users} />
+              <Stack.Screen name="FollowersPage" component={FollowersPage} />
+              <Stack.Screen name="FollowingPage" component={FollowingPage} />
+              <Stack.Screen name="RecentReviews" component={RecentReviews} />
+              <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+              <Stack.Screen
+                name="FavouriteBreweries"
+                component={FavouriteBreweries}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+            </>
+          )}
+        </Stack.Navigator>
+      </PaperProvider>
+    </UserContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+    flex: 1,
+    justifyContent: "center",
+  },
+  input: {
+    marginVertical: 4,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+});

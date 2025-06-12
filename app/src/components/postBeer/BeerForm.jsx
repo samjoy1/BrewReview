@@ -6,7 +6,7 @@ import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "reac
 import { BeerCardTextBox, SelectBrewery, SelectCategory } from "./index.jsx";
 import { BeerImage, InfoButtons } from "../beer/Index"
 
-// TAILWIND STYLING
+// STYLING
 let text_box = "text-white bg-zinc-800 m-1 p-1 rounded-xl h-7 align-middle"
 let text_input = "bg-white rounded-xl m-2 p-2 min-h-9"
 
@@ -79,7 +79,6 @@ function BeerForm ({ submitBeer }) {
     }, [])
 
     return (
-        
         <View>
             {/* BEER CARD */}
             <View className="w-32 bg-violet-900 rounded-t-xl ml-6 p-2">
@@ -213,10 +212,11 @@ const styles = StyleSheet.create({
     padding: 6
   },
   beer_img: {
-    width: '200px',
-    height: '200px',
-    borderRadius: '5%',
-    marginLeft: 64
+    width: '85%',
+    height: '130',
+    borderRadius: '10%',
+    marginLeft: 25,
+    marginTop: 10
   }
 })
 
