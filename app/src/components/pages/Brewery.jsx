@@ -1,37 +1,39 @@
+
+// FIREBASE
 import { FIRESTORE_DB } from "@/firebaseconfig";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { arrayRemove, arrayUnion, doc, getDoc, setDoc } from "firebase/firestore";
+
+// IMPORTS
+import { useRoute } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useEffect, useState, useContext } from "react";
-import { ScrollView, Share } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { ImageBackground, ScrollView, Share, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { getBreweryById } from "../../../scripts/fetch";
+
 import { UserContext } from "../../../index";
-import { getBreweryById } from "../../../scripts/fetch"
-import {
-  BreweryImage,
-  BreweryInfoButtons,
-  IndividualBreweryHeader,
-  ShareButton,
-} from "../brewery/Index";
+
+// COMPONENTS
+import { BreweryImage, BreweryInfoButtons, IndividualBreweryHeader, ShareButton } from "../brewery/Index";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
-function Brewery() {
+
+function Brewery({ navigation }) {
   // HOOKS
   const [liked, setLiked] = useState(false);
   const [breweryData, setBreweryData] = useState(null);
-  const route = useRoute();
-  const navigation = useNavigation();
-  const { breweryID } = route.params || {};
-  const { loggedInUser } = useContext(UserContext)
 
-  const userRef = loggedInUser
-    ? doc(FIRESTORE_DB, "users", loggedInUser)
-    : null;
+  const route = useRoute();
+  const { breweryID } = route.params || {};
+
+  const { loggedInUser, background, navbarColour } = useContext(UserContext)
+
+  const userRef = loggedInUser ? doc(FIRESTORE_DB, "users", loggedInUser.id) : null;
 
     useEffect(() => {
-      if (!loggedInUser || !userRef) {
+      if (!loggedInUser) {
         setLiked(false); 
         return;
       }
@@ -49,7 +51,7 @@ function Brewery() {
           console.log("Error reading favourite breweries", err);
           setLiked(false); 
         });
-    }, [breweryID, loggedInUser, userRef]); 
+    }, [breweryID, loggedInUser]); 
 
   // FETCHING BREWERY DATA
   useEffect(() => {
@@ -188,36 +190,50 @@ function Brewery() {
   const foundedDate = breweryData?.founded_date;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <Header />
-      <ScrollView
-        className="p-4"
-        contentContainerStyle={{ paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <IndividualBreweryHeader
-          name={name}
-          liked={liked}
-          foundedDate={foundedDate}
-          onHeartButtonPress={handlePressHeartButton}
-        />
-        <BreweryImage image={image} />
+    <SafeAreaView className="flex-1">
+      <ImageBackground source={
+        background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+        background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+        background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+        background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
+        require("../../../../assets/images/BR-bg-black.png")
+      } className="relative flex-shrink">
 
-        <BreweryInfoButtons
-          country={country}
-          city={city}
-          url={url}
-          foundedDate={foundedDate}
-          onBeersButtonPress={handlePressBeers}
-          onUrlButtonPress={handlePressUrl}
-          onCountryButtonPress={handlePressCountry}
-          onCityButtonPress={handlePressCity}
-          name={name}
-        />
+        <Header colour={navbarColour}/>
+        <ScrollView
+          className="p-8"
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <IndividualBreweryHeader
+            name={name}
+            liked={liked}
+            foundedDate={foundedDate}
+            onHeartButtonPress={handlePressHeartButton}
+          />
+          <View className="bg-white/80 rounded-xl p-4 mb-2 shadow-lg">
+            <BreweryImage image={image} />
 
-        <ShareButton onShareButtonPress={handleShare} />
-      </ScrollView>
-      <Navbar />
+            <BreweryInfoButtons
+              country={country}
+              city={city}
+              url={url}
+              foundedDate={foundedDate}
+              onBeersButtonPress={handlePressBeers}
+              onUrlButtonPress={handlePressUrl}
+              onCountryButtonPress={handlePressCountry}
+              onCityButtonPress={handlePressCity}
+              name={name}
+            />
+          </View>
+
+          <ShareButton onShareButtonPress={handleShare} />
+        </ScrollView>
+        <Navbar colour={navbarColour}/>
+
+      </ImageBackground>
     </SafeAreaView>
   );
 }

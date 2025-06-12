@@ -37,8 +37,7 @@ export default function Header({ colour }) {
           className="w-32 h-12 rounded-full bg-violet-900"
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => { isLoggedIn ? navigation.navigate("Profile") : console.log("not logged in!") }}
-      >
+      <TouchableOpacity onPress={() => { isLoggedIn ? navigation.navigate("Profile") : console.log("not logged in!") }}>
         <Image
           source={{
             uri: "https://avatar.iran.liara.run/public",

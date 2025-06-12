@@ -6,11 +6,11 @@ function ShareButton({ onShareButtonPress }) {
   return (
     <View className="items-end">
       <TouchableOpacity
-        className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2"
+        className="flex-row items-center bg-sky-400 rounded-lg px-4 py-2"
         onPress={onShareButtonPress}
       >
-        <Share2 size={20} color="gray" />
-        <Text className="ml-2 text-gray-700">Share</Text>
+        <Share2 size={20} color="lightgreen" />
+        <Text className="ml-2 text-gray-900">Share</Text>
       </TouchableOpacity>
     </View>
   );

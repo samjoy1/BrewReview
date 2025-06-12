@@ -1,46 +1,37 @@
+// FIREBASE
 import { FIRESTORE_DB } from "@/firebaseconfig";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import * as Linking from "expo-linking";
-import {
-  arrayRemove,
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+
+// IMPORTS
 import { useContext, useEffect, useState } from "react";
-import { ScrollView, Share } from "react-native";
+import { ImageBackground, ScrollView, Share, View } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import * as Linking from "expo-linking";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { UserContext } from "../../../index";
-import {
-  BeerImage,
-  BeerReviews,
-  IndividualBeerHeader,
-  InfoButtons,
-  ShareButton,
-} from "../beer/Index";
+
+// COMPONENTS
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
+import { BeerImage, BeerReviews, IndividualBeerHeader, InfoButtons, ShareButton } from "../beer/Index";
 
-function Beer() {
+
+function Beer({ navigation }) {
   // HOOKS
   const [liked, setLiked] = useState(false);
   const [hasVotedOnReviewID, setHasVotedOnReviewID] = useState([]);
   const [beerData, setBeerData] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const navigation = useNavigation();
+
   const route = useRoute();
   const { beerID } = route.params || {};
-  const { loggedInUser } = useContext(UserContext);
+
+  const { loggedInUser, background, navbarColour } = useContext(UserContext);
+
+  const userRef = loggedInUser ? doc(FIRESTORE_DB, "users", loggedInUser.id) : null;
 
   // ADDING TO FAVOURITES DATA
-  const userRef = doc(FIRESTORE_DB, "users", loggedInUser);
   useEffect(() => {
     getDoc(userRef)
       .then((docSnap) => {
@@ -280,43 +271,56 @@ function Beer() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <Header />
-      <ScrollView
-        className="p-4"
-        contentContainerStyle={{ paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <IndividualBeerHeader
-          name={name}
-          liked={liked}
-          onHeartButtonPress={handlePressHeartButton}
-        />
+    <SafeAreaView className="flex-1">
+      <ImageBackground source={
+        background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+        background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+        background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+        background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
+        require("../../../../assets/images/BR-bg-black.png")
+      } className="relative flex-shrink">
 
-        <BeerImage image={image} />
+        <Header colour={navbarColour}/>
+        <ScrollView
+          className="p-8"
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <IndividualBeerHeader
+            name={name}
+            liked={liked}
+            onHeartButtonPress={handlePressHeartButton}
+          />
 
-        <InfoButtons
-          type={type}
-          country={country}
-          rating={rating}
-          brewery={brewery}
-          onTypeButtonPress={handlePressType}
-          onCountryButtonPress={handlePressCountry}
-          onRatingButtonPress={handlePressRating}
-          onBreweryButtonPress={handlePressBrewery}
-        />
+          
+          <View className="bg-white/80 rounded-xl p-4 shadow-lg mb-2 mt-2">
+            <BeerImage image={image} />
+            <InfoButtons
+              type={type}
+              country={country}
+              rating={rating}
+              brewery={brewery}
+              onTypeButtonPress={handlePressType}
+              onCountryButtonPress={handlePressCountry}
+              onRatingButtonPress={handlePressRating}
+              onBreweryButtonPress={handlePressBrewery}
+            />
 
-        <BeerReviews
-          reviews={reviews}
-          onPostReviewButtonPress={handlePressPostReview}
-          onVoteButtonPress={handleVote}
-          hasVotedOnReviewID={hasVotedOnReviewID}
-          loggedInUser={loggedInUser}
-        />
+            <BeerReviews
+              reviews={reviews}
+              onPostReviewButtonPress={handlePressPostReview}
+              onVoteButtonPress={handleVote}
+              hasVotedOnReviewID={hasVotedOnReviewID}
+              loggedInUser={loggedInUser}
+            />
+          </View>
+          <ShareButton onShareButtonPress={handleShare} />
 
-        <ShareButton onShareButtonPress={handleShare} />
-      </ScrollView>
-      <Navbar />
+        </ScrollView>
+        <Navbar colour={navbarColour}/>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
