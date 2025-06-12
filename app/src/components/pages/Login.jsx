@@ -38,7 +38,6 @@ export default function Login({ navigation }) {
         <TextInput
           placeholder="Email"
           value={email}
-          placeholderTextColor="#444"
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
@@ -46,7 +45,6 @@ export default function Login({ navigation }) {
         />
         <TextInput
           placeholder="Password"
-          placeholderTextColor="#444"
           secureTextEntry
           value={password}
           onChangeText={setPassword}

@@ -61,6 +61,7 @@ export default function Index() {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setIsLoggedIn(true);
+        // Fetch user profile from Firestore
         try {
           const userDocRef = doc(FIRESTORE_DB, "users", firebaseUser.uid);
           const userDoc = await getDoc(userDocRef);
@@ -68,11 +69,13 @@ export default function Index() {
             const userData = userDoc.data();
             setLoggedInUser({ id: firebaseUser.uid, ...userData });
 
+            // Set theming preferences from fetched user
             setBackground(userData.preferences?.background || "black");
             setNavbarColour(
               userData.preferences?.navbarColour || "bg-stone-900"
             );
           } else {
+            // No user profile found, set minimal data
             setLoggedInUser({
               id: firebaseUser.uid,
               email: firebaseUser.email,
@@ -102,6 +105,16 @@ export default function Index() {
     return unsubscribe;
   }, []);
 
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     setBackground(loggedInUser.preferences.background);
+  //     setNavbarColour(loggedInUser.preferences.navbarColour);
+  //   } else {
+  //     setBackground("black");
+  //     setNavbarColour("bg-stone-900");
+  //   }
+  // }, [isLoggedIn, loggedInUser]);
+
   if (initializing) {
     return (
       <View style={styles.loadingContainer}>
@@ -109,6 +122,8 @@ export default function Index() {
       </View>
     );
   }
+
+  console.log("Setting context: loggedInUser", loggedInUser);
 
   return (
     <UserContext.Provider
