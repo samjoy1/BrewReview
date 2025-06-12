@@ -1,11 +1,13 @@
-import React, { useContext } from "react";
+
+// IMPORTS
+import { useContext } from "react";
 import { ImageBackground, SafeAreaView, ScrollView, Text, View } from "react-native";
 import { UserContext } from "../../../index";
 
-import { BeerCarousel, BreweryCarousel, FeaturedBeer, FeaturedBrewery } from "../home/index"
-
-import HeaderNav from "./HeaderNav";
+// COMPONENTS
 import Navbar from "./NavBar";
+import HeaderNav from "./HeaderNav"
+import { BeerCarousel, BreweryCarousel, FeaturedBeer, FeaturedBrewery } from "../home/index"
 
 export default function Home() {
   let { loggedInUser, background, navbarColour } = useContext(UserContext)
@@ -23,27 +25,31 @@ export default function Home() {
       }
         className="relative flex-shrink bg-scroll">
         <HeaderNav colour={navbarColour}/>  
-        <ScrollView className="p-4"
+        <ScrollView className=""
             contentContainerStyle={{ paddingBottom: 200 }}
             showsVerticalScrollIndicator={false}>    
           <View className="flex-1">
-            <View>
-              <Text className="text-lg font-semibold mb-1 p-3">Top Beers</Text>
+            
+            <Text className="text-white text-center bg-violet-900 rounded-t-xl text-lg font-semibold ml-16 w-40 p-2">Top Beers</Text>
+            <View className="bg-white/80 shadow-lg mb-4">
               <BeerCarousel />
             </View>
 
-            <View>
-              <Text className="text-lg font-semibold mb-1 p-3">Top Breweries</Text>
+            <Text className="text-white text-center bg-violet-900 rounded-t-xl text-lg font-semibold ml-16 w-40 p-2">Top Breweries</Text>
+            <View className="bg-white/80 shadow-lg mb-4">
               <BreweryCarousel />
             </View>
 
-            <View className="py-4 space-y-6">
-              <FeaturedBeer />
+            <Text className="text-white text-center bg-violet-900 rounded-t-xl text-lg font-semibold ml-16 w-40 p-2">Featured</Text>
+            <View className="bg-white/80 shadow-lg mb-4">
+              <View className="py-4 space-y-6">
+                <FeaturedBeer />
+              </View>
+              <View className="py-4 space-y-6">
+                <FeaturedBrewery />
+              </View>
             </View>
 
-            <View className="py-4 space-y-6">
-              <FeaturedBrewery />
-            </View>
           </View>
         </ScrollView>
       <Navbar colour={navbarColour}/>
