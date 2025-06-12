@@ -32,7 +32,7 @@ export default function SearchBarWithSuggestions({ data }) {
   };
 
   return (
-    <View className="mb-4 z-10">
+    <View className="mb-2 z-10">
       <TextInput
         className="border border-gray-300 rounded px-3 py-2"
         placeholder="Search for a beer..."

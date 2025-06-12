@@ -1,17 +1,23 @@
-
 // FIREBASE
-import { FIRESTORE_DB } from "../../../../firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
+import { FIRESTORE_DB } from "../../../../firebaseconfig";
 
 // IMPORTS
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, ImageBackground, FlatList, KeyboardAvoidingView, 
-  Platform, Text, SafeAreaView, 
-  TouchableOpacity, View,
+import {
+  ActivityIndicator,
+  FlatList,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-import { UserContext } from "../../../index"
+import { UserContext } from "../../../index";
 
 // COMPONENTS
 import { FilterDropdown } from "../categories/FilterDropdown";
@@ -20,7 +26,7 @@ import HeaderNav from "./HeaderNav";
 import Navbar from "./NavBar";
 
 export default function Categories() {
-  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+  let { loggedInUser, background, navbarColour } = useContext(UserContext);
 
   const [allBeers, setAllBeers] = useState([]);
   const [filteredBeers, setFilteredBeers] = useState([]);
@@ -31,6 +37,7 @@ export default function Categories() {
   const [breweriesForDropdown, setBreweriesForDropdown] = useState([]);
   const [selectedBreweryId, setSelectedBreweryId] = useState("All");
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -177,80 +184,103 @@ export default function Categories() {
 
   return (
     <SafeAreaView className="flex-1">
-      <ImageBackground source={
-        background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-        background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-        background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-        background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-        background==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
-        background==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
-        require("../../../../assets/images/BR-bg-black.png")
+      <ImageBackground
+        source={
+          background === "black"
+            ? require("../../../../assets/images/BR-bg-black.png")
+            : background === "white"
+            ? require("../../../../assets/images/BR-bg-white.png")
+            : background === "green"
+            ? require("../../../../assets/images/BR-bg-green.png")
+            : background === "yellow"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : background === "blue"
+            ? require("../../../../assets/images/BR-bg-blue.png")
+            : background === "brown"
+            ? require("../../../../assets/images/BR-bg-brown.png")
+            : require("../../../../assets/images/BR-bg-black.png")
         }
-        className="relative flex-shrink">
-      <HeaderNav colour={navbarColour}/>
-
-      <KeyboardAvoidingView
-        className="flex-1 p-8"
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="relative flex-1"
       >
-        <View className="bg-white flex-1 p-8 rounded-xl shadow-lg">
-          <SearchBarWithSuggestions data={allBeers} />
+        <HeaderNav colour={navbarColour} />
 
-          <Text className="text-xl font-semibold mb-4">Filter Beers</Text>
+        <KeyboardAvoidingView
+          className="flex-1 p-4"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View className="bg-white flex-1 p-4 rounded-xl shadow-lg">
+            <SearchBarWithSuggestions data={allBeers} />
 
-          <FilterDropdown
-            label="Country"
-            items={countries}
-            selectedValue={selectedCountry}
-            onSelect={setSelectedCountry}
-          />
+            {/* Toggle button for filters */}
+            <TouchableOpacity
+              onPress={() => setShowFilters(!showFilters)}
+              className="bg-blue-500 rounded-lg p-2 mb-4 items-center" // Tailwind for a simple button
+            >
+              <Text className="text-white font-bold text-base">
+                {showFilters ? "Hide Filters" : "Show Filters"}
+              </Text>
+            </TouchableOpacity>
 
-          <FilterDropdown
-            label="Category"
-            items={categories}
-            selectedValue={selectedCategory}
-            onSelect={setSelectedCategory}
-          />
+            {/* Conditionally render the filter section */}
+            {showFilters && (
+              <View>
+                <Text className="text-xl font-semibold mb-4">Filter Beers</Text>
 
-          <FilterDropdown
-            label="Brewery"
-            items={breweriesForDropdown.map((b) => b.name)}
-            selectedValue={getSelectedBreweryDisplayName()}
-            onSelect={(selectedName) => {
-              const brewery = breweriesForDropdown.find(
-                (b) => b.name === selectedName
-              );
-              setSelectedBreweryId(brewery ? brewery.id : "All");
-            }}
-          />
+                <FilterDropdown
+                  label="Country"
+                  items={countries}
+                  selectedValue={selectedCountry}
+                  onSelect={setSelectedCountry}
+                />
 
-          {loading ? (
-            <ActivityIndicator size="large" className="mt-20" />
-          ) : (
-            <FlatList
-              data={filteredBeers}
-              keyExtractor={(item) => item.id}
-              renderItem={renderBeer}
-              contentContainerStyle={{ paddingBottom: 100 }}
-              ListEmptyComponent={
-                selectedCountry !== "All" ||
-                selectedCategory !== "All" ||
-                selectedBreweryId !== "All" ||
-                sortByRating ? (
-                  <Text style={{ textAlign: "center", marginTop: 20 }}>
-                    No beers match these filters/sort.
-                  </Text>
-                ) : (
-                  <Text style={{ textAlign: "center", marginTop: 20 }}>
-                    No beers available.
-                  </Text>
-                )
-              }
-            />
-          )}
-        </View>
-      </KeyboardAvoidingView>
-      <Navbar colour={navbarColour}/>
+                <FilterDropdown
+                  label="Category"
+                  items={categories}
+                  selectedValue={selectedCategory}
+                  onSelect={setSelectedCategory}
+                />
+
+                <FilterDropdown
+                  label="Brewery"
+                  items={breweriesForDropdown.map((b) => b.name)}
+                  selectedValue={getSelectedBreweryDisplayName()}
+                  onSelect={(selectedName) => {
+                    const brewery = breweriesForDropdown.find(
+                      (b) => b.name === selectedName
+                    );
+                    setSelectedBreweryId(brewery ? brewery.id : "All");
+                  }}
+                />
+              </View>
+            )}
+
+            {loading ? (
+              <ActivityIndicator size="large" className="mt-20" />
+            ) : (
+              <FlatList
+                data={filteredBeers}
+                keyExtractor={(item) => item.id}
+                renderItem={renderBeer}
+                contentContainerStyle={{ paddingBottom: 60 }}
+                ListEmptyComponent={
+                  selectedCountry !== "All" ||
+                  selectedCategory !== "All" ||
+                  selectedBreweryId !== "All" ||
+                  sortByRating ? (
+                    <Text style={{ textAlign: "center", marginTop: 20 }}>
+                      No beers match these filters/sort.
+                    </Text>
+                  ) : (
+                    <Text style={{ textAlign: "center", marginTop: 20 }}>
+                      No beers available.
+                    </Text>
+                  )
+                }
+              />
+            )}
+          </View>
+        </KeyboardAvoidingView>
+        <Navbar colour={navbarColour} />
       </ImageBackground>
     </SafeAreaView>
   );
