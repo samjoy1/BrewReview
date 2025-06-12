@@ -2,8 +2,8 @@
 import { FIRESTORE_DB } from "@/firebaseconfig";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { doc, getDoc } from "firebase/firestore";
-
 import React, { createContext, useEffect, useState } from "react";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import { ActivityIndicator, View } from "react-native";
 
@@ -138,39 +138,45 @@ export default function Index() {
         loggedInUser,
       }}
     >
-      <Stack.Navigator>
-        {isLoggedIn ? (
-          <>
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Beer" component={Beer} />
-            <Stack.Screen name="BeerList" component={BeerList} />
-            <Stack.Screen name="BreweryList" component={BreweryList} />
-            <Stack.Screen name="Brewery" component={Brewery} />
-            <Stack.Screen name="Camera" component={Camera} />
-            <Stack.Screen name="Categories" component={Categories} />
-            <Stack.Screen name="Map" component={Map} />
-            <Stack.Screen name="PostBeer" component={PostBeer} />
-            <Stack.Screen name="PostReview" component={PostReview} />
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen name="User" component={User} />
-            <Stack.Screen name="Users" component={Users} />
-            <Stack.Screen name="FollowersPage" component={FollowersPage} />
-            <Stack.Screen name="FollowingPage" component={FollowingPage} />
-            <Stack.Screen name="RecentReviews" component={RecentReviews} />
-            <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
-            <Stack.Screen
-              name="FavouriteBreweries"
-              component={FavouriteBreweries}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-          </>
-        )}
-      </Stack.Navigator>
+      <PaperProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          {isLoggedIn ? (
+            <>
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Beer" component={Beer} />
+              <Stack.Screen name="BeerList" component={BeerList} />
+              <Stack.Screen name="BreweryList" component={BreweryList} />
+              <Stack.Screen name="Brewery" component={Brewery} />
+              <Stack.Screen name="Camera" component={Camera} />
+              <Stack.Screen name="Categories" component={Categories} />
+              <Stack.Screen name="Map" component={Map} />
+              <Stack.Screen name="PostBeer" component={PostBeer} />
+              <Stack.Screen name="PostReview" component={PostReview} />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Settings" component={Settings} />
+              <Stack.Screen name="User" component={User} />
+              <Stack.Screen name="Users" component={Users} />
+              <Stack.Screen name="FollowersPage" component={FollowersPage} />
+              <Stack.Screen name="FollowingPage" component={FollowingPage} />
+              <Stack.Screen name="RecentReviews" component={RecentReviews} />
+              <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+              <Stack.Screen
+                name="FavouriteBreweries"
+                component={FavouriteBreweries}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+            </>
+          )}
+        </Stack.Navigator>
+      </PaperProvider>
     </UserContext.Provider>
   );
 }
