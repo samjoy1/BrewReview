@@ -1,6 +1,6 @@
 // IMPORTS
 import * as ImagePicker from "expo-image-picker";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -16,21 +16,17 @@ import { Avatar, Icon } from "react-native-elements";
 import { UserContext } from "../../../index.jsx";
 
 // COMPONENTS
+import { BgColourPicker, ConfirmButton, DeleteAccountButton, LogoutButton, NavColourPicker } from "../profile/index.jsx";
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
-import {
-  BgColourPicker,
-  NavColourPicker,
-  ConfirmButton,
-  LogoutButton,
-  DeleteAccountButton,
-} from "../profile/index";
-import { Delete } from "lucide-react-native";
 
 function Profile({ navigation }) {
   let { loggedInUser, setLoggedInUser, background, navbarColour } =
     useContext(UserContext);
   const user = loggedInUser;
+
+  const [tempBackground, setTempBackground] = useState("black")
+  const [tempNavbarColour, setTempNavbarColour] = useState("bg-zinc-800")
 
   // const [user, setUser] = useState(null);
 
@@ -134,8 +130,9 @@ function Profile({ navigation }) {
         }
         className="relative flex-shrink"
       >
-        <Header colour={navbarColour} />
+        <Header colour={tempNavbarColour} />
         <ScrollView
+         className="p-4"
           style={styles.container}
           contentContainerStyle={{ paddingBottom: 100 }}
         >
@@ -220,8 +217,16 @@ function Profile({ navigation }) {
               <Text style={styles.buttonText}>👅 Taste Profile</Text>
             </TouchableOpacity>
           </View>
+          <BgColourPicker tempBackground={tempBackground} setTempBackground={setTempBackground}/>
+          <NavColourPicker tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour}/>
+          <View>
+            <ConfirmButton user={user} tempBackground={tempBackground} tempNavBarColour={tempNavbarColour}/>
+            <LogoutButton navigation={navigation}/>
+            <DeleteAccountButton tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour}/>
+          </View>
+
         </ScrollView>
-        <Navbar colour={navbarColour} />
+        <Navbar colour={tempNavbarColour} />
       </ImageBackground>
     </SafeAreaView>
   );

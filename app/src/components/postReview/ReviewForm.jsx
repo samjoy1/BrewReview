@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native";
 import StarRating from "react-native-star-rating-widget";
 
 // COMPONENTS
-import BeerCardTextBox from "../postReview/BeerCardTextBox";
+import { BeerImage, InfoButtons } from "../beer/Index";
 import SelectTags from "../postReview/SelectTags";
-import { BeerImage, InfoButtons } from "../beer/Index"
 
 function ReviewForm({ posting_user_id, posting_beer, submitReview }) {
   const [brewery, setBrewery] = useState({});
@@ -154,52 +152,6 @@ function ReviewForm({ posting_user_id, posting_beer, submitReview }) {
                 </TouchableOpacity>                                          
             </View>
         </View>
-      </View>
-
-      <View className="w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-        <Text className="text-white">Write a Review</Text>
-      </View>
-      <View className="w-full bg-stone-900/80 rounded-xl p-4 border border-amber-300/90">
-        <TextInput
-          style={styles.text_input} // set title
-          placeholder="Enter a title for your review..."
-          onChangeText={(event) => {
-            handleInput(event, "title");
-          }}
-        />
-
-        <TextInput
-          style={styles.text_input} // set body
-          placeholder="Enter your review..."
-          editable
-          multiline
-          numberOfLines={8}
-          onChangeText={(event) => {
-            handleInput(event, "body");
-          }}
-        />
-
-        <SelectTags addReviewTag={addReviewTag} />
-
-        <View className="flex-row justify-center m-5 bg-gray-500 rounded-xl">
-          <StarRating // Rating
-            rating={rating}
-            onChange={setRating}
-            enableHalfStar={false}
-            starSize={40}
-          />
-        </View>
-
-        <TouchableOpacity // Submit Button
-          onPress={() => {
-            createReview();
-          }}
-          className="flex-row justify-center bg-green-400 rounded-xl px-6 py-6 mx-4 mb-6 shadow-sm hover:bg-green-300"
-        >
-          <Text className="text-black text-lg font-bold">Submit Review</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
   );
 }
 
