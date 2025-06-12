@@ -1,21 +1,28 @@
-import * as ImagePicker from "expo-image-picker";
+// FIRESTORE
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
 import { FIRESTORE_DB } from "../../../../firebaseconfig";
-import Navbar from "./NavBar";
 
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+// IMPORTS
+import * as ImagePicker from "expo-image-picker";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
-function Profile({ route, navigation }) {
-  const { userId } = route.params;
+import { UserContext } from "../../../index.jsx";
+
+// COMPONENTS
+import Header from "./HeaderNav";
+import Navbar from "./NavBar";
+import { BgColourPicker, NavColourPicker, ConfirmButton, LogoutButton, DeleteAccountButton } from "../profile/index"
+import { Delete } from "lucide-react-native";
+
+function Profile({ navigation }) {
+  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+
+  const [tempBackground, setTempBackground] = useState(background)
+  const [tempNavbarColour, setTempNavbarColour] = useState(navbarColour)
+
+  const [user, setUser] = useState(loggedInUser);
 
   // Image uploader function
   const pickImageAndUpload = async () => {
@@ -59,15 +66,15 @@ function Profile({ route, navigation }) {
       setUser({ ...user, avatar_img_url: image.uri });
     }
   };
-  const [user, setUser] = useState(null);
+
   useEffect(() => {
-    if (!userId) {
+    if (!loggedInUser) {
       console.warn("No userId provided to Profile screen.");
       return;
     }
     async function fetchUser() {
       try {
-        const docRef = doc(FIRESTORE_DB, "users", userId);
+        const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -81,7 +88,7 @@ function Profile({ route, navigation }) {
     }
 
     fetchUser();
-  }, [userId]);
+  }, [loggedInUser]);
 
   // Don't render the profile until the user is loaded
   if (!user) {
@@ -93,94 +100,124 @@ function Profile({ route, navigation }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 100 }}
+    <SafeAreaView className="flex-1">
+      <ImageBackground source={
+          tempBackground==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
+          tempBackground==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
+          tempBackground==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
+          tempBackground==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
+          tempBackground==="blue" ? require("../../../../assets/images/BR-bg-blue.png") :
+          tempBackground==="brown" ? require("../../../../assets/images/BR-bg-brown.png") :
+          require("../../../../assets/images/BR-bg-black.png")}
+          className="relative flex-shrink"
+      >
+      <Header colour={tempNavbarColour}/>
+      <ScrollView className="flex-1 p-8"
       >
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.settingsIcon}>
-            <Icon name="settings" type="feather" color="#000" />
-          </TouchableOpacity>
+        <Text className="text-white text-center font-bold w-48 bg-violet-900 rounded-t-xl ml-8 p-3">Your Profile</Text>
+        <View className="bg-gray-500/80 rounded-xl mb-4 shadow-lg">
+          <View className="bg-white rounded-xl h-200 w-full mb-4 shadow-lg">
+            <TouchableOpacity style={styles.settingsIcon}>
+              <Icon name="settings" type="feather" color="#000" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.avatarContainer}
-            onPress={pickImageAndUpload}
-          >
-            <Avatar
-              rounded
-              size="xlarge"
-              icon={{ name: "user", type: "feather" }}
-              source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
-              containerStyle={styles.avatar}
-            />
-            <Text style={styles.username}>{user.username}</Text>
-            <View style={styles.statsContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Users", {
-                    userIds: user.followers || [],
-                  })
-                }
-              >
-                <Text style={styles.linkText}>
-                  {Array.isArray(user.followers) ? user.followers.length : 0}{" "}
-                  followers
-                </Text>
-              </TouchableOpacity>
-              <Text style={styles.dotSeparator}> · </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Users", {
-                    userIds: user.following || [],
-                  })
-                }
-              >
-                <Text style={styles.linkText}>
-                  {Array.isArray(user.following) ? user.following.length : 0}{" "}
-                  following
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-          <Text style={styles.tapHint}>Tap to change avatar</Text>
+            <TouchableOpacity
+              style={styles.avatarContainer}
+              onPress={pickImageAndUpload}
+            >
+              <Avatar
+                rounded
+                size="xlarge"
+                icon={{ name: "user", type: "feather" }}
+                source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
+                containerStyle={styles.avatar}
+              />
+              <Text style={styles.username}>{user.username}</Text>
+              <View style={styles.statsContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Users", {
+                      userIds: user.followers || [],
+                    })
+                  }
+                >
+                  <Text style={styles.linkText}>
+                    {Array.isArray(user.followers) ? user.followers.length : 0}{" "}
+                    followers
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.dotSeparator}> · </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Users", {
+                      userIds: user.following || [],
+                    })
+                  }
+                >
+                  <Text style={styles.linkText}>
+                    {Array.isArray(user.following) ? user.following.length : 0}{" "}
+                    following
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+            <Text className="text-center text-zinc-600 mb-2">Tap to change avatar</Text>
+          </View>
+
+          {/* Sections */}
+          <View className="bg-gray-200 rounded-xl px-2 py-4">
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("FavouriteBeers")}
+            >
+              <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("FavouriteBreweries")}
+            >
+              <Text style={styles.buttonText}>🍺 Favourite Breweries</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("RecentReviews")}
+            >
+              <Text style={styles.buttonText}>📝 Recent Reviews</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("TasteProfile")}
+            >
+              <Text style={styles.buttonText}>👅 Taste Profile</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        
+          <BgColourPicker tempBackground={tempBackground} setTempBackground={setTempBackground} />
+          <NavColourPicker tempNavbarColour={tempNavbarColour} setTempNavbarColour={setTempNavbarColour} />
 
-        {/* Sections */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("FavouriteBeers")}
-          >
-            <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
-          </TouchableOpacity>
+          {/* <View className="bg-white rounded-xl p-3 mb-8">
+                  <Text className="bg-gray-200 rounded-md text-lg mb-2"> Display Me as</Text>
+                  <Text className="bg-gray-200 text-lg mb-2"> Keep me logged in</Text>
+                  <Text className="bg-gray-200 text-lg"> Send me email notifications</Text>
+          </View> */}
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("RecentReviews")}
-          >
-            <Text style={styles.buttonText}>📝 Recent Reviews</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("TasteProfile")}
-          >
-            <Text style={styles.buttonText}>👅 Taste Profile</Text>
-          </TouchableOpacity>
-        </View>
+          <ConfirmButton />
+          <LogoutButton />
+          <DeleteAccountButton />
+          
       </ScrollView>
-      <Navbar />
-    </View>
+      <Navbar colour={tempNavbarColour} />
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f1f5f9",
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
