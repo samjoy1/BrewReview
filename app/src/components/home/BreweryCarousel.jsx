@@ -36,7 +36,7 @@ export default function BreweryCarousel() {
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Brewery", { brewery: item.id })}
+              onPress={() => navigation.navigate("Brewery", { breweryID: item.id })}
             >
               <View
                 className="items-center justify-center px-2"
