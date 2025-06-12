@@ -98,17 +98,7 @@ function PostReview ({ navigation }) {
             }
         }
         // should reload the page
-
     }
-    if (!newReview.body) {
-      Toast.show({
-        type: "error",
-        text1: "Please enter a review",
-      });
-      return false;
-    }
-    return true;
-  }
 
   // SUBMIT
   function submitReview(newReview) {
@@ -143,13 +133,6 @@ function PostReview ({ navigation }) {
         }
         className="relative flex-1"
       >
-        <HeaderNav colour={navbarColour} />
-        <ScrollView className="relative flex-1">
-          <View className="flex-row justify-center mt-4">
-            <TouchableOpacity
-              onPress={() => {}}
-              className={review_rating_button_selected + " rounded-l-xl"}
-            >
                 <HeaderNav colour={navbarColour}/>
                 <ScrollView className="relative flex-1">
 

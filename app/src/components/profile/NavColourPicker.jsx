@@ -6,6 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 let baseStyling = "rounded-full w-16 h-16 border-solid border-4 mr-3 hover:border-white "
 
 export default function NavColourPicker ( { tempNavbarColour, setTempNavbarColour }) {
+    
     return (
         <View className="mb-4">
             <Text className="text-white text-center font-bold w-48 bg-violet-900 rounded-t-xl ml-8 p-3">NavBar Colour</Text>
