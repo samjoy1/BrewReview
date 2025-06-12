@@ -1,11 +1,16 @@
-// FIRESTORE
-import { doc, getDoc } from "firebase/firestore";
-import { FIRESTORE_DB } from "../../../../firebaseconfig";
-
 // IMPORTS
 import * as ImagePicker from "expo-image-picker";
-import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect } from "react";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Avatar, Icon } from "react-native-elements";
 
 import { UserContext } from "../../../index.jsx";
@@ -15,9 +20,11 @@ import Header from "./HeaderNav";
 import Navbar from "./NavBar";
 
 function Profile({ navigation }) {
-  let { loggedInUser, background, navbarColour } = useContext(UserContext)
+  let { loggedInUser, setLoggedInUser, background, navbarColour } =
+    useContext(UserContext);
+  const user = loggedInUser;
 
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
   // Image uploader function
   const pickImageAndUpload = async () => {
@@ -58,31 +65,36 @@ function Profile({ navigation }) {
       //   avatar_img_url: downloadURL,
       // });
       // setUser({ ...user, avatar_img_url: downloadURL });
-      setUser({ ...user, avatar_img_url: image.uri });
+      setLoggedInUser({ ...user, avatar_img_url: image.uri });
     }
   };
 
+  // useEffect(() => {
+  //   if (!loggedInUser || !loggedInUser.id) {
+  //     console.warn("No valid user ID in loggedInUser.");
+  //     return;
+  //   }
+  //   async function fetchUser() {
+  //     try {
+  //       const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
+  //       const docSnap = await getDoc(docRef);
+
+  //       if (docSnap.exists()) {
+  //         setUser(docSnap.data());
+  //       } else {
+  //         console.log("No user profile found!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user profile:", error);
+  //     }
+  //   }
+
+  //   fetchUser();
+  // }, [loggedInUser]);
+
+  // Set user from context directly
   useEffect(() => {
-    if (!loggedInUser) {
-      console.warn("No userId provided to Profile screen.");
-      return;
-    }
-    async function fetchUser() {
-      try {
-        const docRef = doc(FIRESTORE_DB, "users", loggedInUser.id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setUser(docSnap.data());
-        } else {
-          console.log("No user profile found!");
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    }
-
-    fetchUser();
+    console.log("loggedInUser from context:", loggedInUser);
   }, [loggedInUser]);
 
   // Don't render the profile until the user is loaded
@@ -96,103 +108,112 @@ function Profile({ navigation }) {
 
   return (
     <SafeAreaView className="flex-1">
-      <ImageBackground source={
-          background==="black" ? require("../../../../assets/images/BR-bg-black.png") : 
-          background==="white" ? require("../../../../assets/images/BR-bg-white.png") : 
-          background==="green" ? require("../../../../assets/images/BR-bg-green.png") : 
-          background==="yellow" ? require("../../../../assets/images/BR-bg-yellow.png") :
-          background==="blue" ? require("../../../../assets/images/BR-bg-yellow.png") :
-          background==="brown" ? require("../../../../assets/images/BR-bg-yellow.png") :
-          require("../../../../assets/images/BR-bg-black.png")}
-          className="relative flex-shrink"
+      <ImageBackground
+        source={
+          background === "black"
+            ? require("../../../../assets/images/BR-bg-black.png")
+            : background === "white"
+            ? require("../../../../assets/images/BR-bg-white.png")
+            : background === "green"
+            ? require("../../../../assets/images/BR-bg-green.png")
+            : background === "yellow"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : background === "blue"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : background === "brown"
+            ? require("../../../../assets/images/BR-bg-yellow.png")
+            : require("../../../../assets/images/BR-bg-black.png")
+        }
+        className="relative flex-shrink"
       >
-      <Header colour={navbarColour}/>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 100 }}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.settingsIcon}>
-            <Icon name="settings" type="feather" color="#000" />
-          </TouchableOpacity>
+        <Header colour={navbarColour} />
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{ paddingBottom: 100 }}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.settingsIcon}>
+              <Icon name="settings" type="feather" color="#000" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.avatarContainer}
-            onPress={pickImageAndUpload}
-          >
-            <Avatar
-              rounded
-              size="xlarge"
-              icon={{ name: "user", type: "feather" }}
-              source={user.avatar_img_url ? { uri: user.avatar_img_url } : null}
-              containerStyle={styles.avatar}
-            />
-            <Text style={styles.username}>{user.username}</Text>
-            <View style={styles.statsContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Users", {
-                    userIds: user.followers || [],
-                  })
+            <TouchableOpacity
+              style={styles.avatarContainer}
+              onPress={pickImageAndUpload}
+            >
+              <Avatar
+                rounded
+                size="xlarge"
+                icon={{ name: "user", type: "feather" }}
+                source={
+                  user.avatar_img_url ? { uri: user.avatar_img_url } : null
                 }
-              >
-                <Text style={styles.linkText}>
-                  {Array.isArray(user.followers) ? user.followers.length : 0}{" "}
-                  followers
-                </Text>
-              </TouchableOpacity>
-              <Text style={styles.dotSeparator}> · </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Users", {
-                    userIds: user.following || [],
-                  })
-                }
-              >
-                <Text style={styles.linkText}>
-                  {Array.isArray(user.following) ? user.following.length : 0}{" "}
-                  following
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-          <Text style={styles.tapHint}>Tap to change avatar</Text>
-        </View>
+                containerStyle={styles.avatar}
+              />
+              <Text style={styles.username}>{user.username}</Text>
+              <View style={styles.statsContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Users", {
+                      userIds: user.followers || [],
+                    })
+                  }
+                >
+                  <Text style={styles.linkText}>
+                    {Array.isArray(user.followers) ? user.followers.length : 0}{" "}
+                    followers
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.dotSeparator}> · </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Users", {
+                      userIds: user.following || [],
+                    })
+                  }
+                >
+                  <Text style={styles.linkText}>
+                    {Array.isArray(user.following) ? user.following.length : 0}{" "}
+                    following
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.tapHint}>Tap to change avatar</Text>
+          </View>
 
-        {/* Sections */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("FavouriteBeers")}
-          >
-            <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
-          </TouchableOpacity>
+          {/* Sections */}
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("FavouriteBeers")}
+            >
+              <Text style={styles.buttonText}>🍺 Favourite Beers</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("FavouriteBreweries")}
-          >
-            <Text style={styles.buttonText}>🍺 Favourite Breweries</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("FavouriteBreweries")}
+            >
+              <Text style={styles.buttonText}>🍺 Favourite Breweries</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("RecentReviews")}
-          >
-            <Text style={styles.buttonText}>📝 Recent Reviews</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("RecentReviews")}
+            >
+              <Text style={styles.buttonText}>📝 Recent Reviews</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("TasteProfile")}
-          >
-            <Text style={styles.buttonText}>👅 Taste Profile</Text>
-          </TouchableOpacity>
-          
-        </View>
-      </ScrollView>
-      <Navbar colour={navbarColour} />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("TasteProfile")}
+            >
+              <Text style={styles.buttonText}>👅 Taste Profile</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <Navbar colour={navbarColour} />
       </ImageBackground>
     </SafeAreaView>
   );

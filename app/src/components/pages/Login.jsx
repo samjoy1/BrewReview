@@ -20,6 +20,7 @@ export default function Login({ navigation }) {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
     } catch (err) {
       alert("Login failed: " + err.message);
     } finally {
@@ -38,9 +39,9 @@ export default function Login({ navigation }) {
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
-          style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
+          style={styles.input}
         />
         <TextInput
           placeholder="Password"

@@ -1,7 +1,14 @@
 // imports
+import { FIRESTORE_DB } from "@/firebaseconfig";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { doc, getDoc } from "firebase/firestore";
 
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+
+import { ActivityIndicator, View } from "react-native";
+
+import { auth } from "@/firebaseconfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 // styling
 import "@/global.css";
@@ -41,59 +48,73 @@ const Stack = createNativeStackNavigator();
 
 export default function Index() {
   // useStates
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [loggedInUser, setLoggedInUser] = useState({
-    id: "brewcat108",
-    username: "brewcat108",
-    name: "Vibha Kouser",
-    email: "vibha.kouser@example.com",
-    password: "astro",
-    phone: 8147444873,
-    country: "India",
-    avatar_img_url: "https://randomuser.me/api/portraits/women/27.jpg",
-    created_at: 1690359120,
-    favourite_beers: ["hells", "double_ghost"],
-    favourite_categories: [
-      "IPA",
-      "golden_ale",
-      "brown_ale",
-      "pilsner",
-      "lager",
-    ],
-    favourite_tags: [],
-    reviews: ["hells", "313_craft"],
-    following: [],
-    followers: [],
-    preferences: {
-      background: "black",
-      navbarColour: "bg-stone-900",
-      keepLoggedIn: false,
-      sendEmailNotifications: false,
-    },
-  });
-  const [background, setBackground] = useState(
-    isLoggedIn ? loggedInUser.preferences.background : "black"
-  );
-  const [navbarColour, setNavbarColour] = useState(
-    isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900"
-  );
-
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [loading, setLoading] = useState(false);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [loggedInUser, setLoggedInUser] = useState("brewcat108");
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initializing, setInitializing] = useState(true);
+
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [background, setBackground] = useState("black");
+  const [navbarColour, setNavbarColour] = useState("bg-stone-900");
+
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setIsLoggedIn(true);
+        // Fetch user profile from Firestore
+        try {
+          const userDocRef = doc(FIRESTORE_DB, "users", firebaseUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setLoggedInUser({ id: firebaseUser.uid, ...userData });
+
+            // Set theming preferences from fetched user
+            setBackground(userData.preferences?.background || "black");
+            setNavbarColour(
+              userData.preferences?.navbarColour || "bg-stone-900"
+            );
+          } else {
+            // No user profile found, set minimal data
+            setLoggedInUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              preferences: {
+                background: "black",
+                navbarColour: "bg-stone-900",
+              },
+            });
+            setBackground("black");
+            setNavbarColour("bg-stone-900");
+          }
+        } catch (error) {
+          console.warn("Failed to fetch user data:", error);
+          setLoggedInUser(null);
+          setBackground("black");
+          setNavbarColour("bg-stone-900");
+        }
+      } else {
+        setIsLoggedIn(false);
+        setLoggedInUser(null);
+        setBackground("black");
+        setNavbarColour("bg-stone-900");
+      }
       setInitializing(false);
     });
+
     return unsubscribe;
   }, []);
+
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     setBackground(loggedInUser.preferences.background);
+  //     setNavbarColour(loggedInUser.preferences.navbarColour);
+  //   } else {
+  //     setBackground("black");
+  //     setNavbarColour("bg-stone-900");
+  //   }
+  // }, [isLoggedIn, loggedInUser]);
 
   if (initializing) {
     return (
@@ -102,6 +123,8 @@ export default function Index() {
       </View>
     );
   }
+
+  console.log("Setting context: loggedInUser", loggedInUser);
 
   return (
     <UserContext.Provider
@@ -112,10 +135,12 @@ export default function Index() {
         setBackground,
         navbarColour,
         setNavbarColour,
+        isLoggedIn,
+        loggedInUser,
       }}
     >
       <Stack.Navigator>
-        {user ? (
+        {isLoggedIn ? (
           <>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Beer" component={Beer} />

@@ -56,7 +56,6 @@ export default function SignUp({ navigation }) {
         },
       });
 
-      // Optionally navigate to Home or Profile after signup
       navigation.reset({
         index: 0,
         routes: [{ name: "Home" }],
