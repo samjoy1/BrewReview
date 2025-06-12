@@ -25,6 +25,7 @@ export default function Header({ colour }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
+  // let { isLoggedIn, loggedInUser } = useContext(UserContext);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
@@ -57,7 +58,10 @@ export default function Header({ colour }) {
 
   return (
     <View
-      className={`h-16 flex-row items-center justify-between shadow-md px-4 m-4 rounded-xl ${colour}`}
+      className={
+        "h-16 flex-row items-center justify-between border-solid border-32 border-red-500 shadow-md px-4 relative m-4 rounded-xl " +
+        colour
+      }
     >
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
         <Text className="text-white text-3xl">☰</Text>
@@ -106,25 +110,41 @@ export default function Header({ colour }) {
       >
         <Pressable className="flex-1" onPress={() => setMenuVisible(false)}>
           <View className="absolute top-16 left-4 bg-white rounded-lg shadow-md py-2 px-4 w-40">
-            {[
-              "Home",
-              "BeerList",
-              "BreweryList",
-              "Search",
-              "PostReview",
-              "Categories",
-              "Map",
-              "Settings",
-            ].map((screen) => (
-              <TouchableOpacity
-                key={screen}
-                onPress={() => handleNavigate(screen)}
-              >
-                <Text className="py-2 text-gray-800">
-                  {screen.replace(/([A-Z])/g, " $1").trim()}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            <TouchableOpacity onPress={() => handleNavigate("Home")}>
+              <Text className="py-2 text-gray-800">Home</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BeerList");
+              }}
+            >
+              <Text className="py-2 text-gray-800">All Beers</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BreweryList");
+              }}
+            >
+              <Text className="py-2 text-gray-800">All Breweries</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleNavigate("PostReview")}>
+              <Text className="py-2 text-gray-800">Add Review</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleNavigate("Categories")}>
+              <Text className="py-2 text-gray-800">Search / Categories</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleNavigate("Map")}>
+              <Text className="py-2 text-gray-800">Map</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleNavigate("Settings")}>
+              <Text className="py-2 text-gray-800">Settings</Text>
+            </TouchableOpacity>
             <View className="border-t border-gray-200 mt-2 pt-2">
               <TouchableOpacity onPress={handleSignOut}>
                 <Text className="py-2 text-red-500 font-semibold">

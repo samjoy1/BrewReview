@@ -35,7 +35,6 @@ import {
   PostReview,
   Profile,
   RecentReviews,
-  Search,
   Settings,
   SignUp,
   User,

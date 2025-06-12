@@ -14,13 +14,15 @@ export default function Navbar({ colour }) {
         <Text className="text-3xl">🏠</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Categories")}>
         <Text className="text-3xl">🔍</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("PostBeer")}>
-        <Text className="text-4xl rounded-full bg-green-400 p-6 border-solid border-stone-900 border-8">➕</Text>
-      </TouchableOpacity>
+      <View className={colour+" rounded-full p-2"}>
+        <TouchableOpacity onPress={() => navigation.navigate("PostBeer")}>
+          <Text className={"text-4xl rounded-full bg-green-400 p-5 "}>➕</Text>
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity onPress={() => navigation.navigate("Map")}>
         <Text className="text-3xl">📍</Text>

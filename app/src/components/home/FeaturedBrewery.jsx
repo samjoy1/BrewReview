@@ -36,12 +36,12 @@ export default function FeaturedBrewery() {
 
   return (
     <View className="items-center w-full px-4">
-      <View className="bg-yellow-500 border border-yellow-300 rounded-xl p-4 shadow w-full max-w-md">
-        <Text className="text-lg font-semibold text-center mb-1">
+      <View className="bg-stone-800 border-4 border-gray-500 rounded-full p-4 w-full h-36 shadow-xl">
+        <Text className="bg-teal-400 mx-32 mb-4 rounded-full text-base font-bold text-center shadow-lg">
           Featured Brewery
         </Text>
-        <Text className="text-base font-bold text-center">{brewery.name}</Text>
-        <Text className="text-sm text-gray-600 text-center mt-1">
+        <Text className="bg-yellow-500 mx-32 rounded-full text-base font-bold text-center shadow-lg">{brewery.name}</Text>
+        <Text className="text-sm text-white text-center mt-1">
           Country: {brewery.country}
         </Text>
           <Text className="text-sm text-blue-600 text-center mt-1 underline"

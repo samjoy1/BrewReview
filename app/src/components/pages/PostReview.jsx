@@ -104,10 +104,12 @@ function PostReview ({ navigation }) {
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => {}}
                         className={review_rating_button_selected+" rounded-l-xl"}>
-                        Review</TouchableOpacity>
+                        <Text>Review</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => { navigation.navigate("PostBeer")}}
                         className={review_rating_button_unselected+" rounded-r-xl"}>
-                        Beer</TouchableOpacity>
+                        <Text>Beer</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View className="p-6 justify-center">
@@ -119,10 +121,12 @@ function PostReview ({ navigation }) {
                     <View className="flex-row justify-center">
                         <TouchableOpacity onPress={() => { setType("review") }}
                             className={ type==="review" ? review_rating_button_selected+" rounded-l-xl" : review_rating_button_unselected+" rounded-l-xl"}>
-                            Review</TouchableOpacity>
+                            <Text>Review</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setType("rating")}}
                             className={ type==="rating" ? review_rating_button_selected+" rounded-r-xl" : review_rating_button_unselected+" rounded-r-xl"}>
-                            Rating</TouchableOpacity>
+                            <Text>Rating</Text>
+                        </TouchableOpacity>
                     </View>
                     <SelectBeer setPosting_beer={setPosting_beer}/>
                     { type === "review" ? 

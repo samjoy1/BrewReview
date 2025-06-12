@@ -39,21 +39,24 @@ function PostBeer ({ navigation }) {
         if (!newBeer.name) {
             Toast.show({
                 type: "error",
-                text1: "Please enter a name for your beer"
+                text1: "Please Enter a Name for your Beer",
+                position: "bottom"
             })
             return false
         }
         if (!newBeer.country) {
             Toast.show({
                 type: "error",
-                text1: "Please enter the country your beer is from"
+                text1: "Please Enter the Country your Beer is From",
+                position: "bottom"
             })
             return false
         }
         if (!newBeer.category) {
             Toast.show({
                 type: "error",
-                text1: "Please select a category"
+                text1: "Please Select a Category",
+                position: "bottom"
             })
             return false
         }
@@ -67,7 +70,7 @@ function PostBeer ({ navigation }) {
             postBeer(newBeer)
             Toast.show({
                 type: "success",
-                text1: "You just created a new Beer! Why not give it a rating?"
+                text1: "You Just Created a New Beer! Why Not Give it a Rating?"
             })
         }
         // should reload the page
@@ -94,10 +97,12 @@ function PostBeer ({ navigation }) {
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => { navigation.navigate("PostReview")}}
                         className={review_rating_button_unselected+" rounded-l-xl"}>
-                        Review</TouchableOpacity>
+                        <Text>Review</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => {}}
                         className={review_rating_button_selected+" rounded-r-xl"}>
-                        Beer</TouchableOpacity>
+                        <Text>Beer</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View className="p-6">

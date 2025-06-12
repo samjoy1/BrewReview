@@ -24,11 +24,10 @@ export default function BeerCarousel() {
       className="px-2"
       style={{ width: cardWidth }}
     >
-      <View className="bg-teal-500 border border-gray-500 rounded-xl p-4 w-full h-24">
-        <Text className="text-base font-bold text-center">{item.name}</Text>
-        <Text className="text-xs text-white text-center mt-1">
-          {item.percentage}%
-        </Text>
+      <View className="bg-yellow-600 border-4 border-yellow-500 rounded-full p-4 w-full h-24 shadow-lg">
+        <Text className="bg-yellow-500 rounded-full text-base font-bold text-center">{item.name}</Text>
+        <Text className="text-xs text-white text-center mt-1">{item.percentage}%</Text>
+        <Text className="text-xs text-white text-center mt-1">{item.brewery}</Text>
       </View>
     </View>
   );

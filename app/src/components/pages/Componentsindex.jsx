@@ -15,7 +15,6 @@ import PostBeer from "./PostBeer";
 import PostReview from "./PostReview";
 import Profile from "./Profile";
 import RecentReviews from "./RecentReviews";
-import Search from "./Search";
 import Settings from "./Settings";
 import SignUp from "./SignUp";
 import User from "./User";
@@ -38,7 +37,6 @@ module.exports = {
   PostBeer,
   PostReview,
   Profile,
-  Search,
   Settings,
   User,
   Users,

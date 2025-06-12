@@ -18,6 +18,14 @@ import { UserContext } from "../../../index.jsx";
 // COMPONENTS
 import Header from "./HeaderNav";
 import Navbar from "./NavBar";
+import {
+  BgColourPicker,
+  NavColourPicker,
+  ConfirmButton,
+  LogoutButton,
+  DeleteAccountButton,
+} from "../profile/index";
+import { Delete } from "lucide-react-native";
 
 function Profile({ navigation }) {
   let { loggedInUser, setLoggedInUser, background, navbarColour } =
@@ -220,10 +228,6 @@ function Profile({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f1f5f9",
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
