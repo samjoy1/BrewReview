@@ -14,7 +14,7 @@ export default function Navbar({ colour }) {
         <Text className="text-3xl">🏠</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Categories")}>
         <Text className="text-3xl">🔍</Text>
       </TouchableOpacity>
 
