@@ -63,7 +63,6 @@ export default function Index() {
   const [navbarColour, setNavbarColour] = useState( isLoggedIn ? loggedInUser.preferences.navbarColour : "bg-stone-900")
 
   return (
-
     <UserContext.Provider
       value={{
         isLoggedIn,
@@ -73,37 +72,41 @@ export default function Index() {
         background,
         setBackground,
         navbarColour,
-        setNavbarColour
+        setNavbarColour,
       }}
     >
-     <PaperProvider>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Beer" component={Beer} />
-        <Stack.Screen name="BeerList" component={BeerList} />
-        <Stack.Screen name="BreweryList" component={BreweryList} />
-        <Stack.Screen name="Brewery" component={Brewery} />
-        <Stack.Screen name="Camera" component={Camera} />
-        <Stack.Screen name="Categories" component={Categories} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="PostBeer" component={PostBeer} />
-        <Stack.Screen name="PostReview" component={PostReview} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="User" component={User} />
-        <Stack.Screen name="Users" component={Users} />
-        <Stack.Screen name="FollowersPage" component={FollowersPage} />
-        <Stack.Screen name="FollowingPage" component={FollowingPage} />
-        <Stack.Screen name="RecentReviews" component={RecentReviews} />
-        <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
-        <Stack.Screen
-          name="FavouriteBreweries"
-          component={FavouriteBreweries}
-        />
-      </Stack.Navigator>
-    </PaperProvider>
-  </UserContext.Provider>
+      <PaperProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false, // This hides the header on all screens
+          }}
+        >
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Beer" component={Beer} />
+          <Stack.Screen name="BeerList" component={BeerList} />
+          <Stack.Screen name="BreweryList" component={BreweryList} />
+          <Stack.Screen name="Brewery" component={Brewery} />
+          <Stack.Screen name="Camera" component={Camera} />
+          <Stack.Screen name="Categories" component={Categories} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="PostBeer" component={PostBeer} />
+          <Stack.Screen name="PostReview" component={PostReview} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name="User" component={User} />
+          <Stack.Screen name="Users" component={Users} />
+          <Stack.Screen name="FollowersPage" component={FollowersPage} />
+          <Stack.Screen name="FollowingPage" component={FollowingPage} />
+          <Stack.Screen name="RecentReviews" component={RecentReviews} />
+          <Stack.Screen name="FavouriteBeers" component={FavouriteBeers} />
+          <Stack.Screen
+            name="FavouriteBreweries"
+            component={FavouriteBreweries}
+          />
+        </Stack.Navigator>
+      </PaperProvider>
+    </UserContext.Provider>
   );
 }
