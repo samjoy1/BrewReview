@@ -76,6 +76,7 @@ export default function SignUp({ navigation }) {
       <KeyboardAvoidingView behavior="padding">
         <TextInput
           placeholder="Name"
+          placeholderTextColor="#444"
           value={name}
           onChangeText={setName}
           autoCapitalize="words"
@@ -83,6 +84,7 @@ export default function SignUp({ navigation }) {
         />
         <TextInput
           placeholder="Username"
+          placeholderTextColor="#444"
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
@@ -90,6 +92,7 @@ export default function SignUp({ navigation }) {
         />
         <TextInput
           placeholder="Email"
+          placeholderTextColor="#444"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -98,6 +101,7 @@ export default function SignUp({ navigation }) {
         />
         <TextInput
           placeholder="Password"
+          placeholderTextColor="#444"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
