@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "reac
 
 // COMPONENTS
 import { BeerCardTextBox, SelectBrewery, SelectCategory } from "./index.jsx";
+import { BeerImage, InfoButtons } from "../beer/Index"
 
 // TAILWIND STYLING
 let text_box = "text-white bg-zinc-800 m-1 p-1 rounded-xl h-7 align-middle"
@@ -81,27 +82,60 @@ function BeerForm ({ submitBeer }) {
         
         <View>
             {/* BEER CARD */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>Preview</Text>
+            <View className="w-32 bg-violet-900 rounded-t-xl ml-6 p-2">
+                <Text className="text-white font-bold">Preview</Text>
             </View>
-            <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
+            <View className="flex h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
+                <BeerImage image={imageInput} percentage={percentageInput}/>
+                    <View className="flex-row mb-2 px-1">
+                        {/* TYPE */}
+                        <TouchableOpacity
+                            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+                            onPress={() => {}}
+                        >
+                            <Text className="text-base font-bold text-center">
+                            { category.name ? `${category.name}` : "Category"}
+                            </Text>
+                        </TouchableOpacity>
                 
-                <View className="flex-1">
-                    <BeerCardTextBox text={nameInput} placeholder={"Name"} />
-                    <BeerCardTextBox text={category.name} placeholder={"Category"} />
-                    <BeerCardTextBox text={brewery.name} placeholder={"Brewery"} />
-                    <BeerCardTextBox text={countryInput} placeholder={"Country"} />
-                    <BeerCardTextBox text={"tags"} placeholder={"Tags"} />
-                </View>
-                <View className="flex-1">
-                    <Image source={require("../../../../assets/images/default-beer-image.png")}
-                    style={styles.beer_img} className="" />
-                </View>
+                        {/* COUNTRY */}
+                        <TouchableOpacity
+                            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+                            onPress={() => {}}
+                        >
+                            <Text className="text-base font-bold text-center">
+                            { countryInput ? `${countryInput}` : "Country"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View className="flex-row mb-2 px-1">
+                        {/* TYPE */}
+                        <TouchableOpacity
+                            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+                            onPress={() => {}}
+                        >
+                            <Text className="text-base font-bold text-center">
+                            { nameInput ? `${nameInput}` : "Name"}
+                            </Text>
+                        </TouchableOpacity>
+                
+                        {/* BREWERY */}
+                        <TouchableOpacity
+                            className="w-1/2 h-14 bg-white border border-gray-300 rounded-lg justify-center items-center"
+                            onPress={() => {}}
+                        >
+                            <Text className="text-base font-bold text-center">
+                            { brewery.name ? `${brewery.name}` : "Brewery"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
             </View>
 
             {/* BEER FORM */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>
+            <View className="bg-violet-900 w-32 rounded-t-xl ml-6 p-2">
+                <Text className="text-white font-bold">
                     Create a Beer
                 </Text>
             </View>
@@ -128,14 +162,14 @@ function BeerForm ({ submitBeer }) {
                     onChangeText={(event) => {handleInput(event, "percentage")}}/>
 
                 <TextInput className={text_input+" min-h-9 resize-y"}                            // set logo
-                    placeholder="Enter a logo..."
+                    placeholder="Enter a logo url..."
                     editable
                     multiline
                     numberOfLines={1}
                     onChangeText={(event) => {handleInput(event, "logo")}}/>
 
                 <TextInput className={text_input+" min-h-9 resize-y"}                            // set image
-                    placeholder="Enter an image..."
+                    placeholder="Enter an image url..."
                     editable
                     multiline
                     numberOfLines={1}

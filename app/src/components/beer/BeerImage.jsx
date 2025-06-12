@@ -1,10 +1,10 @@
 import React from "react";
-import { Image, View } from "react-native";
+import { ImageBackground, Text, View } from "react-native";
 
-function BeerImage({ image }) {
+function BeerImage({ image, percentage }) {
   return (
     <View className="w-full h-80 bg-stone-900 rounded-xl justify-center items-center mb-4 px-4 shadow-lg">
-      <Image
+      <ImageBackground
         source={{
           uri:
             image?.length > 0
@@ -13,7 +13,9 @@ function BeerImage({ image }) {
         }}
         className="w-full h-full"
         resizeMode="contain"
-      />
+      >
+      <View className="bg-yellow-500 border-yellow-400 border-4 flex-row rounded-full h-16 w-16 justify-center"><Text className="font-bold text-center text-lg content-center">{ percentage ? `${percentage}%` : "ABV%"}</Text></View>
+      </ImageBackground>
     </View>
   );
 }

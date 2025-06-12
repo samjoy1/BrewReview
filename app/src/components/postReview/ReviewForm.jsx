@@ -5,6 +5,7 @@ import StarRating from 'react-native-star-rating-widget';
 // COMPONENTS
 import BeerCardTextBox from "../postReview/BeerCardTextBox";
 import SelectTags from "../postReview/SelectTags";
+import { BeerImage, InfoButtons } from "../beer/Index"
 
 function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
     const [brewery, setBrewery] = useState({})
@@ -64,28 +65,56 @@ function ReviewForm ( { posting_user_id, posting_beer, submitReview } ) {
     useEffect(() => {
     }, [])
 
+    function handlePressBrewery() {
+    }
+
+    function handlePressCountry() {
+    }
+
+    function handlePressType() {
+    }
+
+    // should go to all beers filtered by high to low rating
+    function handlePressRating() {
+    }
+
     return (
         <View>
             {/* BEER CARD */}
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>Preview</Text>
+            <View className="w-32 bg-violet-900 rounded-t-xl ml-6 p-2">
+                <Text className="text-white font-bold">Preview</Text>
             </View>
-            <View className="flex-row h-58 w-full bg-yellow-900/90 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
-                <View className="flex-1">
+            <View className="h-58 w-full bg-yellow-700/80 rounded-xl border border-amber-300/90 mb-6 p-4 shadow-lg">
+                <BeerImage image={posting_beer.img_url} percentage={posting_beer.percentage}/>
+                    <InfoButtons
+                        type={posting_beer.category}
+                        country={posting_beer.country}
+                        rating={posting_beer.rating}
+                        brewery={posting_beer.brewery}
+                        onTypeButtonPress={handlePressType}
+                        onCountryButtonPress={handlePressCountry}
+                        onRatingButtonPress={handlePressRating}
+                        onBreweryButtonPress={handlePressBrewery}
+                    />
+                    {/* <View className="bg-gray-500 w-full h-8">
+                        { posting_beer.tags.forEach((tag) => {
+                        return ( <View className="bg-stone-900 w-16 h-16">
+                            <Text className="text-black font-bold">{tag}</Text>
+                        </View> )
+                        })}
+                    </View> */}
+                
+                {/* <View className="flex-1">
                     <BeerCardTextBox text={posting_beer ? posting_beer.name : ""} placeholder={"Name"} />
                     <BeerCardTextBox text={posting_beer ? posting_beer.category : ""} placeholder={"Category"} />
                     <BeerCardTextBox text={posting_beer ? posting_beer.brewery: ""} placeholder={"Brewery"} />
                     <BeerCardTextBox text={posting_beer ? posting_beer.country: ""} placeholder={"Country"} />
                     <BeerCardTextBox text={"tags"} placeholder={"Tags"} />
-                </View>
-                <View className="flex-1">
-                    <Image source={require("../../../../assets/images/default-beer-image.png")}
-                    style={styles.beer_img} className="" />
-                </View>
+                </View> */}
             </View>
 
-            <View className="text-white w-32 bg-stone-900 rounded-t-xl ml-6 p-2">
-                <Text>Write a Review</Text>
+            <View className="w-32 bg-violet-900 rounded-t-xl ml-6 p-2">
+                <Text className="text-white font-bold">Write a Review</Text>
             </View>
             <View className="w-full bg-stone-900/80 rounded-xl p-4 border border-amber-300/90">
                 <TextInput style={styles.text_input}                            // set title

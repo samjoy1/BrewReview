@@ -1,8 +1,8 @@
 
 // IMPORTS
-import { useContext, useEffect, useState } from "react";
-import Toast from 'react-native-toast-message';
+import { useContext, useState } from "react";
 import { ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import Toast from 'react-native-toast-message';
 
 import { UserContext } from "../../../index.jsx";
 
@@ -51,23 +51,31 @@ function PostReview ({ navigation }) {
 
     // VALIDATION
     function isReviewValid (newReview) {
+        if (newReview.type==="rating") {
+            if (newReview.rating!==0) {
+                return true
+            }
+        }
         if (!newReview.beer_id) {
             Toast.show({
                 type: "error",
-                text1: "Please select a beer to review"
+                text1: "Please select a beer to review",
+                position: "bottom"
             })
         }
         if (!newReview.title) {
             Toast.show({
                 type: "error",
-                text1: "Please enter a title for your review"
+                text1: "Please enter a title for your review",
+                position: "bottom"
             })
             return false
         }
         if (!newReview.body) {
             Toast.show({
                 type: "error",
-                text1: "Please enter a review"
+                text1: "Please enter a review",
+                position: "bottom"
             })
             return false
         } return true
@@ -78,10 +86,17 @@ function PostReview ({ navigation }) {
         setReview(newReview)
         if (isReviewValid(newReview)) {
             postReview(newReview)
-            Toast.show({
-                type: "success",
-                text1: "You just posted a review!"
-            })
+            if (newReview.type==="review") {
+                Toast.show({
+                    type: "success",
+                    text1: "You just posted a review!"
+                })
+            } else if (newReview.type==="rating") {
+                Toast.show({
+                    type: "success",
+                    text1: "You just rated this beer!"
+                })
+            }
         }
         // should reload the page
     }
@@ -104,34 +119,34 @@ function PostReview ({ navigation }) {
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => {}}
                         className={review_rating_button_selected+" rounded-l-xl"}>
-                        <Text>Review</Text>
+                        <Text className="text-center font-bold">Review</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { navigation.navigate("PostBeer")}}
                         className={review_rating_button_unselected+" rounded-r-xl"}>
-                        <Text>Beer</Text>
+                        <Text className="text-center font-bold">Beer</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View className="p-6 justify-center">
                     { type==="review" ? 
-                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Post a Review!</Text>
+                    <Text className="bg-violet-900 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Post a Review!</Text>
                     :
-                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Leave a Rating!</Text>
+                    <Text className="bg-violet-900 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Leave a Rating!</Text>
                     }
                     <View className="flex-row justify-center">
                         <TouchableOpacity onPress={() => { setType("review") }}
                             className={ type==="review" ? review_rating_button_selected+" rounded-l-xl" : review_rating_button_unselected+" rounded-l-xl"}>
-                            <Text>Review</Text>
+                            <Text className="text-center font-bold">Review</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setType("rating")}}
                             className={ type==="rating" ? review_rating_button_selected+" rounded-r-xl" : review_rating_button_unselected+" rounded-r-xl"}>
-                            <Text>Rating</Text>
+                            <Text className="text-center font-bold">Rating</Text>
                         </TouchableOpacity>
                     </View>
                     <SelectBeer setPosting_beer={setPosting_beer}/>
                     { type === "review" ? 
-                    <ReviewForm posting_user_id={loggedInUser} posting_beer={posting_beer} submitReview={submitReview}/>
-                    : <ReviewRating />
+                    <ReviewForm posting_user_id={loggedInUser.id} posting_beer={posting_beer} submitReview={submitReview}/>
+                    : <ReviewRating posting_beer={posting_beer} posting_user_id={loggedInUser.id} submitReview={submitReview}/>
                     }
                     
                 </View>

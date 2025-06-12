@@ -32,6 +32,7 @@ function PostBeer ({ navigation }) {
         percentage: 0,
         tags: [],
         reviews: [],
+        rating: 0
     })
 
     // VALIDATION
@@ -97,16 +98,16 @@ function PostBeer ({ navigation }) {
                 <View className="flex-row justify-center mt-4">
                     <TouchableOpacity onPress={() => { navigation.navigate("PostReview")}}
                         className={review_rating_button_unselected+" rounded-l-xl"}>
-                        <Text>Review</Text>
+                        <Text className="text-center font-bold">Review</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {}}
                         className={review_rating_button_selected+" rounded-r-xl"}>
-                        <Text>Beer</Text>
+                        <Text className="text-center font-bold">Beer</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View className="p-6">
-                    <Text className="bg-zinc-800/90 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
+                    <Text className="bg-violet-900 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Beer doesn't exist yet? Create one!</Text>
                     <BeerForm submitBeer={submitBeer}/>
                 </View>
                 
