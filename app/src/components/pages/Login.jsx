@@ -20,7 +20,7 @@ export default function Login({ navigation }) {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+      //navigation.reset({ index: 0, routes: [{ name: "Home" }] });
     } catch (err) {
       alert("Login failed: " + err.message);
     } finally {

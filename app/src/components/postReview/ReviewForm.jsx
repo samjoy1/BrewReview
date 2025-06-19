@@ -140,7 +140,7 @@ function ReviewForm({ posting_user_id, posting_beer, submitReview }) {
                         rating={rating}
                         onChange={setRating}
                         enableHalfStar={false}
-                        starSize={64}
+                        starSize={40}
                     />
                 </View> 
                 

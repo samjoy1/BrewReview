@@ -56,10 +56,10 @@ export default function SignUp({ navigation }) {
         },
       });
 
-      navigation.reset({
+      /*navigation.reset({
         index: 0,
         routes: [{ name: "Home" }],
-      });
+      });*/
     } catch (err) {
       alert("Sign Up failed: " + err.message);
     } finally {

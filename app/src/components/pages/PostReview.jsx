@@ -149,9 +149,9 @@ function PostReview ({ navigation }) {
 
                 <View className="p-6 justify-center">
                     { type==="review" ? 
-                    <Text className="bg-violet-900 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Post a Review!</Text>
+                    <Text className="bg-violet-900 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Like a Beer? Post a Review!</Text>
                     :
-                    <Text className="bg-violet-900 rounded-xl color-white font-bold h-full text-2xl mb-2 mr-32 p-3"> Like a Beer? Leave a Rating!</Text>
+                    <Text className="bg-violet-900 rounded-xl color-white font-bold text-2xl mb-2 mr-32 p-3"> Like a Beer? Leave a Rating!</Text>
                     }
                     <View className="flex-row justify-center">
                         <TouchableOpacity onPress={() => { setType("review") }}

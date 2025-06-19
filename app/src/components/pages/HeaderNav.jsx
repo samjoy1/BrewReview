@@ -48,7 +48,7 @@ export default function Header({ colour }) {
     try {
       await signOut(auth);
       setMenuVisible(false);
-      navigation.reset({ index: 0, routes: [{ name: "Login" }] });
+      //navigation.reset({ index: 0, routes: [{ name: "Login" }] });
     } catch (error) {
       alert("Sign out failed: " + error.message);
     }
